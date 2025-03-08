@@ -86,7 +86,8 @@ public class Player extends Entity {
 
             mouseDown = false;
         }
-        
+        float angleToLook = (float)Math.atan2(mouseCoords.x-(pos.x+width/2f), mouseCoords.y-(pos.y+height/2f));
+        sprite.setRotation(angleToLook*-180f/(float)Math.PI);
         sprite.setPosition(pos.x, pos.y);
         camera.position.set(pos.x+(width/2f), pos.y+(height/2f), 0);
     }
