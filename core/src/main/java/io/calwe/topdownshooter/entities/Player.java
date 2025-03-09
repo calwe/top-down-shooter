@@ -4,8 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
@@ -18,27 +20,29 @@ public class Player extends Entity {
     Weapon[] inventory;
     int currentInventorySlot = 0;
 
-    int direction;
-
     //Statistics
     int health;
     float movementSpeed;
     OrthographicCamera camera;
 
-    public Player(Texture texture, Vector2 startPos, Weapon[] inventory, OrthographicCamera camera) {
+    Animation<TextureRegion> playerWalkAnimation;
+    float elapsedTime = 0.0f;
+
+
+    public Player(Texture texture, Animation<TextureRegion> playerWalkAnimation, Vector2 startPos, Weapon[] inventory, OrthographicCamera camera) {
         this.pos = startPos;
         this.momentum = new Vector2(0, 0);
         this.movementSpeed = 25f;
-        this.direction = 0;
         this.texture = texture;
         this.mouseDown = false;
+        this.playerWalkAnimation = playerWalkAnimation;
         this.mouseCoords = new Vector2(0,0);
         this.slide = 0.85f;
-        this.width = 15;
-        this.height = 15;
+        this.width = 12;
+        this.height = 10;
         this.inventory = inventory;
         this.camera = camera;
-        this.sprite = new Sprite(texture);
+        this.sprite = new Sprite(texture, width, height);
     }
 
     private Vector2 calculateMovement(){
@@ -57,6 +61,9 @@ public class Player extends Entity {
             movement.y -= 1;
         }
         movement.nor();
+        if (movement.x == 0.0f && movement.y == 0.0f) {
+            elapsedTime = 0.0f;
+        }
         return new Vector2(movement.x * movementSpeed * Gdx.graphics.getDeltaTime(), movement.y * movementSpeed * Gdx.graphics.getDeltaTime());
     }
 
@@ -65,9 +72,29 @@ public class Player extends Entity {
         return new Vector2(temp.x, temp.y);
     }
 
+    private void handleInventorySwitching(){
+        if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)) {
+            if (inventory[0] != null) {
+                currentInventorySlot = 0;
+            }
+        }
+        else if (Gdx.input.isKeyPressed(Input.Keys.NUM_2)) {
+            if (inventory[1] != null) {
+                currentInventorySlot = 1;
+            }
+
+        }
+        else if (Gdx.input.isKeyPressed(Input.Keys.NUM_3)) {
+            if (inventory[2] != null) {
+                currentInventorySlot = 2;
+            }
+        }
+    }
+
     @Override
     public void input(OrthographicCamera camera){
         this.momentum.add(calculateMovement());
+        handleInventorySwitching();
         mouseCoords.set(getMousePosInGameWorld(camera));
         if (Gdx.input.isTouched()) { // If the user has clicked or tapped the screen
             mouseDown = true;
@@ -94,6 +121,9 @@ public class Player extends Entity {
 
     @Override
     public void draw(SpriteBatch batch) {
+        TextureRegion currentFrame = playerWalkAnimation.getKeyFrame(elapsedTime, true);
+        sprite.setRegion(currentFrame);
         sprite.draw(batch);
+        elapsedTime += Gdx.graphics.getDeltaTime();
     }
 }

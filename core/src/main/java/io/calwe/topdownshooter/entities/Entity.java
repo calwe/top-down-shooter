@@ -21,7 +21,9 @@ public class Entity {
     }
 
     public void logic() {
-
+        pos = new Vector2(pos.x + momentum.x, pos.y + momentum.y);
+        //Reduce their momentum over time
+        momentum.scl(slide);
         sprite.setPosition(pos.x, pos.y);
     }
 
