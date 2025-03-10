@@ -136,7 +136,16 @@ public class Player extends Entity {
 
         //Handle clicks registered - currently does nothing since we can't shoot
         if (mouseDown){
-
+            Vector2 direction = new Vector2(mouseCoords.x - (pos.x+width/2f), mouseCoords.y - (pos.y+height/2f));
+            direction.nor();
+            Weapon weapon = inventory[currentInventorySlot];
+            float angleToLook = (float)Math.atan2(mouseCoords.x-(pos.x+width/2f), mouseCoords.y-(pos.y+height/2f));
+            float bulletRotation = angleToLook*-180f/(float)Math.PI;
+            boolean fireSuccessful = weapon.fire(new Vector2(pos.x+(width/2f), pos.y+(height/2f)), direction, bulletRotation);
+            if (fireSuccessful){
+                direction.scl(-0.01f*weapon.recoil);
+                momentum.add(direction);
+            }
             mouseDown = false;
         }
 

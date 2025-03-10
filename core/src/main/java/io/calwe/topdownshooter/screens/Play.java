@@ -49,7 +49,8 @@ public class Play implements Screen {
         //Load a dummy texture for things for which we do not yet have a texture
         Texture noTexture = new Texture("NoTexture.png");
 
-
+        //Populate the weapons dictionary with weapons
+        initializeWeapons(noTexture);
 
         // create a new orthographic (no 3d perspective) camera, and set its position to the center of the map
         camera = new OrthographicCamera();
@@ -82,7 +83,13 @@ public class Play implements Screen {
         return new Animation<TextureRegion>(0.0357f, playerAnimationTextures);
     }
 
-
+    private void initializeWeapons(Texture noTexture) {
+        //Create each weapon and load it into the weapons dictionary
+        weapons.put("Pistol", new Weapon(noTexture, noTexture, 10, 2, 10, 30f, 1f, 0.2f, 5));
+        weapons.put("SMG", new Weapon(noTexture, noTexture, 2, 10, 5, 50f, 0.5f, 0.1f, 5));
+        weapons.put("Assault Rifle", new Weapon(noTexture, noTexture, 4, 5, 15, 10f, 1.5f, 0.3f, 10));
+        weapons.put("Sniper Rifle", new Weapon(noTexture, noTexture, 30, 0.5f, 50, 0.1f, 2f, 0.5f, 15));
+    }
 
 
     @Override
