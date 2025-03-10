@@ -39,6 +39,8 @@ public class Player extends Entity {
     // of the animation to display
     float elapsedTime = 0.0f;
 
+    Texture playerTexture;
+
     // The constructor - intialize all the variables
     public Player(Texture texture, Animation<TextureRegion> playerWalkAnimation, Vector2 startPos, Weapon[] inventory, OrthographicCamera camera) {
         this.maxHealth = 100;
@@ -50,7 +52,7 @@ public class Player extends Entity {
         this.mouseCoords = new Vector2(0,0);
         this.slide = 0.85f;
         this.width = 12;
-        this.height = 10;
+        this.height = 16;
         this.inventory = inventory;
         this.camera = camera;
         this.sprite = new Sprite(texture, width, height);
@@ -104,7 +106,7 @@ public class Player extends Entity {
         // iterate through numbers 1-3. Check if any of these keys are pressed. If they are and that slot is not
         // empty, switch to that slot
         for (int i = 0; i < inventory.length; i++) {
-            if (Gdx.input.isKeyPressed(29 + i)) {
+            if (Gdx.input.isKeyPressed(8+i)) {
                 if (inventory[i] != null) {
                     currentInventorySlot = i;
                 }
@@ -128,23 +130,34 @@ public class Player extends Entity {
     //This overrides Entity's logic method
     @Override
     public void logic(){
+
         //Update the character's position according to how far their momentum is causing them to move
         pos = new Vector2(pos.x + momentum.x, pos.y + momentum.y);
-        sprite.setPosition(pos.x, pos.y);
         //Reduce their momentum over time
         momentum.scl(slide);
 
+
+        playerTexture = inventory[currentInventorySlot].texture;
         //Handle clicks registered - currently does nothing since we can't shoot
         if (mouseDown){
-            Vector2 direction = new Vector2(mouseCoords.x - (pos.x+width/2f), mouseCoords.y - (pos.y+height/2f));
-            direction.nor();
             Weapon weapon = inventory[currentInventorySlot];
+
             float angleToLook = (float)Math.atan2(mouseCoords.x-(pos.x+width/2f), mouseCoords.y-(pos.y+height/2f));
-            float bulletRotation = angleToLook*-180f/(float)Math.PI;
-            boolean fireSuccessful = weapon.fire(new Vector2(pos.x+(width/2f), pos.y+(height/2f)), direction, bulletRotation);
+            float offsetRotation = angleToLook*-180f/(float)Math.PI;
+            Vector2 weaponOffset = new Vector2(5, 6).rotate(offsetRotation);
+
+            Vector2 firingPos = new Vector2(pos.x+width/2f, pos.y+height/2f);
+            firingPos.add(weaponOffset);
+            Vector2 direction = new Vector2(mouseCoords.x - (firingPos.x), mouseCoords.y - (firingPos.y));
+            direction.nor();
+            float bulletAngleToLook = (float)Math.atan2(mouseCoords.x-(firingPos.x), mouseCoords.y-(firingPos.y));
+            float bulletRotation = bulletAngleToLook*-180f/(float)Math.PI;
+
+            boolean fireSuccessful = weapon.fire(firingPos, direction, bulletRotation);
             if (fireSuccessful){
                 direction.scl(-0.01f*weapon.recoil);
                 momentum.add(direction);
+                playerTexture = inventory[currentInventorySlot].firingTexture;
             }
             mouseDown = false;
         }
@@ -158,6 +171,12 @@ public class Player extends Entity {
         // move the camera so it remains always centered on the player (taking into account that pos is the bottom
         // left corner of the player
         camera.position.set(pos.x+(width/2f), pos.y+(height/2f), 0);
+
+        // Add an offset to the sprite to account for the fact that the player sprite is not centered in its image.
+        Vector2 spriteOffset = new Vector2(0, 2).rotate(angleToLook*-180f/(float)Math.PI);
+        spriteOffset.add(pos);
+        sprite.setPosition(spriteOffset.x, spriteOffset.y);
+
     }
 
     // This overrides entity's draw method so we can have animation
@@ -168,7 +187,11 @@ public class Player extends Entity {
         TextureRegion currentFrame = playerWalkAnimation.getKeyFrame(elapsedTime, true);
         // Set the animation's current frame to the player sprite's image
         sprite.setRegion(currentFrame);
+
         // Render the player sprite
+        sprite.draw(batch);
+
+        sprite.setRegion(playerTexture);
         sprite.draw(batch);
         // Update how much time has passed since we started showing the animation
         elapsedTime += Gdx.graphics.getDeltaTime();

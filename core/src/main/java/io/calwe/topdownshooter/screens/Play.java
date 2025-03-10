@@ -68,7 +68,7 @@ public class Play implements Screen {
 
     private Animation<TextureRegion> getAnimatedPlayerTexture(){
         // load the spritesheet as a texture, then make a textureRegion out of that texture.
-        TextureRegion playerTexture = new TextureRegion(new Texture("player.png"));
+        TextureRegion playerTexture = new TextureRegion(new Texture("running.png"));
         //The number of sprites in the spritesheet showing each part of the walk animation
         int numFrames = 14;
         //Split the spritesheet into individual textureregions
@@ -85,10 +85,11 @@ public class Play implements Screen {
 
     private void initializeWeapons(Texture noTexture) {
         //Create each weapon and load it into the weapons dictionary
-        weapons.put("Pistol", new Weapon(noTexture, noTexture, 10, 2, 10, 30f, 1f, 0.2f, 5));
-        weapons.put("SMG", new Weapon(noTexture, noTexture, 2, 10, 5, 50f, 0.5f, 0.1f, 5));
-        weapons.put("Assault Rifle", new Weapon(noTexture, noTexture, 4, 5, 15, 10f, 1.5f, 0.3f, 10));
-        weapons.put("Sniper Rifle", new Weapon(noTexture, noTexture, 30, 0.5f, 50, 0.1f, 2f, 0.5f, 15));
+        Texture bulletTexture = new Texture("bullet.png");
+        weapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("pistol-firing.png"), bulletTexture, 10, 2, 10, 30f, 1f, 0.2f, 5));
+        weapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMG-firing.png"), bulletTexture, 2, 10, 5, 50f, 0.5f, 0.1f, 5));
+        weapons.put("Assault Rifle", new Weapon(noTexture, noTexture, bulletTexture, 4, 5, 15, 10f, 1.5f, 0.3f, 10));
+        weapons.put("Sniper Rifle", new Weapon(noTexture, noTexture, bulletTexture, 30, 0.5f, 50, 0.1f, 2f, 0.5f, 15));
     }
 
 

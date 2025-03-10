@@ -1,6 +1,7 @@
 package io.calwe.topdownshooter.entities;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import io.calwe.topdownshooter.screens.Play;
 
@@ -16,14 +17,16 @@ public class Weapon{
     float bulletSpeed;
 
     Texture texture;
+    Texture firingTexture;
     Texture bulletTexture;
     float weaponWidth = 20;
     float weaponHeight = 5;
 
     long timeLastFired = 0;
 
-    public Weapon(Texture texture, Texture bulletTexture, int damage, float fireRate, int critChance, float inaccuracy, float recoil, float knockback, float bulletSpeed){
+    public Weapon(Texture texture, Texture firingTexture, Texture bulletTexture, int damage, float fireRate, int critChance, float inaccuracy, float recoil, float knockback, float bulletSpeed){
         this.texture = texture;
+        this.firingTexture = firingTexture;
         this.bulletTexture = bulletTexture;
         this.bulletSpeed = bulletSpeed;
         this.damage = damage;

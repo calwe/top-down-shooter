@@ -14,8 +14,8 @@ class Bullet extends Entity {
         this.momentum = new Vector2(0, 0);
 
         this.slide = 1;
-        this.width = 3;
-        this.height = 3;
+        this.width = 1;
+        this.height = 2;
         this.sprite = new Sprite(texture, width, height);
         this.damage = damage;
         this.critChance = critChance;
