@@ -11,29 +11,40 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
+// A sublass of entity, which is the player - the main character
 public class Player extends Entity {
-    //Input
+    //Input - whether the mouse is currently pressed down (for shooting)
     boolean mouseDown;
+    //What the current location of the mouse is - so that the character can look at the mouse location
     Vector2 mouseCoords;
 
-    //Inventory
+    //The character's inventory
     Weapon[] inventory;
+    // What slot in the character's inventory they currently have selected
     int currentInventorySlot = 0;
 
-    //Statistics
+    // The maximum amount of health the player can have, and how much health they start with
+    int maxHealth;
+    // The amount of health the player currently has remaining
     int health;
+    //how fast the player move
     float movementSpeed;
+
+    // The camera - this is used to keep the camera's position over the player
     OrthographicCamera camera;
 
+    // The player's movement animation
     Animation<TextureRegion> playerWalkAnimation;
+    // A float that stores the time since the animation started playing so we can figure out what frame
+    // of the animation to display
     float elapsedTime = 0.0f;
 
-
+    // The constructor - intialize all the variables
     public Player(Texture texture, Animation<TextureRegion> playerWalkAnimation, Vector2 startPos, Weapon[] inventory, OrthographicCamera camera) {
+        this.maxHealth = 100;
         this.pos = startPos;
         this.momentum = new Vector2(0, 0);
         this.movementSpeed = 25f;
-        this.texture = texture;
         this.mouseDown = false;
         this.playerWalkAnimation = playerWalkAnimation;
         this.mouseCoords = new Vector2(0,0);
@@ -43,11 +54,14 @@ public class Player extends Entity {
         this.inventory = inventory;
         this.camera = camera;
         this.sprite = new Sprite(texture, width, height);
+        this.health = maxHealth;
     }
 
-    private Vector2 calculateMovement(){
+    private Vector2 calculateMovementFromInputs(){
+        //Initialise the movement vector and set it to zero
         Vector2 movement = Vector2.Zero;
         movement.set(0,0);
+        //Add our inputs to the movement vector - ASWD or right left up and down arrows.
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
             movement.x += 1;
         }
@@ -60,70 +74,94 @@ public class Player extends Entity {
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN) || Gdx.input.isKeyPressed(Input.Keys.S)) {
             movement.y -= 1;
         }
+        //Normalise the movement so that its total magnitude is 1, unless we have no movement at all
+        //This is to prevent the character from moving faster when moving diagonally
         movement.nor();
+        // If the character is not moving, reset the timer for the walking animation to prevent it from playing
         if (movement.x == 0.0f && movement.y == 0.0f) {
             elapsedTime = 0.0f;
         }
+        // Calculate the actual movement speed by multiplying the normalised inputs by the player movement speed, and
+        // the deltaTime. This is the time since the last frame. Doing this prevents the character from moving at
+        // different speeds at different frame rates
         return new Vector2(movement.x * movementSpeed * Gdx.graphics.getDeltaTime(), movement.y * movementSpeed * Gdx.graphics.getDeltaTime());
     }
 
+    //When we get the mouse coordinates using the Gdx.input.getX() and getY(), we get the coordinates on the
+    // screen, not in the world. This function gets the world coordinates for us.
     Vector2 getMousePosInGameWorld(OrthographicCamera camera) {
+        //Convert the screen coordinates to world coordinates and store it as a vector3
         Vector3 temp = camera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+        //We are working in a 2d world, and thus use vector2s not vector3s, so convert the vector3 to a
+        // vector2 and return it
         return new Vector2(temp.x, temp.y);
     }
 
     private void handleInventorySwitching(){
-        if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)) {
-            if (inventory[0] != null) {
-                currentInventorySlot = 0;
-            }
-        }
-        else if (Gdx.input.isKeyPressed(Input.Keys.NUM_2)) {
-            if (inventory[1] != null) {
-                currentInventorySlot = 1;
-            }
-
-        }
-        else if (Gdx.input.isKeyPressed(Input.Keys.NUM_3)) {
-            if (inventory[2] != null) {
-                currentInventorySlot = 2;
+        //Inventory slot switching can only handle inventories up to 9 slots long, because it iterates through
+        // number keys, starting at 1.
+        // Iterate through number keys up to the length of the inventory (e.g. if the inventory is 3 slots in size,
+        // iterate through numbers 1-3. Check if any of these keys are pressed. If they are and that slot is not
+        // empty, switch to that slot
+        for (int i = 0; i < inventory.length; i++) {
+            if (Gdx.input.isKeyPressed(29 + i)) {
+                if (inventory[i] != null) {
+                    currentInventorySlot = i;
+                }
             }
         }
     }
 
+    //This overrides Entity's input method.
     @Override
     public void input(OrthographicCamera camera){
-        this.momentum.add(calculateMovement());
+        // Take in the movement inputs and add the resulting movement to our momentum
+        this.momentum.add(calculateMovementFromInputs());
+        // Check if we are pressing a number key to switch inventory slot
         handleInventorySwitching();
+        //update the mouseCoords value with the current location of the mouse
         mouseCoords.set(getMousePosInGameWorld(camera));
-        if (Gdx.input.isTouched()) { // If the user has clicked or tapped the screen
-            mouseDown = true;
-        }
+        // update the mouseDown value with the current status of the mouse
+        mouseDown = Gdx.input.isTouched();
     }
 
+    //This overrides Entity's logic method
     @Override
     public void logic(){
-        //Move the character
+        //Update the character's position according to how far their momentum is causing them to move
         pos = new Vector2(pos.x + momentum.x, pos.y + momentum.y);
+        sprite.setPosition(pos.x, pos.y);
         //Reduce their momentum over time
         momentum.scl(slide);
 
-        //Handle clicks registered
+        //Handle clicks registered - currently does nothing since we can't shoot
         if (mouseDown){
 
             mouseDown = false;
         }
+
+        // Calculate the angle the player will need to be turning towards to face the mouse, taking into account that
+        // the pos.x and pos.y coordinates are from the bottom left corner of the player not the center
         float angleToLook = (float)Math.atan2(mouseCoords.x-(pos.x+width/2f), mouseCoords.y-(pos.y+height/2f));
+        // convert the angle given from radians to degrees, and rotate the player to look in that direction
         sprite.setRotation(angleToLook*-180f/(float)Math.PI);
-        sprite.setPosition(pos.x, pos.y);
+
+        // move the camera so it remains always centered on the player (taking into account that pos is the bottom
+        // left corner of the player
         camera.position.set(pos.x+(width/2f), pos.y+(height/2f), 0);
     }
 
+    // This overrides entity's draw method so we can have animation
     @Override
     public void draw(SpriteBatch batch) {
+        // calculated based on how much time has passed since we started playing the animation what frame of the
+        // animation we should be showing
         TextureRegion currentFrame = playerWalkAnimation.getKeyFrame(elapsedTime, true);
+        // Set the animation's current frame to the player sprite's image
         sprite.setRegion(currentFrame);
+        // Render the player sprite
         sprite.draw(batch);
+        // Update how much time has passed since we started showing the animation
         elapsedTime += Gdx.graphics.getDeltaTime();
     }
 }
