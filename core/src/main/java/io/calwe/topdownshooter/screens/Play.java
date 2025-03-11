@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import io.calwe.topdownshooter.entities.Enemy;
 import io.calwe.topdownshooter.entities.Entity;
@@ -93,10 +94,10 @@ public class Play implements Screen {
     private void initializeWeapons(Texture noTexture) {
         //Create each weapon and load it into the weapons dictionary
         Texture bulletTexture = new Texture("bullet.png");
-        weapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("pistol-firing.png"), bulletTexture, 10, 2, 10, 30f, 1f, 0.2f, 5));
-        weapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMG-firing.png"), bulletTexture, 2, 10, 5, 50f, 0.5f, 0.1f, 5));
-        weapons.put("Assault Rifle", new Weapon(noTexture, noTexture, bulletTexture, 4, 5, 15, 10f, 1.5f, 0.3f, 10));
-        weapons.put("Sniper Rifle", new Weapon(noTexture, noTexture, bulletTexture, 30, 0.5f, 50, 0.1f, 2f, 0.5f, 15));
+        weapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("pistol-firing.png"), bulletTexture, 10, 2, 10, 10f, 1f, 1f, 5));
+        weapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMG-firing.png"), bulletTexture, 2, 10, 5, 20f, 0.5f, 0.4f, 5));
+        weapons.put("Assault Rifle", new Weapon(noTexture, noTexture, bulletTexture, 4, 5, 15, 5f, 1.5f, 0.7f, 10));
+        weapons.put("Sniper Rifle", new Weapon(noTexture, noTexture, bulletTexture, 30, 0.5f, 50, 0f, 2f, 3f, 15));
     }
 
 
@@ -160,6 +161,17 @@ public class Play implements Screen {
         for (Entity e : entities) {
             e.input(camera);
         }
+    }
+
+    public static Dictionary<Rectangle, Entity> getOtherColliderRects(Entity entity) {
+        Dictionary<Rectangle, Entity> collideableRects = new Hashtable<>();
+        for (int i = 0; i < entities.size(); i++) {
+            Entity e = entities.get(i);
+            if (e != entity){
+                collideableRects.put(e.bounds, e);
+            }
+        }
+        return collideableRects;
     }
 
     public void logic() {

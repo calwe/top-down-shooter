@@ -57,6 +57,10 @@ public class Player extends Entity {
         this.camera = camera;
         this.sprite = new Sprite(texture, width, height);
         this.health = maxHealth;
+        bounds.x = pos.x;
+        bounds.y = pos.y;
+        bounds.width = width;
+        bounds.height = height;
     }
 
     private Vector2 calculateMovementFromInputs(){
@@ -132,7 +136,7 @@ public class Player extends Entity {
     public void logic(){
 
         //Update the character's position according to how far their momentum is causing them to move
-        pos = new Vector2(pos.x + momentum.x, pos.y + momentum.y);
+        tryMove();
         //Reduce their momentum over time
         momentum.scl(slide);
 
@@ -147,22 +151,22 @@ public class Player extends Entity {
             float angleToLook = (float)Math.atan2(mouseCoords.x-(pos.x+width/2f), mouseCoords.y-(pos.y+height/2f));
             // Calculate the offset to account for the fact that the weapon is not at the center of the player
             float offsetRotation = angleToLook*-180f/(float)Math.PI;
-            Vector2 weaponOffset = new Vector2(5, 6).rotate(offsetRotation);
+            Vector2 weaponOffset = new Vector2(5, 6).rotateDeg(offsetRotation);
 
             // calculate the gun's position by finding the center of the player and adding the weapon offset
             Vector2 firingPos = new Vector2(pos.x+width/2f, pos.y+height/2f);
             firingPos.add(weaponOffset);
-            // calculate the direction vector between the gun and the mouse position
-            Vector2 direction = new Vector2(mouseCoords.x - (firingPos.x), mouseCoords.y - (firingPos.y));
-            direction.nor();
+
             // calculate the angle between the gun and the mouse position
             float bulletAngleToLook = (float)Math.atan2(mouseCoords.x-(firingPos.x), mouseCoords.y-(firingPos.y));
             float bulletRotation = bulletAngleToLook*-180f/(float)Math.PI;
 
             // attempt to fire the weapon at the mouse position
-            boolean fireSuccessful = weapon.fire(firingPos, direction, bulletRotation);
+            boolean fireSuccessful = weapon.fire(firingPos, bulletRotation);
             if (fireSuccessful){
                 //if the weapon fired, apply recoil and show the firing texture
+                Vector2 direction = new Vector2(mouseCoords.x - (firingPos.x), mouseCoords.y - (firingPos.y));
+                direction.nor();
                 direction.scl(-0.01f*weapon.recoil);
                 momentum.add(direction);
                 playerTexture = inventory[currentInventorySlot].firingTexture;
@@ -182,10 +186,10 @@ public class Player extends Entity {
         camera.position.set(pos.x+(width/2f), pos.y+(height/2f), 0);
 
         // Add an offset to the sprite to account for the fact that the player sprite is not centered in its image.
-        Vector2 spriteOffset = new Vector2(0, 2).rotate(angleToLook*-180f/(float)Math.PI);
+        Vector2 spriteOffset = new Vector2(0, 2).rotateDeg(angleToLook*-180f/(float)Math.PI);
         spriteOffset.add(pos);
-        sprite.setPosition(spriteOffset.x, spriteOffset.y);
-
+        //sprite.setPosition(spriteOffset.x, spriteOffset.y);
+        sprite.setPosition(pos.x, pos.y);
     }
 
     // This overrides entity's draw method so we can have animation
@@ -204,5 +208,13 @@ public class Player extends Entity {
         sprite.draw(batch);
         // Update how much time has passed since we started showing the animation
         elapsedTime += Gdx.graphics.getDeltaTime();
+    }
+
+    public void takeDamage(int damage){
+        health -= damage;
+    }
+
+    public void applyKnockback(Vector2 knockback ){
+        this.momentum.add(knockback);
     }
 }

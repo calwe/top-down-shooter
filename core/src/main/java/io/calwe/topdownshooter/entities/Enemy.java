@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import io.calwe.topdownshooter.screens.Play;
 
 public class Enemy extends Entity {
 
@@ -16,6 +17,7 @@ public class Enemy extends Entity {
     int health;
     // The amount of damage done to the player on contact
     int damage;
+    float knockback;
     //how fast the player move
     float movementSpeed;
 
@@ -31,8 +33,9 @@ public class Enemy extends Entity {
 
     // The constructor - initialize all the variables
     public Enemy(Texture texture, Animation<TextureRegion> enemyWalkAnimation, Vector2 startPos, Player target) {
-        this.maxHealth = 100;
+        this.maxHealth = 50;
         this.damage = 8;
+        this.knockback = 2f;
         this.pos = startPos;
         this.momentum = new Vector2(0, 0);
         this.movementSpeed = 5f;
@@ -44,6 +47,10 @@ public class Enemy extends Entity {
         this.health = maxHealth;
         this.target = target;
         this.enemyTexture = texture;
+        bounds.x = pos.x;
+        bounds.y = pos.y;
+        bounds.width = width;
+        bounds.height = height;
     }
 
     //This overrides Entity's logic method
@@ -54,7 +61,7 @@ public class Enemy extends Entity {
         movementToPlayer.scl(movementSpeed*Gdx.graphics.getDeltaTime());
         momentum.add(movementToPlayer);
 
-        pos = new Vector2(pos.x + momentum.x, pos.y + momentum.y);
+        tryMove();
         //Reduce their momentum over time
         momentum.scl(slide);
 
@@ -66,7 +73,9 @@ public class Enemy extends Entity {
         Vector2 spriteOffset = new Vector2(0, 2).rotate(angleToLook*-180f/(float)Math.PI);
         spriteOffset.add(pos);
         sprite.setPosition(spriteOffset.x, spriteOffset.y);
-
+        if (health <= 0){
+            Play.entitiesToRemove.add(this);
+        }
     }
 
     // This overrides entity's draw method so we can have animation
@@ -85,5 +94,26 @@ public class Enemy extends Entity {
         sprite.draw(batch);
         // Update how much time has passed since we started showing the animation
         elapsedTime += Gdx.graphics.getDeltaTime();
+    }
+
+    @Override
+    public void OnEntityCollision(Entity e){
+        if (e instanceof Player){
+            Player player = (Player)e;
+            player.takeDamage(damage);
+            Vector2 knockbackDirection = new Vector2(player.pos.x-pos.x,player.pos.y-pos.y);
+            knockbackDirection.nor();
+            knockbackDirection.scl(knockback);
+            player.applyKnockback(knockbackDirection);
+            Play.entitiesToRemove.add(this);
+        }
+    }
+
+    public void takeDamage(int damage){
+        health -= damage;
+    }
+
+    public void applyKnockback(Vector2 knockback ){
+        this.momentum.add(knockback);
     }
 }

@@ -37,7 +37,7 @@ public class Weapon{
 
     //This function returns true or false depending on whether the weapon was still cooling down
     //or it fired successfully
-    public boolean fire(Vector2 gunPos, Vector2 direction, float bulletRotation){
+    public boolean fire(Vector2 gunPos, float bulletRotation){
         //Check if the weapon is ready to fire another shot
         if (timeLastFired + (long)(1000f/fireRate) < System.currentTimeMillis()){
             //Create an instance of bullet, give it the bullet texture, and its stats.
@@ -48,13 +48,10 @@ public class Weapon{
             bullet.pos.set(new Vector2(gunPos.x-(bullet.width/2f), gunPos.y-(bullet.height/2f)));
             // initialize a new instance of Random, which will be used for providing inaccuracy
             Random random = new Random();
-            direction.nor();
             // add a random offset to direction to cause inaccuracy for the gun
-            direction.set(direction.x + ((random.nextFloat(inaccuracy*2f)-inaccuracy)/300f), direction.y+ ((random.nextFloat(inaccuracy*2f)-inaccuracy)/300f));
-            // multiply the direction by the bullet speed to get the bullet's movement
-            direction.scl(bulletSpeed);
+            bulletRotation += random.nextFloat(inaccuracy*2) - inaccuracy;
             // apply the movement to the bullet
-            bullet.momentum.set(direction);
+            bullet.momentum.set(new Vector2(0, bulletSpeed).rotateDeg(bulletRotation));
             // Start the weapon cooldown
             timeLastFired = System.currentTimeMillis();
             // Add the bullet to the entitiesToAdd list so it can be added to the master entities list, and rendered and have its logic handled

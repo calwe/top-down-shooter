@@ -1,10 +1,16 @@
 package io.calwe.topdownshooter.entities;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
+import io.calwe.topdownshooter.screens.Play;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Dictionary;
+import java.util.List;
 
 // superclass intended to be used by all moving objects/creatures
 // This class does not have a constructor because it is abstract and will never be implemented
@@ -25,6 +31,8 @@ public abstract class Entity {
     protected int width;
     protected int height;
     protected Sprite sprite;
+    public Rectangle bounds = new Rectangle();
+    public boolean hasSolidCollision = true;
 
     public void input(OrthographicCamera camera) {
 
@@ -33,7 +41,7 @@ public abstract class Entity {
     // Basic logic that most subclasses will override, it moves the entity according to its current momentum,
     // and reduces its momentum based on its slipperyness
     public void logic() {
-        pos = new Vector2(pos.x + momentum.x, pos.y + momentum.y);
+        tryMove();
         //Reduce their momentum over time
         momentum.scl(slide);
         sprite.setPosition(pos.x, pos.y);
@@ -45,4 +53,64 @@ public abstract class Entity {
     public void draw(SpriteBatch batch) {
         sprite.draw(batch);
     }
+
+
+
+    protected void tryMove () {
+        bounds.x = pos.x;
+        bounds.y = pos.y;
+        bounds.width = width;
+        bounds.height = height;
+        bounds.x += momentum.x;
+        pos = new Vector2(pos.x + momentum.x, pos.y + momentum.y);
+        Dictionary<Rectangle, Entity> collideableRects = Play.getOtherColliderRects(this);
+        Object[] rects = Collections.list(collideableRects.keys()).toArray();
+        List<Entity> entityCollisions = new ArrayList<>();
+        for (int i = 0; i < rects.length; i++) {
+            Rectangle rect = (Rectangle)rects[i];
+            if (bounds.overlaps(rect)) {
+                if (!entityCollisions.contains(collideableRects.get(rect))) {
+                    entityCollisions.add(collideableRects.get(rect));
+                }
+                if (collideableRects.get(rect).hasSolidCollision && hasSolidCollision){
+                    if (momentum.x < 0)
+                        bounds.x = rect.x + rect.width + 0.1f;
+                    else
+                        bounds.x = rect.x - bounds.width - 0.1f;
+                    momentum.x = 0;
+                }
+            }
+        }
+
+        bounds.y += momentum.y;
+        for (int i = 0; i < rects.length; i++) {
+            Rectangle rect = (Rectangle)rects[i];
+            if (bounds.overlaps(rect)) {
+                if (!entityCollisions.contains(collideableRects.get(rect))) {
+                    entityCollisions.add(collideableRects.get(rect));
+                }
+                if (collideableRects.get(rect).hasSolidCollision && hasSolidCollision){
+                    if (momentum.y < 0) {
+                        bounds.y = rect.y + rect.height + 0.1f;
+                    } else
+                        bounds.y = rect.y - bounds.height - 0.1f;
+                    momentum.y = 0;
+                }
+            }
+        }
+
+        if (this.hasSolidCollision) {
+            pos.x = bounds.x;
+            pos.y = bounds.y;
+        }
+        for (Entity e : entityCollisions) {
+            OnEntityCollision(e);
+        }
+    }
+
+
+    public void OnEntityCollision(Entity e){
+
+    }
+
 }
