@@ -46,7 +46,7 @@ public class Player extends Entity {
         this.maxHealth = 100;
         this.pos = startPos;
         this.momentum = new Vector2(0, 0);
-        this.movementSpeed = 25f;
+        this.movementSpeed = 15f;
         this.mouseDown = false;
         this.playerWalkAnimation = playerWalkAnimation;
         this.mouseCoords = new Vector2(0,0);

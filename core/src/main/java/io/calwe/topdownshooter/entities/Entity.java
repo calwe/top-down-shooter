@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 // But all its subclasses shoudl have constructors
 public abstract class Entity {
     //The entity's current position in the world
-    protected Vector2 pos;
+    public Vector2 pos;
     // The entity's current momentum, which is added to their position each turn to move them
     protected Vector2 momentum;
     // How much the entity's momentum reduces each turn - how slippery they are.

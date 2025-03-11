@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import io.calwe.topdownshooter.entities.Enemy;
 import io.calwe.topdownshooter.entities.Entity;
 import io.calwe.topdownshooter.entities.Player;
 import io.calwe.topdownshooter.entities.Weapon;
@@ -36,6 +37,12 @@ public class Play implements Screen {
     //This is used by the draw method of entities so that all entities can rendered in a single batch draw,
     // rather than in multiple batches
     public SpriteBatch batch;
+    private Player player;
+
+    private float spawnCooldown = 5f;
+    private float spawnCooldownDecrease = 0.05f;
+    private float minSpawnCooldown = 0.5f;
+    private float lastSpawnedTime = 0.0f;
 
     @Override
     // show is called whenever this screen is shown
@@ -56,14 +63,14 @@ public class Play implements Screen {
         camera = new OrthographicCamera();
         camera.position.set(Map.MAP_WIDTH * Map.TILE_SIZE / 2f, Map.MAP_HEIGHT * Map.TILE_SIZE / 2f, 0);
 
-        // Load the player's walking animation
-        Animation<TextureRegion> playerWalkAnimation = getAnimatedPlayerTexture();
         // Add the player to the list of entities so he is updated and rendered, with a pistol in his inventory
-        entities.add(new Player(new Texture("player_single_frame.png"), playerWalkAnimation, new Vector2(Map.MAP_WIDTH * Map.TILE_SIZE / 2f, Map.MAP_HEIGHT * Map.TILE_SIZE / 2f), new Weapon[]{
+        // and with his walk animation
+        player = new Player(new Texture("player_single_frame.png"), getAnimatedPlayerTexture(), new Vector2(Map.MAP_WIDTH * Map.TILE_SIZE / 2f, Map.MAP_HEIGHT * Map.TILE_SIZE / 2f), new Weapon[]{
             weapons.get("Pistol"),
             null,
             null
-        }, camera));
+        }, camera);
+        entities.add(player);
     }
 
     private Animation<TextureRegion> getAnimatedPlayerTexture(){
@@ -115,6 +122,8 @@ public class Play implements Screen {
         //draw each entity
         draw();
 
+        handleEnemySpawning();
+
         //add all entities from the entitiesToAdd list to the main entities list
         //See the initialisation of entitiesToAdd for why this is necessary
         //Then empty the entitiesToAdd list, since everything in it has already been added.
@@ -126,6 +135,23 @@ public class Play implements Screen {
         //Then empty the entitiesToRemove list, since everything in it has already been removed.
         entities.removeAll(entitiesToRemove);
         entitiesToRemove.clear();
+    }
+
+    public void handleEnemySpawning(){
+        if (lastSpawnedTime + spawnCooldown < System.currentTimeMillis()){
+            float spawnRadius = 100;
+            Random random = new Random();
+            Vector2 spawnPos = new Vector2(random.nextFloat(spawnRadius*2)-spawnRadius, random.nextFloat(spawnRadius*2)-spawnRadius);
+            spawnPos.nor();
+            spawnPos.scl(spawnRadius);
+            spawnPos.add(player.pos);
+            Entity newEnemy = new Enemy(new Texture("zombie.png"), getAnimatedPlayerTexture(), spawnPos, player);
+            entitiesToAdd.add(newEnemy);
+            lastSpawnedTime = System.currentTimeMillis();
+            if (spawnCooldown > minSpawnCooldown){
+                spawnCooldown -= spawnCooldownDecrease;
+            }
+        }
     }
 
     public void input() {
