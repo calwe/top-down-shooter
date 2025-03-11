@@ -13,7 +13,9 @@ class Bullet extends Entity {
         this.pos = startPos;
         this.momentum = new Vector2(0, 0);
 
+        //The bullet shouldn't slow down over time
         this.slide = 1;
+
         this.width = 1;
         this.height = 2;
         this.sprite = new Sprite(texture, width, height);

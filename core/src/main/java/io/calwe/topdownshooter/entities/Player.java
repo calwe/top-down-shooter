@@ -138,27 +138,36 @@ public class Player extends Entity {
 
 
         playerTexture = inventory[currentInventorySlot].texture;
-        //Handle clicks registered - currently does nothing since we can't shoot
+        //Handle clicks registered - shoot the current weapon
         if (mouseDown){
+            // Check what weapon we are currently using
             Weapon weapon = inventory[currentInventorySlot];
 
+            // Find the angle between the player and the mouse
             float angleToLook = (float)Math.atan2(mouseCoords.x-(pos.x+width/2f), mouseCoords.y-(pos.y+height/2f));
+            // Calculate the offset to account for the fact that the weapon is not at the center of the player
             float offsetRotation = angleToLook*-180f/(float)Math.PI;
             Vector2 weaponOffset = new Vector2(5, 6).rotate(offsetRotation);
 
+            // calculate the gun's position by finding the center of the player and adding the weapon offset
             Vector2 firingPos = new Vector2(pos.x+width/2f, pos.y+height/2f);
             firingPos.add(weaponOffset);
+            // calculate the direction vector between the gun and the mouse position
             Vector2 direction = new Vector2(mouseCoords.x - (firingPos.x), mouseCoords.y - (firingPos.y));
             direction.nor();
+            // calculate the angle between the gun and the mouse position
             float bulletAngleToLook = (float)Math.atan2(mouseCoords.x-(firingPos.x), mouseCoords.y-(firingPos.y));
             float bulletRotation = bulletAngleToLook*-180f/(float)Math.PI;
 
+            // attempt to fire the weapon at the mouse position
             boolean fireSuccessful = weapon.fire(firingPos, direction, bulletRotation);
             if (fireSuccessful){
+                //if the weapon fired, apply recoil and show the firing texture
                 direction.scl(-0.01f*weapon.recoil);
                 momentum.add(direction);
                 playerTexture = inventory[currentInventorySlot].firingTexture;
             }
+            // reset mouseDown
             mouseDown = false;
         }
 
