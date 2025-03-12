@@ -2,6 +2,7 @@ package io.calwe.topdownshooter.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -43,7 +44,7 @@ public class Play implements Screen {
     private float spawnCooldown = 5f;
     private float spawnCooldownDecrease = 0.05f;
     private float minSpawnCooldown = 0.5f;
-    private float lastSpawnedTime = 0.0f;
+    private float timer = 0f;
 
     @Override
     // show is called whenever this screen is shown
@@ -94,10 +95,11 @@ public class Play implements Screen {
     private void initializeWeapons(Texture noTexture) {
         //Create each weapon and load it into the weapons dictionary
         Texture bulletTexture = new Texture("bullet.png");
-        weapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("pistol-firing.png"), bulletTexture, 10, 2, 10, 10f, 1f, 1f, 5));
-        weapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMG-firing.png"), bulletTexture, 2, 10, 5, 20f, 0.5f, 0.4f, 5));
-        weapons.put("Assault Rifle", new Weapon(noTexture, noTexture, bulletTexture, 4, 5, 15, 5f, 1.5f, 0.7f, 10));
-        weapons.put("Sniper Rifle", new Weapon(noTexture, noTexture, bulletTexture, 30, 0.5f, 50, 0f, 2f, 3f, 15));
+        Sound fireSound = Gdx.audio.newSound(Gdx.files.internal("gunshot.mp3"));
+        weapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("pistol-firing.png"), bulletTexture, fireSound, 10, 2, 10, 10f, 1f, 1f, 5));
+        weapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMG-firing.png"), bulletTexture, fireSound,  2, 10, 5, 20f, 0.5f, 0.4f, 5));
+        weapons.put("Assault Rifle", new Weapon(noTexture, noTexture, bulletTexture, fireSound,  4, 5, 15, 5f, 1.5f, 0.7f, 10));
+        weapons.put("Sniper Rifle", new Weapon(noTexture, noTexture, bulletTexture, fireSound, 30, 0.5f, 50, 0f, 2f, 3f, 15));
     }
 
 
@@ -139,20 +141,22 @@ public class Play implements Screen {
     }
 
     public void handleEnemySpawning(){
-        if (lastSpawnedTime + spawnCooldown < System.currentTimeMillis()){
+        if (timer >= spawnCooldown){
+            //System.out.println("Spawned new enemy.");
             float spawnRadius = 100;
             Random random = new Random();
             Vector2 spawnPos = new Vector2(random.nextFloat(spawnRadius*2)-spawnRadius, random.nextFloat(spawnRadius*2)-spawnRadius);
             spawnPos.nor();
             spawnPos.scl(spawnRadius);
             spawnPos.add(player.pos);
-            Entity newEnemy = new Enemy(new Texture("zombie.png"), getAnimatedPlayerTexture(), spawnPos, player);
+            Entity newEnemy = new Enemy(new Texture("zombie.png"),  getAnimatedPlayerTexture(),Gdx.audio.newSound(Gdx.files.internal("zombieHit.mp3")), spawnPos, player);
             entitiesToAdd.add(newEnemy);
-            lastSpawnedTime = System.currentTimeMillis();
-            if (spawnCooldown > minSpawnCooldown){
-                spawnCooldown -= spawnCooldownDecrease;
-            }
+            timer = 0;
+            //if (spawnCooldown > minSpawnCooldown){
+                //spawnCooldown -= spawnCooldownDecrease;
+            //}
         }
+        timer += Gdx.graphics.getDeltaTime();
     }
 
     public void input() {

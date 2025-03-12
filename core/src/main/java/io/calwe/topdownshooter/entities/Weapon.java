@@ -1,5 +1,6 @@
 package io.calwe.topdownshooter.entities;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import io.calwe.topdownshooter.screens.Play;
@@ -20,9 +21,11 @@ public class Weapon{
     Texture firingTexture;
     Texture bulletTexture;
 
+    Sound fireSound;
+
     long timeLastFired = 0;
 
-    public Weapon(Texture texture, Texture firingTexture, Texture bulletTexture, int damage, float fireRate, int critChance, float inaccuracy, float recoil, float knockback, float bulletSpeed){
+    public Weapon(Texture texture, Texture firingTexture, Texture bulletTexture, Sound fireSound, int damage, float fireRate, int critChance, float inaccuracy, float recoil, float knockback, float bulletSpeed){
         this.texture = texture;
         this.firingTexture = firingTexture;
         this.bulletTexture = bulletTexture;
@@ -33,6 +36,7 @@ public class Weapon{
         this.inaccuracy = inaccuracy;
         this.recoil = recoil;
         this.knockback = knockback;
+        this.fireSound = fireSound;
     }
 
     //This function returns true or false depending on whether the weapon was still cooling down
@@ -56,6 +60,7 @@ public class Weapon{
             timeLastFired = System.currentTimeMillis();
             // Add the bullet to the entitiesToAdd list so it can be added to the master entities list, and rendered and have its logic handled
             Play.entitiesToAdd.add(bullet);
+            fireSound.play(1.0f);
             return true;
         }
 

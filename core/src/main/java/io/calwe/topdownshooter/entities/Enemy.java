@@ -1,6 +1,7 @@
 package io.calwe.topdownshooter.entities;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -31,8 +32,10 @@ public class Enemy extends Entity {
 
     Player target;
 
+    Sound hurtSound;
+
     // The constructor - initialize all the variables
-    public Enemy(Texture texture, Animation<TextureRegion> enemyWalkAnimation, Vector2 startPos, Player target) {
+    public Enemy(Texture texture, Animation<TextureRegion> enemyWalkAnimation, Sound hurtSound, Vector2 startPos, Player target) {
         this.maxHealth = 50;
         this.damage = 8;
         this.knockback = 2f;
@@ -47,6 +50,7 @@ public class Enemy extends Entity {
         this.health = maxHealth;
         this.target = target;
         this.enemyTexture = texture;
+        this.hurtSound = hurtSound;
         bounds.x = pos.x;
         bounds.y = pos.y;
         bounds.width = width;
@@ -111,6 +115,7 @@ public class Enemy extends Entity {
 
     public void takeDamage(int damage){
         health -= damage;
+        hurtSound.play(1.0f);
     }
 
     public void applyKnockback(Vector2 knockback ){
