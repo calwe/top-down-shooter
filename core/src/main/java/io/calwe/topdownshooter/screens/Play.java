@@ -11,10 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import io.calwe.topdownshooter.entities.Enemy;
-import io.calwe.topdownshooter.entities.Entity;
-import io.calwe.topdownshooter.entities.Player;
-import io.calwe.topdownshooter.entities.Weapon;
+import io.calwe.topdownshooter.entities.*;
 
 import java.util.*;
 
@@ -73,6 +70,8 @@ public class Play implements Screen {
             null
         }, camera);
         entities.add(player);
+        WeaponDrop w = new WeaponDrop(weapons.get("SMG"), new Vector2(Map.MAP_WIDTH * Map.TILE_SIZE / 2f, Map.MAP_HEIGHT * Map.TILE_SIZE / 2f));
+        entities.add(w);
     }
 
     private Animation<TextureRegion> getAnimatedPlayerTexture(){
@@ -96,10 +95,12 @@ public class Play implements Screen {
         //Create each weapon and load it into the weapons dictionary
         Texture bulletTexture = new Texture("bullet.png");
         Sound fireSound = Gdx.audio.newSound(Gdx.files.internal("gunshot.mp3"));
-        weapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("pistol-firing.png"), bulletTexture, fireSound, 10, 2, 10, 10f, 1f, 1f, 5));
-        weapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMG-firing.png"), bulletTexture, fireSound,  2, 10, 5, 20f, 0.5f, 0.4f, 5));
-        weapons.put("Assault Rifle", new Weapon(noTexture, noTexture, bulletTexture, fireSound,  4, 5, 15, 5f, 1.5f, 0.7f, 10));
-        weapons.put("Sniper Rifle", new Weapon(noTexture, noTexture, bulletTexture, fireSound, 30, 0.5f, 50, 0f, 2f, 3f, 15));
+        Sound emptySound = Gdx.audio.newSound(Gdx.files.internal("noAmmo.mp3"));
+
+        weapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("pistol-firing.png"), new Texture("PistolSideOn.png"), bulletTexture, fireSound, emptySound, 12, 10, 2, 10, 10f, 1f, 1f, 5));
+        weapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMG-firing.png"), new Texture("SMGSideOn.png"), bulletTexture, fireSound, emptySound, 60, 2, 10, 5, 15f, 0.5f, 0.4f, 5));
+        weapons.put("Assault Rifle", new Weapon(noTexture, noTexture, new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 50,  4, 5, 15, 5f, 1.5f, 0.7f, 10));
+        weapons.put("Sniper Rifle", new Weapon(noTexture, noTexture, noTexture, bulletTexture, fireSound, emptySound, 7, 30, 0.5f, 50, 0f, 2f, 3f, 15));
     }
 
 

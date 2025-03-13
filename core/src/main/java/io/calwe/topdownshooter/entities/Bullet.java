@@ -29,10 +29,12 @@ class Bullet extends Entity {
         this.critChance = critChance;
         this.knockback = knockback;
         this.hasSolidCollision = false;
-        bounds.x = pos.x;
-        bounds.y = pos.y;
-        bounds.width = width;
-        bounds.height = height;
+        this.boundsHeightReduction = 0;
+        this.boundsWidthReduction = 0;
+        bounds.x = pos.x + boundsWidthReduction;
+        bounds.y = pos.y + boundsHeightReduction;
+        bounds.width = width - (boundsWidthReduction*2f);
+        bounds.height = height - (boundsHeightReduction*2f);
     }
 
     @Override

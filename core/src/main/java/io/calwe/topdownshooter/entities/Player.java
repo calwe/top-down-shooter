@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import io.calwe.topdownshooter.screens.Play;
 
 // A sublass of entity, which is the player - the main character
 public class Player extends Entity {
@@ -57,10 +58,12 @@ public class Player extends Entity {
         this.camera = camera;
         this.sprite = new Sprite(texture, width, height);
         this.health = maxHealth;
-        bounds.x = pos.x;
-        bounds.y = pos.y;
-        bounds.width = width;
-        bounds.height = height;
+        this.boundsHeightReduction = 3;
+        this.boundsWidthReduction = 3;
+        bounds.x = pos.x + boundsWidthReduction;
+        bounds.y = pos.y + boundsHeightReduction;
+        bounds.width = width - (boundsWidthReduction*2f);
+        bounds.height = height - (boundsHeightReduction*2f);
     }
 
     private Vector2 calculateMovementFromInputs(){
@@ -216,5 +219,17 @@ public class Player extends Entity {
 
     public void applyKnockback(Vector2 knockback ){
         this.momentum.add(knockback);
+    }
+
+    public void addToInventory(Weapon weaponToAdd){
+        for (int i = 0; i < inventory.length; i++) {
+            if (inventory[i] == null){
+                inventory[i] = weaponToAdd;
+                return;
+            }
+        }
+        WeaponDrop droppedWeapon = new WeaponDrop(inventory[currentInventorySlot], pos);
+        inventory[currentInventorySlot] = weaponToAdd;
+        Play.entitiesToAdd.add(droppedWeapon);
     }
 }

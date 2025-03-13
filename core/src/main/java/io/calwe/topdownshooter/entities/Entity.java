@@ -34,6 +34,9 @@ public abstract class Entity {
     public Rectangle bounds = new Rectangle();
     public boolean hasSolidCollision = true;
 
+    public float boundsHeightReduction;
+    public float boundsWidthReduction;
+
     public void input(OrthographicCamera camera) {
 
     }
@@ -62,7 +65,6 @@ public abstract class Entity {
         bounds.width = width;
         bounds.height = height;
         bounds.x += momentum.x;
-        pos = new Vector2(pos.x + momentum.x, pos.y + momentum.y);
         Dictionary<Rectangle, Entity> collideableRects = Play.getOtherColliderRects(this);
         Object[] rects = Collections.list(collideableRects.keys()).toArray();
         List<Entity> entityCollisions = new ArrayList<>();
@@ -102,6 +104,9 @@ public abstract class Entity {
         if (this.hasSolidCollision) {
             pos.x = bounds.x;
             pos.y = bounds.y;
+        }
+        else{
+            pos = new Vector2(pos.x + momentum.x, pos.y + momentum.y);
         }
         for (Entity e : entityCollisions) {
             OnEntityCollision(e);

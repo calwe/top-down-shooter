@@ -51,10 +51,12 @@ public class Enemy extends Entity {
         this.target = target;
         this.enemyTexture = texture;
         this.hurtSound = hurtSound;
-        bounds.x = pos.x;
-        bounds.y = pos.y;
-        bounds.width = width;
-        bounds.height = height;
+        this.boundsHeightReduction = 3;
+        this.boundsWidthReduction = 3;
+        bounds.x = pos.x + boundsWidthReduction;
+        bounds.y = pos.y + boundsHeightReduction;
+        bounds.width = width - (boundsWidthReduction*2f);
+        bounds.height = height - (boundsHeightReduction*2f);
     }
 
     //This overrides Entity's logic method
@@ -115,7 +117,7 @@ public class Enemy extends Entity {
 
     public void takeDamage(int damage){
         health -= damage;
-        hurtSound.play(1.0f);
+        hurtSound.play(0.1f);
     }
 
     public void applyKnockback(Vector2 knockback ){
