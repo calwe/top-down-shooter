@@ -228,8 +228,10 @@ public class Player extends Entity {
                 return;
             }
         }
-        WeaponDrop droppedWeapon = new WeaponDrop(inventory[currentInventorySlot], pos);
+        WeaponDrop droppedWeapon = new WeaponDrop(new Weapon(inventory[currentInventorySlot], inventory[currentInventorySlot].ammo), pos.cpy());
         inventory[currentInventorySlot] = weaponToAdd;
-        Play.entitiesToAdd.add(droppedWeapon);
+        if (droppedWeapon.weapon.ammo > 0){
+            Play.entitiesToAdd.add(droppedWeapon);
+        }
     }
 }

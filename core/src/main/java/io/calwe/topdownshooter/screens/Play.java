@@ -72,6 +72,10 @@ public class Play implements Screen {
         entities.add(player);
         WeaponDrop w = new WeaponDrop(weapons.get("SMG"), new Vector2(Map.MAP_WIDTH * Map.TILE_SIZE / 2f, Map.MAP_HEIGHT * Map.TILE_SIZE / 2f));
         entities.add(w);
+        w = new WeaponDrop(weapons.get("SMG"), new Vector2(Map.MAP_WIDTH * Map.TILE_SIZE / 2f - 30f, Map.MAP_HEIGHT * Map.TILE_SIZE / 2f));
+        entities.add(w);
+        w = new WeaponDrop(weapons.get("SMG"), new Vector2(Map.MAP_WIDTH * Map.TILE_SIZE / 2f + 30f, Map.MAP_HEIGHT * Map.TILE_SIZE / 2f));
+        entities.add(w);
     }
 
     private Animation<TextureRegion> getAnimatedPlayerTexture(){

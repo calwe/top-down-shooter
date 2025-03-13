@@ -49,6 +49,7 @@ public class Weapon{
         this.texture = weaponToCopy.texture;
         this.firingTexture = weaponToCopy.firingTexture;
         this.bulletTexture = weaponToCopy.bulletTexture;
+        this.sideOn = weaponToCopy.sideOn;
         this.bulletSpeed = weaponToCopy.bulletSpeed;
         this.ammo = ammo;
         this.damage = weaponToCopy.damage;
