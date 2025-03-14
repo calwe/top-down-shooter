@@ -1,33 +1,27 @@
 package io.calwe.topdownshooter.entities;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import io.calwe.topdownshooter.screens.Play;
 
-public class HitText extends Entity {
-    String text;
+public class Particle extends Entity {
     float lifeTime;
-    float timer;
-    BitmapFont font;
+    float timer = 0;
 
-    HitText(String text, Vector2 startPos, Color color){
-        this.font = new BitmapFont();
-        this.font.setColor(color);
-        this.font.getData().setScale(0.4f);
+    public Particle(Texture texture, Vector2 startPos){
+        this.layer = 0;
         this.pos = startPos;
-        this.momentum = new Vector2(0, 0.6f);
+        this.momentum = new Vector2(0, 0);
         this.slide = 0.99f;
         this.width = 1;
         this.height = 1;
-        this.text = text;
+        this.lifeTime = 0.2f;
+        this.sprite = new Sprite(texture, width, height);
         this.hasSolidCollision = false;
         this.boundsHeightReduction = 0;
         this.boundsWidthReduction = 0;
-        this.lifeTime = 0.2f;
-        this.timer = 0;
         bounds.x = pos.x + boundsWidthReduction;
         bounds.y = pos.y + boundsHeightReduction;
         bounds.width = width - (boundsWidthReduction*2f);
@@ -39,17 +33,12 @@ public class HitText extends Entity {
         tryMove();
         //Reduce their momentum over time
         momentum.scl(slide);
+        sprite.setPosition(pos.x, pos.y);
         timer += Gdx.graphics.getDeltaTime();
         if (timer > lifeTime){
             Play.entitiesToRemove.add(this);
         }
     }
-
-    @Override
-    public void draw(SpriteBatch batch) {
-        font.draw(batch, text, pos.x, pos.y);
-    }
 }
-
 
 

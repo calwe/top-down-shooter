@@ -1,8 +1,9 @@
-package io.calwe.topdownshooter.entities;
+package io.calwe.topdownshooter;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+import io.calwe.topdownshooter.entities.Bullet;
 import io.calwe.topdownshooter.screens.Play;
 
 import java.util.Random;
@@ -13,14 +14,14 @@ public class Weapon{
     float fireRate;
     int critChance;
     float inaccuracy;
-    float recoil;
+    public float recoil;
     float knockback;
     float bulletSpeed;
-    int ammo;
+    public int ammo;
 
-    Texture texture;
-    Texture sideOn;
-    Texture firingTexture;
+    public Texture texture;
+    public Texture sideOn;
+    public Texture firingTexture;
     Texture bulletTexture;
 
     Sound fireSound;

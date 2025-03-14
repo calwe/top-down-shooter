@@ -3,16 +3,15 @@ package io.calwe.topdownshooter.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import io.calwe.topdownshooter.Weapon;
 import io.calwe.topdownshooter.entities.*;
 
 import java.util.*;
@@ -70,11 +69,20 @@ public class Play implements Screen {
 
         // Add the player to the list of entities so he is updated and rendered, with a pistol in his inventory
         // and with his walk animation
-        player = new Player(new Texture("player_single_frame.png"), getAnimatedPlayerTexture(), new Vector2(Map.MAP_WIDTH * Map.TILE_SIZE / 2f, Map.MAP_HEIGHT * Map.TILE_SIZE / 2f), new Weapon[]{
-            weapons.get("Pistol"),
-            null,
-            null
-        }, camera);
+        player = new Player(
+            new Texture("player_single_frame.png"),
+            getAnimatedPlayerTexture(),
+            new Vector2(Map.MAP_WIDTH * Map.TILE_SIZE / 2f, Map.MAP_HEIGHT * Map.TILE_SIZE / 2f),
+            new Weapon[]{
+                weapons.get("Pistol"),
+                null,
+                null
+            },
+            new Texture[]{
+                new Texture("bloodParticle.png")
+            },
+            camera
+        );
         entities.add(player);
         WeaponDrop w = new WeaponDrop(weapons.get("SMG"), new Vector2(Map.MAP_WIDTH * Map.TILE_SIZE / 2f, Map.MAP_HEIGHT * Map.TILE_SIZE / 2f));
         entities.add(w);
@@ -155,6 +163,14 @@ public class Play implements Screen {
             scoreIncreaseTimer = 0;
         }
         scoreIncreaseTimer += Gdx.graphics.getDeltaTime();
+
+        entities.sort(new Comparator<Entity>() {
+            public int compare(Entity entity1, Entity entity2) {
+                if (entity1.layer > entity2.layer) return 1;
+                if (entity1.layer < entity2.layer) return -1;
+                return 0;
+            }
+        });
     }
 
     public void handleEnemySpawning(){
@@ -166,7 +182,17 @@ public class Play implements Screen {
             spawnPos.nor();
             spawnPos.scl(spawnRadius);
             spawnPos.add(player.pos);
-            Entity newEnemy = new Enemy(new Texture("zombie.png"),  getAnimatedPlayerTexture(),Gdx.audio.newSound(Gdx.files.internal("zombieHit.mp3")), spawnPos, player);
+            Entity newEnemy = new Enemy(
+                new Texture("zombie.png"),
+                getAnimatedPlayerTexture(),
+                Gdx.audio.newSound(Gdx.files.internal("zombieHit.mp3")),
+                spawnPos,
+                player,
+                new Texture[]{
+                    new Texture("bloodParticle.png"),
+                    new Texture("zombieParticle.png")
+                }
+            );
             entitiesToAdd.add(newEnemy);
             timer = 0;
             //if (spawnCooldown > minSpawnCooldown){

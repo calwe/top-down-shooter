@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import io.calwe.topdownshooter.screens.Play;
 
+import java.util.Random;
+
 public class Enemy extends Entity {
 
     // The maximum amount of health the player can have, and how much health they start with
@@ -34,8 +36,10 @@ public class Enemy extends Entity {
 
     Sound hurtSound;
 
+    Texture[] damageParticles;
+
     // The constructor - initialize all the variables
-    public Enemy(Texture texture, Animation<TextureRegion> enemyWalkAnimation, Sound hurtSound, Vector2 startPos, Player target) {
+    public Enemy(Texture texture, Animation<TextureRegion> enemyWalkAnimation, Sound hurtSound, Vector2 startPos, Player target, Texture[] damageParticles) {
         this.maxHealth = 50;
         this.damage = 10;
         this.knockback = 2f;
@@ -46,6 +50,7 @@ public class Enemy extends Entity {
         this.slide = 0.85f;
         this.width = 12;
         this.height = 16;
+        this.damageParticles = damageParticles;
         this.sprite = new Sprite(texture, width, height);
         this.health = maxHealth;
         this.target = target;
@@ -123,6 +128,15 @@ public class Enemy extends Entity {
     public void takeDamage(int damage){
         health -= damage;
         hurtSound.play(0.1f);
+        Random random = new Random();
+        for (int i = 0; i < 6; i++) {
+            Particle p = new Particle(damageParticles[random.nextInt(damageParticles.length)], new Vector2(pos.x + (width/2f), pos.y + (height/2f)));
+            Vector2 movement = new Vector2(random.nextFloat(2)-1, random.nextFloat(2)-1);
+            movement.nor();
+            movement.scl(1);
+            p.momentum = movement;
+            Play.entitiesToAdd.add(p);
+        }
     }
 
     public void applyKnockback(Vector2 knockback ){

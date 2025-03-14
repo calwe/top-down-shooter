@@ -10,7 +10,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import io.calwe.topdownshooter.Weapon;
 import io.calwe.topdownshooter.screens.Play;
+
+import java.util.Random;
 
 // A sublass of entity, which is the player - the main character
 public class Player extends Entity {
@@ -42,8 +45,10 @@ public class Player extends Entity {
 
     Texture playerTexture;
 
+    Texture[] damageParticles;
+
     // The constructor - intialize all the variables
-    public Player(Texture texture, Animation<TextureRegion> playerWalkAnimation, Vector2 startPos, Weapon[] inventory, OrthographicCamera camera) {
+    public Player(Texture texture, Animation<TextureRegion> playerWalkAnimation, Vector2 startPos, Weapon[] inventory, Texture[] damageParticles, OrthographicCamera camera) {
         this.maxHealth = 100;
         this.pos = startPos;
         this.momentum = new Vector2(0, 0);
@@ -55,6 +60,7 @@ public class Player extends Entity {
         this.width = 12;
         this.height = 16;
         this.inventory = inventory;
+        this.damageParticles = damageParticles;
         this.camera = camera;
         this.sprite = new Sprite(texture, width, height);
         this.health = maxHealth;
@@ -223,6 +229,15 @@ public class Player extends Entity {
 
     public void takeDamage(int damage){
         health -= damage;
+        Random random = new Random();
+        for (int i = 0; i < 6; i++) {
+            Particle p = new Particle(damageParticles[random.nextInt(damageParticles.length)], new Vector2(pos.x + (width/2f), pos.y + (height/2f)));
+            Vector2 movement = new Vector2(random.nextFloat(2)-1, random.nextFloat(2)-1);
+            movement.nor();
+            movement.scl(1);
+            p.momentum = movement;
+            Play.entitiesToAdd.add(p);
+        }
     }
 
     public void applyKnockback(Vector2 knockback ){

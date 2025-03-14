@@ -9,14 +9,14 @@ import io.calwe.topdownshooter.screens.Play;
 
 import java.util.Random;
 
-class Bullet extends Entity {
+public class Bullet extends Entity {
     int damage;
     int critChance;
     float knockback;
     float lifeTime = 5;
     float timer = 0;
 
-    Bullet(Texture texture, Vector2 startPos, int damage, int critChance, float knockback){
+    public Bullet(Texture texture, Vector2 startPos, int damage, int critChance, float knockback){
         this.pos = startPos;
         this.momentum = new Vector2(0, 0);
 

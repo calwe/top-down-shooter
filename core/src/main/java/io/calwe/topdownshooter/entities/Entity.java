@@ -19,7 +19,7 @@ public abstract class Entity {
     //The entity's current position in the world
     public Vector2 pos;
     // The entity's current momentum, which is added to their position each turn to move them
-    protected Vector2 momentum;
+    public Vector2 momentum;
     // How much the entity's momentum reduces each turn - how slippery they are.
     // It is a number between 1 and 0, by which their momentum is multiplied by -
     // 1 means they keep all momentum forever, like in space
@@ -28,9 +28,9 @@ public abstract class Entity {
     protected float slide;
 
     // The width and height of the sprite
-    protected int width;
-    protected int height;
-    protected Sprite sprite;
+    public int width;
+    public int height;
+    public Sprite sprite;
     public Rectangle bounds = new Rectangle();
     public boolean hasSolidCollision = true;
 
@@ -40,6 +40,8 @@ public abstract class Entity {
     public void input(OrthographicCamera camera) {
 
     }
+
+    public int layer = 10;
 
     // Basic logic that most subclasses will override, it moves the entity according to its current momentum,
     // and reduces its momentum based on its slipperyness

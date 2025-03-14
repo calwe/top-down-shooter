@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
+import io.calwe.topdownshooter.Weapon;
 import io.calwe.topdownshooter.screens.Play;
 
 import java.util.*;
