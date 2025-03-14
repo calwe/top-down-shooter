@@ -14,13 +14,14 @@ public class WeaponDrop extends Entity{
 
     public WeaponDrop(Weapon weapon, Vector2 position){
         this.randomlyGenerateAmmo = false;
-        this.pos = position;
+
         this.weapon = weapon;
         this.hasSolidCollision = false;
         this.width = 32;
         this.height = 12;
         this.sprite = new Sprite(weapon.sideOn, width, height);
         sprite.setScale(0.6f);
+        this.pos = new Vector2(position.x - (width*0.6f/2f), position.y-(height*0.6f/2f));
         this.slide = 0;
         this.momentum = new Vector2(0, 0);
         this.boundsHeightReduction = 0;

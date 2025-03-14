@@ -100,16 +100,15 @@ public abstract class Entity {
                 }
             }
         }
-
+        for (Entity e : entityCollisions) {
+            OnEntityCollision(e);
+        }
         if (this.hasSolidCollision) {
             pos.x = bounds.x;
             pos.y = bounds.y;
         }
         else{
             pos = new Vector2(pos.x + momentum.x, pos.y + momentum.y);
-        }
-        for (Entity e : entityCollisions) {
-            OnEntityCollision(e);
         }
     }
 

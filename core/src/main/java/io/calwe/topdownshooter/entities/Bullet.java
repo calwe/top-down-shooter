@@ -1,6 +1,7 @@
 package io.calwe.topdownshooter.entities;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
@@ -54,12 +55,17 @@ class Bullet extends Entity {
         if (e instanceof Enemy){
             Enemy enemy = (Enemy)e;
             Random random = new Random();
+            HitText hitText;
+            Vector2 hitTextPos = new Vector2(enemy.pos.x + (enemy.width/2f) + random.nextFloat(12)-6, enemy.pos.y + enemy.height);
             if (random.nextInt(100) <= critChance){
                 enemy.takeDamage(damage*2);
+                hitText = new HitText(String.valueOf(damage*2), hitTextPos, Color.YELLOW);
             }
             else{
                 enemy.takeDamage(damage);
+                hitText = new HitText(String.valueOf(damage), hitTextPos, Color.RED);
             }
+            Play.entitiesToAdd.add(hitText);
             Vector2 knockbackDirection = new Vector2(enemy.pos.x-pos.x,enemy.pos.y-pos.y);
             knockbackDirection.nor();
             knockbackDirection.scl(knockback);

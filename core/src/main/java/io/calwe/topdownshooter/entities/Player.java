@@ -193,6 +193,14 @@ public class Player extends Entity {
         spriteOffset.add(pos);
         //sprite.setPosition(spriteOffset.x, spriteOffset.y);
         sprite.setPosition(pos.x, pos.y);
+
+        if (health <= 0){
+            die();
+        }
+    }
+
+    private void die(){
+        Play.entitiesToRemove.add(this);
     }
 
     // This overrides entity's draw method so we can have animation
@@ -228,7 +236,7 @@ public class Player extends Entity {
                 return;
             }
         }
-        WeaponDrop droppedWeapon = new WeaponDrop(new Weapon(inventory[currentInventorySlot], inventory[currentInventorySlot].ammo), pos.cpy());
+        WeaponDrop droppedWeapon = new WeaponDrop(new Weapon(inventory[currentInventorySlot], inventory[currentInventorySlot].ammo), new Vector2(pos.x + (width/2f), pos.y + height/2f));
         inventory[currentInventorySlot] = weaponToAdd;
         if (droppedWeapon.weapon.ammo > 0){
             Play.entitiesToAdd.add(droppedWeapon);

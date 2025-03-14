@@ -3,10 +3,12 @@ package io.calwe.topdownshooter.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
@@ -14,6 +16,7 @@ import com.badlogic.gdx.math.Vector2;
 import io.calwe.topdownshooter.entities.*;
 
 import java.util.*;
+import java.util.List;
 
 public class Play implements Screen {
     // libGDX uses floats for viewport width/height, so the scale should also be a float
@@ -42,6 +45,9 @@ public class Play implements Screen {
     private float spawnCooldownDecrease = 0.05f;
     private float minSpawnCooldown = 0.5f;
     private float timer = 0f;
+
+    public static int score;
+    private float scoreIncreaseTimer = 0f;
 
     @Override
     // show is called whenever this screen is shown
@@ -143,6 +149,12 @@ public class Play implements Screen {
         //Then empty the entitiesToRemove list, since everything in it has already been removed.
         entities.removeAll(entitiesToRemove);
         entitiesToRemove.clear();
+
+        if (scoreIncreaseTimer > 1){
+            score += 5;
+            scoreIncreaseTimer = 0;
+        }
+        scoreIncreaseTimer += Gdx.graphics.getDeltaTime();
     }
 
     public void handleEnemySpawning(){

@@ -37,7 +37,7 @@ public class Enemy extends Entity {
     // The constructor - initialize all the variables
     public Enemy(Texture texture, Animation<TextureRegion> enemyWalkAnimation, Sound hurtSound, Vector2 startPos, Player target) {
         this.maxHealth = 50;
-        this.damage = 8;
+        this.damage = 10;
         this.knockback = 2f;
         this.pos = startPos;
         this.momentum = new Vector2(0, 0);
@@ -80,8 +80,13 @@ public class Enemy extends Entity {
         spriteOffset.add(pos);
         sprite.setPosition(spriteOffset.x, spriteOffset.y);
         if (health <= 0){
-            Play.entitiesToRemove.add(this);
+            die();
         }
+    }
+
+    private void die(){
+        Play.score += 100;
+        Play.entitiesToRemove.add(this);
     }
 
     // This overrides entity's draw method so we can have animation
