@@ -40,12 +40,18 @@ public class Play implements Screen {
     public SpriteBatch batch;
     private Player player;
 
+    //How long between a zombies spawning in
     private float spawnCooldown = 5f;
+    //Each time a zombie spawns, spawnCooldown should decrease by this amount, so zombies spawn in faster over time
     private float spawnCooldownDecrease = 0.05f;
-    private float minSpawnCooldown = 0.5f;
+    //Minimum spawn cooldown, used to prevent spawnCooldown being reduced to near zero and the player being buried in zombies
+    private float minSpawnCooldown = 1f;
+    //Stores the timer used to calculated when spawnCooldown has elapsed
     private float timer = 0f;
 
+    // The player's score, based on how many zombies have been killed and how long the player has been alive
     public static int score;
+    //Used to periodically increase the score based on how long the player has been alive
     private float scoreIncreaseTimer = 0f;
 
     @Override
@@ -68,7 +74,7 @@ public class Play implements Screen {
         camera.position.set(Map.MAP_WIDTH * Map.TILE_SIZE / 2f, Map.MAP_HEIGHT * Map.TILE_SIZE / 2f, 0);
 
         // Add the player to the list of entities so he is updated and rendered, with a pistol in his inventory
-        // and with his walk animation
+        // and with his walk animation, and a red particle that is released when he is damaged
         player = new Player(
             new Texture("player_single_frame.png"),
             getAnimatedPlayerTexture(),
@@ -84,14 +90,13 @@ public class Play implements Screen {
             camera
         );
         entities.add(player);
+
+        //For testing purposes
         WeaponDrop w = new WeaponDrop(weapons.get("SMG"), new Vector2(Map.MAP_WIDTH * Map.TILE_SIZE / 2f, Map.MAP_HEIGHT * Map.TILE_SIZE / 2f));
-        entities.add(w);
-        w = new WeaponDrop(weapons.get("SMG"), new Vector2(Map.MAP_WIDTH * Map.TILE_SIZE / 2f - 30f, Map.MAP_HEIGHT * Map.TILE_SIZE / 2f));
-        entities.add(w);
-        w = new WeaponDrop(weapons.get("SMG"), new Vector2(Map.MAP_WIDTH * Map.TILE_SIZE / 2f + 30f, Map.MAP_HEIGHT * Map.TILE_SIZE / 2f));
         entities.add(w);
     }
 
+    //Get the humanoid walk animation
     private Animation<TextureRegion> getAnimatedPlayerTexture(){
         // load the spritesheet as a texture, then make a textureRegion out of that texture.
         TextureRegion playerTexture = new TextureRegion(new Texture("running.png"));
@@ -144,6 +149,7 @@ public class Play implements Screen {
         //draw each entity
         draw();
 
+        //check if new enemies need to be spawned in
         handleEnemySpawning();
 
         //add all entities from the entitiesToAdd list to the main entities list
@@ -158,12 +164,15 @@ public class Play implements Screen {
         entities.removeAll(entitiesToRemove);
         entitiesToRemove.clear();
 
+        //periodically increase the score
         if (scoreIncreaseTimer > 1){
             score += 5;
             scoreIncreaseTimer = 0;
         }
         scoreIncreaseTimer += Gdx.graphics.getDeltaTime();
 
+        //sort the entities in the entities by layer, so that entities with a lower layer will be rendered under
+        // entities with a higher layer
         entities.sort(new Comparator<Entity>() {
             public int compare(Entity entity1, Entity entity2) {
                 if (entity1.layer > entity2.layer) return 1;
@@ -174,14 +183,19 @@ public class Play implements Screen {
     }
 
     public void handleEnemySpawning(){
+        //Check if the cooldown to spawn a new enemy has elapsed
         if (timer >= spawnCooldown){
-            //System.out.println("Spawned new enemy.");
+            //how far away from a player zombies should spawn
             float spawnRadius = 100;
             Random random = new Random();
+            //Find a new random direction
             Vector2 spawnPos = new Vector2(random.nextFloat(spawnRadius*2)-spawnRadius, random.nextFloat(spawnRadius*2)-spawnRadius);
             spawnPos.nor();
+            //Multiply the direction by the radius and add the player's position to spawn the zombie 100 away
+            // from the player in a random direction
             spawnPos.scl(spawnRadius);
             spawnPos.add(player.pos);
+            // Create a new enemy, with the appropriate textures and sounds, and spawn him at the generated position
             Entity newEnemy = new Enemy(
                 new Texture("zombie.png"),
                 getAnimatedPlayerTexture(),
@@ -193,12 +207,16 @@ public class Play implements Screen {
                     new Texture("zombieParticle.png")
                 }
             );
+            //Add him to the entities list so he will be updated
             entitiesToAdd.add(newEnemy);
+            //reset the cooldown for spawning enemies
             timer = 0;
-            //if (spawnCooldown > minSpawnCooldown){
-                //spawnCooldown -= spawnCooldownDecrease;
-            //}
+            //If the spawning cooldown hasn't already been decreased to its minimum value, decrease it
+            if (spawnCooldown > minSpawnCooldown){
+                spawnCooldown -= spawnCooldownDecrease;
+            }
         }
+        //increment the timer
         timer += Gdx.graphics.getDeltaTime();
     }
 
@@ -210,8 +228,12 @@ public class Play implements Screen {
         }
     }
 
+    //Get the collision bounds for every entity other than the one given, so an entity can check for collisions
+    // with all other entities
     public static Dictionary<Rectangle, Entity> getOtherColliderRects(Entity entity) {
+        //Create a new dictionary of entities and their bounds
         Dictionary<Rectangle, Entity> collideableRects = new Hashtable<>();
+        //Loop through each entity and add them and their bounds to the dictionary
         for (int i = 0; i < entities.size(); i++) {
             Entity e = entities.get(i);
             if (e != entity){

@@ -9,6 +9,7 @@ import io.calwe.topdownshooter.screens.Play;
 
 public class HitText extends Entity {
     String text;
+    //How long before the text should disappear
     float lifeTime;
     float timer;
     BitmapFont font;
@@ -39,6 +40,7 @@ public class HitText extends Entity {
         tryMove();
         //Reduce their momentum over time
         momentum.scl(slide);
+        //Check if the time this text is supposed to last has elapsed. If it has, destroy the text
         timer += Gdx.graphics.getDeltaTime();
         if (timer > lifeTime){
             Play.entitiesToRemove.add(this);

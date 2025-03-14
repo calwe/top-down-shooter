@@ -34,6 +34,7 @@ public class Particle extends Entity {
         //Reduce their momentum over time
         momentum.scl(slide);
         sprite.setPosition(pos.x, pos.y);
+        // If the lifetime of this particle has elapsed, destroy it
         timer += Gdx.graphics.getDeltaTime();
         if (timer > lifeTime){
             Play.entitiesToRemove.add(this);

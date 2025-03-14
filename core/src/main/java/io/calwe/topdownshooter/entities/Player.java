@@ -15,7 +15,7 @@ import io.calwe.topdownshooter.screens.Play;
 
 import java.util.Random;
 
-// A sublass of entity, which is the player - the main character
+// A subclass of entity, which is the player - the main character
 public class Player extends Entity {
     //Input - whether the mouse is currently pressed down (for shooting)
     boolean mouseDown;
@@ -43,8 +43,10 @@ public class Player extends Entity {
     // of the animation to display
     float elapsedTime = 0.0f;
 
+    //The player's current body image based on what weapon he is currently holding
     Texture playerTexture;
 
+    //An array of textures for the particles that should be released when the player is damage
     Texture[] damageParticles;
 
     // The constructor - intialize all the variables
@@ -52,7 +54,7 @@ public class Player extends Entity {
         this.maxHealth = 100;
         this.pos = startPos;
         this.momentum = new Vector2(0, 0);
-        this.movementSpeed = 15f;
+        this.movementSpeed = 10f;
         this.mouseDown = false;
         this.playerWalkAnimation = playerWalkAnimation;
         this.mouseCoords = new Vector2(0,0);
@@ -66,6 +68,7 @@ public class Player extends Entity {
         this.health = maxHealth;
         this.boundsHeightReduction = 3;
         this.boundsWidthReduction = 3;
+        //Calculate the player's collider bounds
         bounds.x = pos.x + boundsWidthReduction;
         bounds.y = pos.y + boundsHeightReduction;
         bounds.width = width - (boundsWidthReduction*2f);
@@ -149,7 +152,7 @@ public class Player extends Entity {
         //Reduce their momentum over time
         momentum.scl(slide);
 
-
+        //Set the player's current body image based on the weapon they are currently holding
         playerTexture = inventory[currentInventorySlot].texture;
         //Handle clicks registered - shoot the current weapon
         if (mouseDown){
@@ -200,11 +203,13 @@ public class Player extends Entity {
         //sprite.setPosition(spriteOffset.x, spriteOffset.y);
         sprite.setPosition(pos.x, pos.y);
 
+        //Check if the player has no health remaining - execute the die function if they don't
         if (health <= 0){
             die();
         }
     }
 
+    //If the player is out of health, remove them from the world
     private void die(){
         Play.entitiesToRemove.add(this);
     }
@@ -218,18 +223,22 @@ public class Player extends Entity {
         // Set the animation's current frame to the player sprite's image
         sprite.setRegion(currentFrame);
 
-        // Render the player sprite
+        // Render the player's animated legs
         sprite.draw(batch);
 
+        //Render the player's body with the weapon they are holding
         sprite.setRegion(playerTexture);
         sprite.draw(batch);
         // Update how much time has passed since we started showing the animation
         elapsedTime += Gdx.graphics.getDeltaTime();
     }
 
+    //Deal damage to the player
     public void takeDamage(int damage){
+        // subtract the damage dealt from their health
         health -= damage;
         Random random = new Random();
+        //Generate blood particles and release them in random directions from the player
         for (int i = 0; i < 6; i++) {
             Particle p = new Particle(damageParticles[random.nextInt(damageParticles.length)], new Vector2(pos.x + (width/2f), pos.y + (height/2f)));
             Vector2 movement = new Vector2(random.nextFloat(2)-1, random.nextFloat(2)-1);
@@ -240,21 +249,28 @@ public class Player extends Entity {
         }
     }
 
-    public void applyKnockback(Vector2 knockback ){
+    //Add knockback to the player's momentum
+    public void applyKnockback(Vector2 knockback){
         this.momentum.add(knockback);
     }
 
+    //Add a weapon to the inventory, or swap out the currently held weapon if there is no space in the inventory
+    // remaining
     public void addToInventory(Weapon weaponToAdd){
+        //iterate through the inventory and add the weapon to the first empty slot
         for (int i = 0; i < inventory.length; i++) {
             if (inventory[i] == null){
                 inventory[i] = weaponToAdd;
                 return;
             }
         }
+        //if there are no empty slots in the inventory
+        //drop the current weapon
         WeaponDrop droppedWeapon = new WeaponDrop(new Weapon(inventory[currentInventorySlot], inventory[currentInventorySlot].ammo), new Vector2(pos.x + (width/2f), pos.y + height/2f));
-        inventory[currentInventorySlot] = weaponToAdd;
         if (droppedWeapon.weapon.ammo > 0){
             Play.entitiesToAdd.add(droppedWeapon);
         }
+        //And add the picked up weapon to our inventory in its place
+        inventory[currentInventorySlot] = weaponToAdd;
     }
 }

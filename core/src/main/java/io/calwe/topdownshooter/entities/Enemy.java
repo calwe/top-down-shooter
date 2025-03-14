@@ -30,12 +30,16 @@ public class Enemy extends Entity {
     // of the animation to display
     float elapsedTime = 0.0f;
 
+    //The body texture of the enemy
     Texture enemyTexture;
 
+    //The player, so that we can track their position to move towards
     Player target;
 
+    //The sound the zombie plays when it takes damage
     Sound hurtSound;
 
+    //The blood particles the zombie releases when it takes damage
     Texture[] damageParticles;
 
     // The constructor - initialize all the variables
@@ -58,6 +62,7 @@ public class Enemy extends Entity {
         this.hurtSound = hurtSound;
         this.boundsHeightReduction = 3;
         this.boundsWidthReduction = 3;
+        //Generate the collider bounds
         bounds.x = pos.x + boundsWidthReduction;
         bounds.y = pos.y + boundsHeightReduction;
         bounds.width = width - (boundsWidthReduction*2f);
@@ -67,15 +72,15 @@ public class Enemy extends Entity {
     //This overrides Entity's logic method
     @Override
     public void logic(){
+        //Calculate the direction to the player, and move in that direction
         Vector2 movementToPlayer = new Vector2(target.pos.x-pos.x,target.pos.y-pos.y);
         movementToPlayer.nor();
         movementToPlayer.scl(movementSpeed*Gdx.graphics.getDeltaTime());
         momentum.add(movementToPlayer);
-
         tryMove();
         //Reduce their momentum over time
         momentum.scl(slide);
-
+        //Turn to face the player
         float angleToLook = (float)Math.atan2(target.pos.x-(pos.x), target.pos.y-(pos.y));
         // convert the angle given from radians to degrees, and rotate the enemy to look in that direction
         sprite.setRotation(angleToLook*-180f/(float)Math.PI);
@@ -84,13 +89,18 @@ public class Enemy extends Entity {
         Vector2 spriteOffset = new Vector2(0, 2).rotate(angleToLook*-180f/(float)Math.PI);
         spriteOffset.add(pos);
         sprite.setPosition(spriteOffset.x, spriteOffset.y);
+
+        //Check if the zombie is out of health - if it is, execute the die function
         if (health <= 0){
             die();
         }
     }
 
+    //executed when the enemy runs out of health
     private void die(){
+        //Add to the player's score
         Play.score += 100;
+        //Remove this entity from the world
         Play.entitiesToRemove.add(this);
     }
 
@@ -112,23 +122,32 @@ public class Enemy extends Entity {
         elapsedTime += Gdx.graphics.getDeltaTime();
     }
 
+    //Run when we collide with another entity
     @Override
     public void OnEntityCollision(Entity e){
+        //Check if the entity we collided with is the player
         if (e instanceof Player){
             Player player = (Player)e;
+            //Deal damage to the player
             player.takeDamage(damage);
+            //Knock the player away from the zombie
             Vector2 knockbackDirection = new Vector2(player.pos.x-pos.x,player.pos.y-pos.y);
             knockbackDirection.nor();
             knockbackDirection.scl(knockback);
             player.applyKnockback(knockbackDirection);
+            //Remove this zombie from the world
             Play.entitiesToRemove.add(this);
         }
     }
 
+    //Run to deal damage to the zombie
     public void takeDamage(int damage){
+        //Subtract the damage from our health
         health -= damage;
+        //Play the enemy damaged sound
         hurtSound.play(0.1f);
         Random random = new Random();
+        //Generate blood particles and release them from the enemy in random directions
         for (int i = 0; i < 6; i++) {
             Particle p = new Particle(damageParticles[random.nextInt(damageParticles.length)], new Vector2(pos.x + (width/2f), pos.y + (height/2f)));
             Vector2 movement = new Vector2(random.nextFloat(2)-1, random.nextFloat(2)-1);
@@ -139,7 +158,8 @@ public class Enemy extends Entity {
         }
     }
 
-    public void applyKnockback(Vector2 knockback ){
+    //Apply knockback to the enemy
+    public void applyKnockback(Vector2 knockback){
         this.momentum.add(knockback);
     }
 }

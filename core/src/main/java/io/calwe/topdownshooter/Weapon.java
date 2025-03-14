@@ -68,6 +68,7 @@ public class Weapon{
     public boolean fire(Vector2 gunPos, float bulletRotation){
         //Check if the weapon is ready to fire another shot
         if (timeLastFired + (long)(1000f/fireRate) < System.currentTimeMillis()){
+            //Check if we still have ammunition left
             if (ammo > 0){
                 //Create an instance of bullet, give it the bullet texture, and its stats.
                 Bullet bullet = new Bullet(bulletTexture, gunPos, damage, critChance, knockback);
@@ -90,6 +91,7 @@ public class Weapon{
                 return true;
             }
             else{
+                //If we have no ammo in the gun, play the gun empty sound
                 timeLastFired = System.currentTimeMillis();
                 emptySound.play(0.2f);
                 return false;

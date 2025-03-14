@@ -31,9 +31,12 @@ public abstract class Entity {
     public int width;
     public int height;
     public Sprite sprite;
+    //The collision bounds for this entity
     public Rectangle bounds = new Rectangle();
+    //Whether or not the entity is solid and should be unable to move through other entities
     public boolean hasSolidCollision = true;
 
+    //How much to reduce the size of the collider from the size of the sprite
     public float boundsHeightReduction;
     public float boundsWidthReduction;
 
@@ -41,6 +44,7 @@ public abstract class Entity {
 
     }
 
+    //The priority for rendering this entity - higher numbers are rendered on top.
     public int layer = 10;
 
     // Basic logic that most subclasses will override, it moves the entity according to its current momentum,
@@ -60,23 +64,31 @@ public abstract class Entity {
     }
 
 
-
+    //This handles collisions while moving
     protected void tryMove () {
+        //Calculate the current collider bounds
         bounds.x = pos.x;
         bounds.y = pos.y;
         bounds.width = width;
         bounds.height = height;
+        //get the location we are going to move to in the x direction
         bounds.x += momentum.x;
+        //Get all the other objects we could collide with
         Dictionary<Rectangle, Entity> collideableRects = Play.getOtherColliderRects(this);
         Object[] rects = Collections.list(collideableRects.keys()).toArray();
         List<Entity> entityCollisions = new ArrayList<>();
+        // Iterate through each other object we could collide with
         for (int i = 0; i < rects.length; i++) {
             Rectangle rect = (Rectangle)rects[i];
+            //If we collide with an entity
             if (bounds.overlaps(rect)) {
+                //Add them to the list of entities we collided with
                 if (!entityCollisions.contains(collideableRects.get(rect))) {
                     entityCollisions.add(collideableRects.get(rect));
                 }
+                //If both objects have solid colliders
                 if (collideableRects.get(rect).hasSolidCollision && hasSolidCollision){
+                    //prevent us from moving through us
                     if (momentum.x < 0)
                         bounds.x = rect.x + rect.width + 0.1f;
                     else
@@ -85,15 +97,20 @@ public abstract class Entity {
                 }
             }
         }
-
+        //get the location we are going to move to in the y direction
         bounds.y += momentum.y;
+        // Iterate through each other object we could collide with
         for (int i = 0; i < rects.length; i++) {
             Rectangle rect = (Rectangle)rects[i];
+            //If we collide with an entity
             if (bounds.overlaps(rect)) {
+                //Add them to the list of entities we collided with
                 if (!entityCollisions.contains(collideableRects.get(rect))) {
                     entityCollisions.add(collideableRects.get(rect));
                 }
+                //If both objects have solid colliders
                 if (collideableRects.get(rect).hasSolidCollision && hasSolidCollision){
+                    //prevent us from moving through us
                     if (momentum.y < 0) {
                         bounds.y = rect.y + rect.height + 0.1f;
                     } else
@@ -102,9 +119,11 @@ public abstract class Entity {
                 }
             }
         }
+        //Call OnEntityCollision for each entity we collided with
         for (Entity e : entityCollisions) {
             OnEntityCollision(e);
         }
+        //Move us based on the collisions
         if (this.hasSolidCollision) {
             pos.x = bounds.x;
             pos.y = bounds.y;
