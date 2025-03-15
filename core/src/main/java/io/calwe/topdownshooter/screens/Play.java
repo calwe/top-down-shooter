@@ -196,17 +196,37 @@ public class Play implements Screen {
             spawnPos.scl(spawnRadius);
             spawnPos.add(player.pos);
             // Create a new enemy, with the appropriate textures and sounds, and spawn him at the generated position
-            Entity newEnemy = new Enemy(
-                new Texture("zombie.png"),
-                getAnimatedPlayerTexture(),
-                Gdx.audio.newSound(Gdx.files.internal("zombieHit.mp3")),
-                spawnPos,
-                player,
-                new Texture[]{
-                    new Texture("bloodParticle.png"),
-                    new Texture("zombieParticle.png")
-                }
-            );
+            Entity newEnemy;
+            if (random.nextInt(100) < 70){
+                newEnemy = new Enemy(
+                    new Texture("zombie.png"),
+                    getAnimatedPlayerTexture(),
+                    Gdx.audio.newSound(Gdx.files.internal("zombieHit.mp3")),
+                    spawnPos,
+                    player,
+                    new Texture[]{
+                        new Texture("bloodParticle.png"),
+                        new Texture("zombieParticle.png")
+                    }
+                );
+            }
+            else{
+                newEnemy = new RangedEnemy(
+                    new Texture("zombie.png"),
+                    getAnimatedPlayerTexture(),
+                    Gdx.audio.newSound(Gdx.files.internal("zombieHit.mp3")),
+                    spawnPos,
+                    player,
+                    new Texture[]{
+                        new Texture("bloodParticle.png"),
+                        new Texture("zombieParticle.png")
+                    },
+                    2,
+                    1.5f,
+                    new Texture("zombieProjectile.png")
+                );
+            }
+
             //Add him to the entities list so he will be updated
             entitiesToAdd.add(newEnemy);
             //reset the cooldown for spawning enemies
