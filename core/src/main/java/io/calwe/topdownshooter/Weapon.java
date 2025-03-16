@@ -21,7 +21,6 @@ public class Weapon{
 
     public Texture texture;
     public Texture sideOn;
-    public Texture firingTexture;
     Texture bulletTexture;
 
     Sound fireSound;
@@ -29,9 +28,8 @@ public class Weapon{
 
     long timeLastFired = 0;
 
-    public Weapon(Texture texture, Texture firingTexture, Texture sideOn, Texture bulletTexture, Sound fireSound, Sound emptySound, int ammo, int damage, float fireRate, int critChance, float inaccuracy, float recoil, float knockback, float bulletSpeed){
+    public Weapon(Texture texture, Texture sideOn, Texture bulletTexture, Sound fireSound, Sound emptySound, int ammo, int damage, float fireRate, int critChance, float inaccuracy, float recoil, float knockback, float bulletSpeed){
         this.texture = texture;
-        this.firingTexture = firingTexture;
         this.sideOn = sideOn;
         this.bulletTexture = bulletTexture;
         this.bulletSpeed = bulletSpeed;
@@ -48,7 +46,6 @@ public class Weapon{
 
     public Weapon(Weapon weaponToCopy, int ammo){
         this.texture = weaponToCopy.texture;
-        this.firingTexture = weaponToCopy.firingTexture;
         this.bulletTexture = weaponToCopy.bulletTexture;
         this.sideOn = weaponToCopy.sideOn;
         this.bulletSpeed = weaponToCopy.bulletSpeed;

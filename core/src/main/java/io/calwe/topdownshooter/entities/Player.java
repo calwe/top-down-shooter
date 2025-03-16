@@ -182,7 +182,6 @@ public class Player extends Entity {
                 direction.nor();
                 direction.scl(-0.01f*weapon.recoil);
                 momentum.add(direction);
-                playerTexture = inventory[currentInventorySlot].firingTexture;
             }
             // reset mouseDown
             mouseDown = false;
@@ -201,8 +200,7 @@ public class Player extends Entity {
         // Add an offset to the sprite to account for the fact that the player sprite is not centered in its image.
         Vector2 spriteOffset = new Vector2(0, 2).rotateDeg(angleToLook*-180f/(float)Math.PI);
         spriteOffset.add(pos);
-        //sprite.setPosition(spriteOffset.x, spriteOffset.y);
-        sprite.setPosition(pos.x, pos.y);
+        sprite.setPosition(spriteOffset.x, spriteOffset.y);
 
         //Check if the player has no health remaining - execute the die function if they don't
         if (health <= 0){
@@ -223,10 +221,11 @@ public class Player extends Entity {
         TextureRegion currentFrame = playerWalkAnimation.getKeyFrame(elapsedTime, true);
         // Set the animation's current frame to the player sprite's image
         sprite.setRegion(currentFrame);
-
+        sprite.setSize(width, height);
         // Render the player's animated legs
         sprite.draw(batch);
 
+        sprite.setSize(width, 18);
         //Render the player's body with the weapon they are holding
         sprite.setRegion(playerTexture);
         sprite.draw(batch);
