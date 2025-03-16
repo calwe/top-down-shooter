@@ -34,7 +34,7 @@ public class ChargingEnemy extends Enemy{
         this.chargeUpTime = chargeUpTime;
         this.chargeUpTimer = 0;
         this.chargeTimer = 0;
-        this.movementSpeed = 12f;
+        this.movementSpeed = 11f;
         this.damage = 20;
         this.knockback = 5f;
         this.chargeDuration = chargeDuration;
