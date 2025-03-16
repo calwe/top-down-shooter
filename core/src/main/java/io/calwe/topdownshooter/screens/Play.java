@@ -98,7 +98,7 @@ public class Play implements Screen {
             new Vector2(Map.MAP_WIDTH * Map.TILE_SIZE / 2f, Map.MAP_HEIGHT * Map.TILE_SIZE / 2f),
             new Weapon[]{
                 new Weapon(weapons.get("Pistol"),weapons.get("Pistol").ammo),
-                new Weapon(weapons.get("Assault Rifle"),weapons.get("Assault Rifle").ammo),
+                null,
                 null
             },
             new Texture[]{
@@ -108,13 +108,6 @@ public class Play implements Screen {
         );
         entities.add(player);
 
-        //For testing purposes
-        WeaponDrop w = new WeaponDrop(weapons.get("Sniper Rifle"), new Vector2(Map.MAP_WIDTH * Map.TILE_SIZE / 2f, Map.MAP_HEIGHT * Map.TILE_SIZE / 2f));
-        entities.add(w);
-        //For testing purposes
-        EquipmentDrop e = equipment[2];
-        equipment[2].pos = new Vector2(Map.MAP_WIDTH * Map.TILE_SIZE / 2f, Map.MAP_HEIGHT * Map.TILE_SIZE / 2f);
-        entities.add(equipment[2]);
     }
 
     //Get the humanoid walk animation
