@@ -28,7 +28,7 @@ public class RangedEnemy extends Enemy{
     //This overrides Enemy's logic method
     @Override
     public void logic(){
-        if (target.pos.dst(pos) > 50){
+        if (target.pos.dst(pos) > 60){
             //Calculate the direction to the player, and move in that direction
             Vector2 movementToPlayer = new Vector2(target.pos.x-pos.x,target.pos.y-pos.y);
             movementToPlayer.nor();
@@ -39,7 +39,7 @@ public class RangedEnemy extends Enemy{
             elapsedTime = 0.0f;
         }
 
-        if (target.pos.dst(pos) < 80){
+        if (target.pos.dst(pos) < 120){
             if (attackCooldownTimer >= attackCooldown){
                 EnemyProjectile p = new EnemyProjectile(projectileTexture, new Vector2(pos.x + (width/2f), pos.y + (height/2f)), damage, knockback);
                 //Turn the bullet so it is facing towards the target

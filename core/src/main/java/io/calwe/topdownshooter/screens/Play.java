@@ -198,9 +198,9 @@ public class Play implements Screen {
             // Create a new enemy, with the appropriate textures and sounds, and spawn him at the generated position
             Entity newEnemy;
             int enemyChoice = random.nextInt(100);
-            if (enemyChoice >= 90){
+            if (enemyChoice >= 85){
                 newEnemy = new ExplodingEnemy(
-                    new Texture("zombie.png"),
+                    new Texture("blueZombie.png"),
                     getAnimatedPlayerTexture(),
                     Gdx.audio.newSound(Gdx.files.internal("zombieHit.mp3")),
                     spawnPos,
@@ -213,9 +213,9 @@ public class Play implements Screen {
                     1.5f
                 );
             }
-            if (enemyChoice >= 80){
+            else if (enemyChoice >= 70){
                 newEnemy = new ChargingEnemy(
-                    new Texture("zombie.png"),
+                    new Texture("redZombie.png"),
                     getAnimatedPlayerTexture(),
                     Gdx.audio.newSound(Gdx.files.internal("zombieHit.mp3")),
                     spawnPos,
@@ -227,13 +227,13 @@ public class Play implements Screen {
                     new Texture("ChargingZombieLockingOn.png"),
                     4,
                     0.5f,
-                    30,
-                    1
+                    40,
+                    0.8f
                 );
             }
-            else if (enemyChoice >= 65){
+            else if (enemyChoice >= 55){
                 newEnemy = new RangedEnemy(
-                    new Texture("zombie.png"),
+                    new Texture("greyZombie.png"),
                     getAnimatedPlayerTexture(),
                     Gdx.audio.newSound(Gdx.files.internal("zombieHit.mp3")),
                     spawnPos,
@@ -249,7 +249,7 @@ public class Play implements Screen {
             }
             else{
                 newEnemy = new Enemy(
-                    new Texture("zombie.png"),
+                    new Texture("orangeZombie.png"),
                     getAnimatedPlayerTexture(),
                     Gdx.audio.newSound(Gdx.files.internal("zombieHit.mp3")),
                     spawnPos,

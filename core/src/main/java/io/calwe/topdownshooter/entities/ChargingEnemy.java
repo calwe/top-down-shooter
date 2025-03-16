@@ -80,7 +80,7 @@ public class ChargingEnemy extends Enemy{
                 elapsedTime = 0.0f;
             }
 
-            if (target.pos.dst(pos) < 55 ){
+            if (target.pos.dst(pos) < 70){
                 if (attackCooldownTimer >= attackCooldown){
                     chargeDirection = new Vector2(target.pos.x-pos.x,target.pos.y-pos.y);
                     chargeDirection.nor();
