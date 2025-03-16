@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
+import io.calwe.topdownshooter.entities.Enemies.Enemy;
 import io.calwe.topdownshooter.screens.Play;
 
 import java.util.Random;
@@ -12,11 +13,12 @@ import java.util.Random;
 public class Bullet extends Entity {
     int damage;
     int critChance;
+    float critMultiplier;
     float knockback;
     float lifeTime = 5;
     float timer = 0;
 
-    public Bullet(Texture texture, Vector2 startPos, int damage, int critChance, float knockback){
+    public Bullet(Texture texture, Vector2 startPos, int damage, int critChance, float critMultiplier, float knockback){
         this.pos = startPos;
         this.momentum = new Vector2(0, 0);
         this.width = 1;
@@ -24,6 +26,7 @@ public class Bullet extends Entity {
         this.sprite = new Sprite(texture, width, height);
         this.damage = damage;
         this.critChance = critChance;
+        this.critMultiplier = critMultiplier;
         this.knockback = knockback;
         this.hasSolidCollision = false;
         this.boundsHeightReduction = 0;
@@ -60,7 +63,7 @@ public class Bullet extends Entity {
             Vector2 hitTextPos = new Vector2(enemy.pos.x + (enemy.width/2f) + random.nextFloat(12)-6, enemy.pos.y + enemy.height);
             //Decide whether or not the hit is a critical hit (x2 damage) and deal the damage to the enemy
             if (random.nextInt(100) <= critChance){
-                enemy.takeDamage(damage*2);
+                enemy.takeDamage(Math.round(damage*critMultiplier));
                 hitText = new HitText(String.valueOf(damage*2), hitTextPos, Color.YELLOW);
             }
             else{

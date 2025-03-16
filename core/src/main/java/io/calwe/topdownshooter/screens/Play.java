@@ -13,6 +13,11 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import io.calwe.topdownshooter.Weapon;
 import io.calwe.topdownshooter.entities.*;
+import io.calwe.topdownshooter.entities.Enemies.ChargingEnemy;
+import io.calwe.topdownshooter.entities.Enemies.Enemy;
+import io.calwe.topdownshooter.entities.Enemies.ExplodingEnemy;
+import io.calwe.topdownshooter.entities.Enemies.RangedEnemy;
+import io.calwe.topdownshooter.entities.Equipment.*;
 
 import java.util.*;
 import java.util.List;
@@ -35,6 +40,8 @@ public class Play implements Screen {
     public static List<Entity> entitiesToRemove = new ArrayList<>();
     //This is a dictionary, linking every weapon to its name so that they are easily accessible
     public static Dictionary<String, Weapon> weapons = new Hashtable<>();
+
+    public static EquipmentDrop[] equipment;
     //This is used by the draw method of entities so that all entities can rendered in a single batch draw,
     // rather than in multiple batches
     public SpriteBatch batch;
@@ -69,6 +76,16 @@ public class Play implements Screen {
         //Populate the weapons dictionary with weapons
         initializeWeapons(noTexture);
 
+        equipment = new EquipmentDrop[]{
+            new CritChanceDrop(new Texture("Equipment/RedDotSight.png"), "Red dot sight", "Increases your critical hit chance by 7%.", 7),
+            new CritDamageDrop(noTexture, "Armor piercing bullets", "Increases your critical hit damage multiplier by 0.5.", 0.5f),
+            new DamageDrop(new Texture("Equipment/ammo.png"), "Hollow points", "Increases your damage by 20%", 0.2f),
+            new ExtraInventoryDrop(noTexture, "Backpack", "Allows you to carry an additional weapon."),
+            new HealDrop(new Texture("Equipment/medkit.png"), "Medkit", "Restores 25 health.", 25),
+            new HealthDrop(new Texture("Equipment/FlakVest.png"), "Kevlar vest", "Increases your current and maximum health by 10.", 10),
+            new SaveAmmoDrop(new Texture("Equipment/Magazine.png"), "Extended magazine", "Gives you a 8% chance not to consume ammo when firing a weapon.", 8)
+        };
+
         // create a new orthographic (no 3d perspective) camera, and set its position to the center of the map
         camera = new OrthographicCamera();
         camera.position.set(Map.MAP_WIDTH * Map.TILE_SIZE / 2f, Map.MAP_HEIGHT * Map.TILE_SIZE / 2f, 0);
@@ -94,6 +111,10 @@ public class Play implements Screen {
         //For testing purposes
         WeaponDrop w = new WeaponDrop(weapons.get("Sniper Rifle"), new Vector2(Map.MAP_WIDTH * Map.TILE_SIZE / 2f, Map.MAP_HEIGHT * Map.TILE_SIZE / 2f));
         entities.add(w);
+        //For testing purposes
+        EquipmentDrop e = equipment[2];
+        equipment[2].pos = new Vector2(Map.MAP_WIDTH * Map.TILE_SIZE / 2f, Map.MAP_HEIGHT * Map.TILE_SIZE / 2f);
+        entities.add(equipment[2]);
     }
 
     //Get the humanoid walk animation
@@ -200,63 +221,63 @@ public class Play implements Screen {
             int enemyChoice = random.nextInt(100);
             if (enemyChoice >= 85){
                 newEnemy = new ExplodingEnemy(
-                    new Texture("blueZombie.png"),
+                    new Texture("Enemies/blueZombie.png"),
                     getAnimatedPlayerTexture(),
-                    Gdx.audio.newSound(Gdx.files.internal("zombieHit.mp3")),
+                    Gdx.audio.newSound(Gdx.files.internal("Enemies/zombieHit.mp3")),
                     spawnPos,
                     player,
                     new Texture[]{
                         new Texture("bloodParticle.png"),
-                        new Texture("zombieParticle.png")
+                        new Texture("Enemies/zombieParticle.png")
                     },
-                    new Texture("zombieProjectile.png"),
+                    new Texture("Enemies/zombieProjectile.png"),
                     1.5f
                 );
             }
             else if (enemyChoice >= 70){
                 newEnemy = new ChargingEnemy(
-                    new Texture("redZombie.png"),
+                    new Texture("Enemies/redZombie.png"),
                     getAnimatedPlayerTexture(),
-                    Gdx.audio.newSound(Gdx.files.internal("zombieHit.mp3")),
+                    Gdx.audio.newSound(Gdx.files.internal("Enemies/zombieHit.mp3")),
                     spawnPos,
                     player,
                     new Texture[]{
                         new Texture("bloodParticle.png"),
-                        new Texture("zombieParticle.png")
+                        new Texture("Enemies/zombieParticle.png")
                     },
-                    new Texture("ChargingZombieLockingOn.png"),
+                    new Texture("Enemies/ChargingZombieLockingOn.png"),
                     4,
                     0.5f,
                     40,
-                    0.8f
+                    0.7f
                 );
             }
             else if (enemyChoice >= 55){
                 newEnemy = new RangedEnemy(
-                    new Texture("greyZombie.png"),
+                    new Texture("Enemies/greyZombie.png"),
                     getAnimatedPlayerTexture(),
-                    Gdx.audio.newSound(Gdx.files.internal("zombieHit.mp3")),
+                    Gdx.audio.newSound(Gdx.files.internal("Enemies/zombieHit.mp3")),
                     spawnPos,
                     player,
                     new Texture[]{
                         new Texture("bloodParticle.png"),
-                        new Texture("zombieParticle.png")
+                        new Texture("Enemies/zombieParticle.png")
                     },
                     2,
                     2f,
-                    new Texture("zombieProjectile.png")
+                    new Texture("Enemies/zombieProjectile.png")
                 );
             }
             else{
                 newEnemy = new Enemy(
-                    new Texture("orangeZombie.png"),
+                    new Texture("Enemies/orangeZombie.png"),
                     getAnimatedPlayerTexture(),
-                    Gdx.audio.newSound(Gdx.files.internal("zombieHit.mp3")),
+                    Gdx.audio.newSound(Gdx.files.internal("Enemies/zombieHit.mp3")),
                     spawnPos,
                     player,
                     new Texture[]{
                         new Texture("bloodParticle.png"),
-                        new Texture("zombieParticle.png")
+                        new Texture("Enemies/zombieParticle.png")
                     }
                 );
             }

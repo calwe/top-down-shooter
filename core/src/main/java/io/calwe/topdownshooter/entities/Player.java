@@ -23,12 +23,12 @@ public class Player extends Entity {
     Vector2 mouseCoords;
 
     //The character's inventory
-    Weapon[] inventory;
+    public Weapon[] inventory;
     // What slot in the character's inventory they currently have selected
     int currentInventorySlot = 0;
 
     // The maximum amount of health the player can have, and how much health they start with
-    int maxHealth;
+    public int maxHealth;
     // The amount of health the player currently has remaining
     int health;
     //how fast the player move
@@ -48,6 +48,12 @@ public class Player extends Entity {
 
     //An array of textures for the particles that should be released when the player is damage
     Texture[] damageParticles;
+
+    public float damageMultiplier = 1;
+    public int saveAmmoChance = 0;
+    public float critMultiplier = 2;
+    public int additionalCritChance = 0;
+
 
     // The constructor - intialize all the variables
     public Player(Texture texture, Animation<TextureRegion> playerWalkAnimation, Vector2 startPos, Weapon[] inventory, Texture[] damageParticles, OrthographicCamera camera) {
@@ -175,7 +181,7 @@ public class Player extends Entity {
             float bulletRotation = bulletAngleToLook*-180f/(float)Math.PI;
 
             // attempt to fire the weapon at the mouse position
-            boolean fireSuccessful = weapon.fire(firingPos, bulletRotation);
+            boolean fireSuccessful = weapon.fire(firingPos, bulletRotation, damageMultiplier, critMultiplier, additionalCritChance, saveAmmoChance);
             if (fireSuccessful){
                 //if the weapon fired, apply recoil and show the firing texture
                 Vector2 direction = new Vector2(mouseCoords.x - (firingPos.x), mouseCoords.y - (firingPos.y));
@@ -272,5 +278,12 @@ public class Player extends Entity {
         }
         //And add the picked up weapon to our inventory in its place
         inventory[currentInventorySlot] = weaponToAdd;
+    }
+
+    public void heal(int healAmount){
+        health += healAmount;
+        if (health > maxHealth){
+            health = maxHealth;
+        }
     }
 }

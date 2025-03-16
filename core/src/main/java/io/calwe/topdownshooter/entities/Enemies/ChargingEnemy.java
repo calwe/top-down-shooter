@@ -1,4 +1,4 @@
-package io.calwe.topdownshooter.entities;
+package io.calwe.topdownshooter.entities.Enemies;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
@@ -8,11 +8,11 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import io.calwe.topdownshooter.entities.Entity;
+import io.calwe.topdownshooter.entities.Player;
 import io.calwe.topdownshooter.screens.Play;
 
-import java.util.Random;
-
-public class ChargingEnemy extends Enemy{
+public class ChargingEnemy extends Enemy {
     Sprite chargingSprite;
     float attackCooldown;
     float attackCooldownTimer;
@@ -26,7 +26,7 @@ public class ChargingEnemy extends Enemy{
     Vector2 chargeDirection;
 
     // The constructor - initialize all the variables
-    public ChargingEnemy(Texture texture, Animation<TextureRegion> enemyWalkAnimation, Sound hurtSound, Vector2 startPos, Player target, Texture[] damageParticles, Texture attackTelegraphTexture, float attackCooldown,  float chargeUpTime, float chargeSpeed, float chargeDuration) {
+    public ChargingEnemy(Texture texture, Animation<TextureRegion> enemyWalkAnimation, Sound hurtSound, Vector2 startPos, Player target, Texture[] damageParticles, Texture attackTelegraphTexture, float attackCooldown, float chargeUpTime, float chargeSpeed, float chargeDuration) {
         super(texture, enemyWalkAnimation, hurtSound, startPos, target, damageParticles);
         this.chargingSprite = new Sprite(attackTelegraphTexture, width, 128);
         this.attackCooldown = attackCooldown;

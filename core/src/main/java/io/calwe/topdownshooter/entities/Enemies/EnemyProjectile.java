@@ -1,10 +1,11 @@
-package io.calwe.topdownshooter.entities;
+package io.calwe.topdownshooter.entities.Enemies;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
+import io.calwe.topdownshooter.entities.Entity;
+import io.calwe.topdownshooter.entities.Player;
 import io.calwe.topdownshooter.screens.Play;
 
 import java.util.Random;

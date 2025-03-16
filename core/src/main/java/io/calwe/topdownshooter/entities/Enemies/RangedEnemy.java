@@ -1,4 +1,4 @@
-package io.calwe.topdownshooter.entities;
+package io.calwe.topdownshooter.entities.Enemies;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
@@ -6,11 +6,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import io.calwe.topdownshooter.entities.Entity;
+import io.calwe.topdownshooter.entities.Player;
 import io.calwe.topdownshooter.screens.Play;
 
-import java.util.Random;
-
-public class RangedEnemy extends Enemy{
+public class RangedEnemy extends Enemy {
     float projectileSpeed;
     Texture projectileTexture;
     float attackCooldown;

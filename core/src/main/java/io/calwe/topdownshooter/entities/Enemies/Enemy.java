@@ -1,4 +1,4 @@
-package io.calwe.topdownshooter.entities;
+package io.calwe.topdownshooter.entities.Enemies;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
@@ -8,6 +8,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import io.calwe.topdownshooter.entities.Entity;
+import io.calwe.topdownshooter.entities.Particle;
+import io.calwe.topdownshooter.entities.Player;
 import io.calwe.topdownshooter.screens.Play;
 
 import java.util.Random;
