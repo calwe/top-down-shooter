@@ -49,7 +49,7 @@ public class Enemy extends Entity {
         this.knockback = 2f;
         this.pos = startPos;
         this.momentum = new Vector2(0, 0);
-        this.movementSpeed = 5f;
+        this.movementSpeed = 7f;
         this.enemyWalkAnimation = enemyWalkAnimation;
         this.slide = 0.85f;
         this.width = 12;

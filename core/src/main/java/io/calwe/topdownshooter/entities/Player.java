@@ -60,6 +60,7 @@ public class Player extends Entity {
         this.mouseCoords = new Vector2(0,0);
         this.slide = 0.85f;
         this.width = 12;
+        this.layer = 15;
         this.height = 16;
         this.inventory = inventory;
         this.damageParticles = damageParticles;

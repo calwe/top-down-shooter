@@ -197,8 +197,9 @@ public class Play implements Screen {
             spawnPos.add(player.pos);
             // Create a new enemy, with the appropriate textures and sounds, and spawn him at the generated position
             Entity newEnemy;
-            if (random.nextInt(100) < 70){
-                newEnemy = new Enemy(
+            int enemyChoice = random.nextInt(100);
+            if (enemyChoice >= 85){
+                newEnemy = new ChargingEnemy(
                     new Texture("zombie.png"),
                     getAnimatedPlayerTexture(),
                     Gdx.audio.newSound(Gdx.files.internal("zombieHit.mp3")),
@@ -207,10 +208,15 @@ public class Play implements Screen {
                     new Texture[]{
                         new Texture("bloodParticle.png"),
                         new Texture("zombieParticle.png")
-                    }
+                    },
+                    new Texture("ChargingZombieLockingOn.png"),
+                    4,
+                    0.5f,
+                    30,
+                    1
                 );
             }
-            else{
+            else if (enemyChoice >= 65){
                 newEnemy = new RangedEnemy(
                     new Texture("zombie.png"),
                     getAnimatedPlayerTexture(),
@@ -222,8 +228,21 @@ public class Play implements Screen {
                         new Texture("zombieParticle.png")
                     },
                     2,
-                    1.5f,
+                    2f,
                     new Texture("zombieProjectile.png")
+                );
+            }
+            else{
+                newEnemy = new Enemy(
+                    new Texture("zombie.png"),
+                    getAnimatedPlayerTexture(),
+                    Gdx.audio.newSound(Gdx.files.internal("zombieHit.mp3")),
+                    spawnPos,
+                    player,
+                    new Texture[]{
+                        new Texture("bloodParticle.png"),
+                        new Texture("zombieParticle.png")
+                    }
                 );
             }
 
