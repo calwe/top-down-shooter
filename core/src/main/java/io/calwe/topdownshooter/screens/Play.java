@@ -198,7 +198,22 @@ public class Play implements Screen {
             // Create a new enemy, with the appropriate textures and sounds, and spawn him at the generated position
             Entity newEnemy;
             int enemyChoice = random.nextInt(100);
-            if (enemyChoice >= 85){
+            if (enemyChoice >= 90){
+                newEnemy = new ExplodingEnemy(
+                    new Texture("zombie.png"),
+                    getAnimatedPlayerTexture(),
+                    Gdx.audio.newSound(Gdx.files.internal("zombieHit.mp3")),
+                    spawnPos,
+                    player,
+                    new Texture[]{
+                        new Texture("bloodParticle.png"),
+                        new Texture("zombieParticle.png")
+                    },
+                    new Texture("zombieProjectile.png"),
+                    1.5f
+                );
+            }
+            if (enemyChoice >= 80){
                 newEnemy = new ChargingEnemy(
                     new Texture("zombie.png"),
                     getAnimatedPlayerTexture(),
