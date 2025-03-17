@@ -15,4 +15,8 @@ public class CritChanceDrop extends EquipmentDrop{
     public void ApplyAffect(Player p){
         p.additionalCritChance += this.additionalCritChance;
     }
+    @Override
+    public EquipmentDrop getCopy(){
+        return new CritChanceDrop(texture, upgradeName, upgradeDescription, additionalCritChance);
+    }
 }

@@ -16,4 +16,8 @@ public class HealthDrop extends EquipmentDrop{
         p.maxHealth += healthIncreaseAmount;
         p.heal(healthIncreaseAmount);
     }
+    @Override
+    public EquipmentDrop getCopy(){
+        return new HealthDrop(texture, upgradeName, upgradeDescription, healthIncreaseAmount);
+    }
 }

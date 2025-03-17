@@ -2,51 +2,34 @@ package io.calwe.topdownshooter.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import io.calwe.topdownshooter.Weapon;
+import io.calwe.topdownshooter.entities.Equipment.EquipmentDrop;
 import io.calwe.topdownshooter.screens.Play;
 
 import java.util.*;
 
-public class WeaponDrop extends Entity{
-    Weapon weapon;
-    //Should we randomly generate the ammunition or use that provided
-    boolean randomlyGenerateAmmo;
-    float scale = 0.6f;
+public class Crate extends Entity{
+    float scale = 0.4f;
+    int tier;
 
-    public WeaponDrop(Weapon weapon, Vector2 position){
-        this.randomlyGenerateAmmo = false;
+    public Crate(Texture texture, Vector2 position, int tier){
         this.layer = 0;
-        this.weapon = weapon;
         this.hasSolidCollision = false;
         this.width = 32;
-        this.height = 12;
-        this.sprite = new Sprite(weapon.sideOn, width, height);
+        this.height = 32;
+        this.sprite = new Sprite(texture, width, height);
         sprite.setScale(scale);
+        this.tier = tier;
         this.pos = new Vector2(position.x - (width*scale/2f), position.y-(height*scale/2f));
         this.momentum = new Vector2(0, 0);
         bounds.x = pos.x;
         bounds.y = pos.y;
-        bounds.width = width * scale;
-        bounds.height = height * scale;
-    }
-    WeaponDrop(Weapon weapon, Vector2 position, boolean randomlyGenerateAmmo){
-        this.randomlyGenerateAmmo = randomlyGenerateAmmo;
-        this.layer = 0;
-        this.weapon = weapon;
-        this.hasSolidCollision = false;
-        this.width = 32;
-        this.height = 12;
-        this.sprite = new Sprite(weapon.sideOn, width, height);
-        sprite.setScale(scale);
-        this.pos = new Vector2(position.x - (width*scale/2f), position.y-(height*scale/2f));
-        this.momentum = new Vector2(0, 0);
-        bounds.x = pos.x;
-        bounds.y = pos.y;
-        bounds.width = width * scale;
-        bounds.height = height * scale;
+        bounds.width = width;
+        bounds.height = height;
     }
 
     @Override
@@ -103,16 +86,44 @@ public class WeaponDrop extends Entity{
         if (e instanceof Player){
             //if the e key has just been pressed down
             if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-                Player p = (Player)e;
-                //Add the weapon from this drop to the player's inventory, with random ammo or not depending on the
-                // value of randomlyGenerateAmmo
-                if (randomlyGenerateAmmo){
-                    Random random = new Random();
-                    int ammo = random.nextInt(Math.round(weapon.ammo*1.5f))+Math.round(weapon.ammo*0.5f);
-                    p.addToInventory(weapon.copy(ammo));
+                Random random = new Random();
+                if (random.nextInt(100) < 40){
+                    if (tier == 1){
+                        List<String> weapons = Collections.list(Play.commonWeapons.keys());
+                        Weapon weaponChoice = Play.commonWeapons.get(weapons.get(random.nextInt(weapons.size())));
+                        WeaponDrop weaponDrop = new WeaponDrop(weaponChoice, pos, true);
+                        Play.entitiesToAdd.add(weaponDrop);
+                    }
+                    else if (tier == 2){
+                        List<String> weapons = Collections.list(Play.uncommonWeapons.keys());
+                        Weapon weaponChoice = Play.uncommonWeapons.get(weapons.get(random.nextInt(weapons.size())));
+                        WeaponDrop weaponDrop = new WeaponDrop(weaponChoice, pos, true);
+                        Play.entitiesToAdd.add(weaponDrop);
+                    }
+                    else if (tier == 3){
+                        List<String> weapons = Collections.list(Play.rareWeapons.keys());
+                        Weapon weaponChoice = Play.rareWeapons.get(weapons.get(random.nextInt(weapons.size())));
+                        WeaponDrop weaponDrop = new WeaponDrop(weaponChoice, pos, true);
+                        Play.entitiesToAdd.add(weaponDrop);
+                    }
+                    else if (tier == 4){
+                        List<String> weapons = Collections.list(Play.epicWeapons.keys());
+                        Weapon weaponChoice = Play.epicWeapons.get(weapons.get(random.nextInt(weapons.size())));
+                        WeaponDrop weaponDrop = new WeaponDrop(weaponChoice, pos, true);
+                        Play.entitiesToAdd.add(weaponDrop);
+                    }
+                    else if (tier == 5){
+                        List<String> weapons = Collections.list(Play.legendaryWeapons.keys());
+                        Weapon weaponChoice = Play.legendaryWeapons.get(weapons.get(random.nextInt(weapons.size())));
+                        WeaponDrop weaponDrop = new WeaponDrop(weaponChoice, pos, true);
+                        Play.entitiesToAdd.add(weaponDrop);
+                    }
+
                 }
                 else{
-                    p.addToInventory(weapon.copy());
+                    EquipmentDrop equipment = Play.equipment[random.nextInt(Play.equipment.length)].getCopy();
+                    equipment.pos = this.pos;
+                    Play.entitiesToAdd.add(equipment);
                 }
                 //Destroy this drop
                 Play.entitiesToRemove.add(this);

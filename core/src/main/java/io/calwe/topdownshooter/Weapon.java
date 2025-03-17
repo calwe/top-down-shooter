@@ -60,6 +60,15 @@ public class Weapon{
         this.emptySound = weaponToCopy.emptySound;
     }
 
+
+    public Weapon copy(){
+        return new Weapon(this, ammo);
+    }
+
+    public Weapon copy(int ammo){
+        return new Weapon(this, ammo);
+    }
+
     //This function returns true or false depending on whether the weapon was still cooling down
     //or it fired successfully
     public boolean fire(Vector2 gunPos, float bulletRotation, float damageMultiplier, float critMultiplier, int additionalCritChance, int ammoSaveChance){

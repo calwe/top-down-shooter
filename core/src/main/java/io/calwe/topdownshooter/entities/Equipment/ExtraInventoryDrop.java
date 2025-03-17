@@ -17,4 +17,8 @@ public class ExtraInventoryDrop extends EquipmentDrop{
         System.arraycopy(temp, 0, newInventory, 0, temp.length);
         p.inventory = newInventory;
     }
+    @Override
+    public EquipmentDrop getCopy(){
+        return new ExtraInventoryDrop(texture, upgradeName, upgradeDescription);
+    }
 }

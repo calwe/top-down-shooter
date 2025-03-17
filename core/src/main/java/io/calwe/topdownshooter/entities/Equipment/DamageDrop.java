@@ -15,4 +15,8 @@ public class DamageDrop extends EquipmentDrop{
     public void ApplyAffect(Player p){
         p.damageMultiplier += damageMultiplier;
     }
+    @Override
+    public EquipmentDrop getCopy(){
+        return new DamageDrop(texture, upgradeName, upgradeDescription, damageMultiplier);
+    }
 }

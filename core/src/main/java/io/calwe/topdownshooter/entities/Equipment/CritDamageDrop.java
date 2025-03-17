@@ -15,4 +15,8 @@ public class CritDamageDrop extends EquipmentDrop{
     public void ApplyAffect(Player p){
         p.critMultiplier += additionalCritMultiplier;
     }
+    @Override
+    public EquipmentDrop getCopy(){
+        return new CritDamageDrop(texture, upgradeName, upgradeDescription, additionalCritMultiplier);
+    }
 }

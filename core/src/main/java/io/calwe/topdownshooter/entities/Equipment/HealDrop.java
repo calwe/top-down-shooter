@@ -15,4 +15,8 @@ public class HealDrop extends EquipmentDrop{
     public void ApplyAffect(Player p){
         p.heal(healAmount);
     }
+    @Override
+    public EquipmentDrop getCopy(){
+        return new HealDrop(texture, upgradeName, upgradeDescription, healAmount);
+    }
 }

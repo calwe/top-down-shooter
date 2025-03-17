@@ -15,4 +15,8 @@ public class SaveAmmoDrop extends EquipmentDrop{
     public void ApplyAffect(Player p){
         p.saveAmmoChance = ammoSaveChance;
     }
+    @Override
+    public EquipmentDrop getCopy(){
+        return new SaveAmmoDrop(texture, upgradeName, upgradeDescription, ammoSaveChance);
+    }
 }

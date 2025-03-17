@@ -272,7 +272,7 @@ public class Player extends Entity {
         }
         //if there are no empty slots in the inventory
         //drop the current weapon
-        WeaponDrop droppedWeapon = new WeaponDrop(new Weapon(inventory[currentInventorySlot], inventory[currentInventorySlot].ammo), new Vector2(pos.x + (width/2f), pos.y + height/2f));
+        WeaponDrop droppedWeapon = new WeaponDrop(inventory[currentInventorySlot].copy(), new Vector2(pos.x + (width/2f), pos.y + height/2f));
         if (droppedWeapon.weapon.ammo > 0){
             Play.entitiesToAdd.add(droppedWeapon);
         }

@@ -19,13 +19,15 @@ import java.util.List;
 public class EquipmentDrop extends Entity {
     String upgradeName;
     String upgradeDescription;
-    float scale = 0.5f;
+    float scale = 0.4f;
+    Texture texture;
 
     public EquipmentDrop(Texture texture, String upgradeName, String upgradeDescription) {
         this.layer = 0;
         this.hasSolidCollision = false;
         this.width = 28;
         this.height = 32;
+        this.texture = texture;
         this.sprite = new Sprite(texture, width, height);
         sprite.setScale(scale);
         this.pos = new Vector2(0, 0);
@@ -103,6 +105,11 @@ public class EquipmentDrop extends Entity {
     public void ApplyAffect(Player p){
 
     }
+
+    public EquipmentDrop getCopy(){
+        return new EquipmentDrop(texture, upgradeName, upgradeDescription);
+    }
+
 }
 
 
