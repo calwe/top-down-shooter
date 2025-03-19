@@ -9,13 +9,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.tiled.TiledMapTile;
-import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
-import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FillViewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import io.calwe.topdownshooter.Shotgun;
 import io.calwe.topdownshooter.Weapon;
 import io.calwe.topdownshooter.entities.*;
@@ -50,6 +46,8 @@ public class Play implements Screen {
     public static Dictionary<String, Weapon> rareWeapons = new Hashtable<>();
     public static Dictionary<String, Weapon> epicWeapons = new Hashtable<>();
     public static Dictionary<String, Weapon> legendaryWeapons = new Hashtable<>();
+
+    private List<Vector2> entitysAlreadyGeneratedCoords = new ArrayList<>();
 
     public static EquipmentDrop[] equipment;
     //This is used by the draw method of entities so that all entities can rendered in a single batch draw,
@@ -106,7 +104,7 @@ public class Play implements Screen {
         player = new Player(
             new Texture("player_single_frame.png"),
             getAnimatedPlayerTexture(),
-            new Vector2(Map.MAP_WIDTH * Map.TILE_SIZE / 2f, Map.MAP_HEIGHT * Map.TILE_SIZE / 2f),
+            new Vector2(0, 0),
             new Weapon[]{
                 commonWeapons.get("Pistol").copy(),
                 null,
@@ -118,7 +116,7 @@ public class Play implements Screen {
             camera
         );
         entities.add(player);
-        Crate c = new Crate(new Texture("crate.png"), new Vector2(Map.MAP_WIDTH * Map.TILE_SIZE / 2f, Map.MAP_HEIGHT * Map.TILE_SIZE / 2f));
+        Crate c = new Crate(new Texture("crate.png"), new Vector2(0, 0));
         entities.add(c);
     }
 
@@ -248,16 +246,16 @@ public class Play implements Screen {
             }
         });
 
-        if (score > 1000){
+        if (score > 2000){
             currentTier = 5;
         }
-        else if (score > 750){
+        else if (score > 1200){
             currentTier = 4;
         }
-        else if (score > 500){
+        else if (score > 600){
             currentTier = 3;
         }
-        else if (score > 250){
+        else if (score > 200){
             currentTier = 2;
         }
 
@@ -387,7 +385,7 @@ public class Play implements Screen {
         batch.setProjectionMatrix(camera.combined);
         // Start loading things to render into the batch
         batch.begin();
-        map.renderWorld(batch);
+        map.renderWorld(batch, entitysAlreadyGeneratedCoords);
         // Iterate through each entity and call their draw function to add them to the batch do draw passing in
         // the spritebatch so that all entities can be drawn at once
         for (Entity e : entities) {
