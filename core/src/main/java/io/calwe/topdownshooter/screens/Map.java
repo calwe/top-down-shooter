@@ -3,6 +3,7 @@ package io.calwe.topdownshooter.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 
+import java.awt.image.BufferedImage;
 import java.util.Random;
 
 public class Map {
@@ -28,28 +30,53 @@ public class Map {
 
     // libGDX contains a few different tile map renderers, such as isometric or hexagonal
     // for a top-down game, the orthogonal map renderer is suitable
-    private final OrthogonalTiledMapRenderer renderer;
-    private final TiledMap map;
+    private OrthogonalTiledMapRenderer renderer;
+    private TiledMap map;
+
+    private final long initialTime;
+
+    private final int viewDistance;
 
     public Map() {
-        // turn the tile set texture into a libGDX TiledMapTileSet
-        TiledMapTileSet tileSet = createTileSet();
-        // using this TiledMapTileSet, create a TiledMap by selecting a random texture for each tile
-        map = createMap(tileSet);
-        // create a renderer for this TiledMap
-        renderer = new OrthogonalTiledMapRenderer(map);
+        initialTime = System.currentTimeMillis();
+        viewDistance = 20;
     }
 
-    private TiledMapTileSet createTileSet() {
-        // get the texture from the path string
-        Texture tilesetTexture = new Texture(Gdx.files.internal(TILE_SET_TEXTURE));
+    float seededRandomLocationValue(int x,int y) {
+        if (x > 0){
+            x *= 2;
+        }
+        else{
+            x = (Math.abs(x) * 2) + 1;
+        }
+        if (y > 0){
+            x *= 2;
+        }
+        else{
+            y = (Math.abs(y) * 2) + 1;
+        }
+        String xString = String.valueOf(x);
+        String yString = String.valueOf(y);
+        while (xString.length() < 5) {
+            xString = "0" + xString;
+        }
+        while (yString.length() < 5) {
+            yString = "0" + yString;
+        }
+        Random r = new Random((long) (Integer.valueOf(xString + yString)) * initialTime);
+        return r.nextFloat();
+    }
 
+    public void renderWorld(SpriteBatch batch){
+        Texture tilesetTexture = new Texture(Gdx.files.internal("map_tileset.png"));
+        int tileCount = 5;
+        int tileSize = 12;
         // create a new empty tile set
         TiledMapTileSet tileSet = new TiledMapTileSet();
         // loop through each square region in the texture, and add this to the tile set
-        for (int i = 0; i < TILE_COUNT; i++) {
+        for (int i = 0; i < 5; i++) {
             // get the correct region
-            TextureRegion region = new TextureRegion(tilesetTexture, 0, i * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+            TextureRegion region = new TextureRegion(tilesetTexture, 0, i * tileSize, tileSize, tileSize);
             // turn the region into a tile
             TiledMapTile tile = new StaticTiledMapTile(region);
             // set the id of the tile to i+1, as tile IDs must start at 1
@@ -57,51 +84,11 @@ public class Map {
             // put the tile into the tileSet, at the correct position
             tileSet.putTile(i + 1, tile);
         }
-
-        return tileSet;
-    }
-
-    private TiledMap createMap(TiledMapTileSet tileSet) {
-        // create an empty tiled map
-        TiledMap map = new TiledMap();
-        // create the first layer in the tile map, with the right size
-        TiledMapTileLayer layer = new TiledMapTileLayer(MAP_WIDTH, MAP_HEIGHT, TILE_SIZE, TILE_SIZE);
-
-        Random random = new Random();
-        // loop through each position on the tiled map and set it to a random tile from the tile set
-        for (int x = 0; x < MAP_WIDTH; x++) {
-            for (int y = 0; y < MAP_HEIGHT; y++) {
-                // get a random tile id
-                int tileId = random.nextInt(TILE_COUNT) + 1;
-                // create a cell
-                TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-                // set the cells tile to the correct ID
-                cell.setTile(tileSet.getTile(tileId));
-                // put this cell into the layer at the correct position
-                layer.setCell(x, y, cell);
+        for (int x = Math.round(Play.player.pos.x/tileSize)-viewDistance; x < Math.round(Play.player.pos.x/tileSize) + viewDistance; x++){
+            for (int y = Math.round(Play.player.pos.y/tileSize)-viewDistance; y < Math.round(Play.player.pos.y/tileSize) + viewDistance; y++){
+                int tileId = Math.round(seededRandomLocationValue(x, y)*(tileCount-1)) + 1;
+                batch.draw(tileSet.getTile(tileId).getTextureRegion(), x*tileSize, y*tileSize);
             }
         }
-        // add the layer to the map
-        map.getLayers().add(layer);
-
-        return map;
-    }
-
-    public void render(Camera camera) {
-        // set the bounds for which the render renders in
-        renderer.setView(
-            camera.combined,
-            0, 0,
-            MAP_WIDTH * TILE_SIZE,
-            MAP_HEIGHT * TILE_SIZE
-        );
-        // render the map
-        renderer.render();
-    }
-
-    public void dispose() {
-        // gracefully delete the map and renderer
-        map.dispose();
-        renderer.dispose();
     }
 }

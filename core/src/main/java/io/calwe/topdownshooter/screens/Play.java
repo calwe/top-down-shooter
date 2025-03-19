@@ -9,8 +9,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
+import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
+import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import io.calwe.topdownshooter.Shotgun;
 import io.calwe.topdownshooter.Weapon;
 import io.calwe.topdownshooter.entities.*;
@@ -50,10 +55,10 @@ public class Play implements Screen {
     //This is used by the draw method of entities so that all entities can rendered in a single batch draw,
     // rather than in multiple batches
     public SpriteBatch batch;
-    private Player player;
+    public static Player player;
 
     //How long between a zombies spawning in
-    private float spawnCooldown = 5f;
+    private final float spawnCooldown = 5f;
     //Stores the timer used to calculated when spawnCooldown has elapsed
     private float timer = 0f;
 
@@ -63,6 +68,8 @@ public class Play implements Screen {
     private float scoreIncreaseTimer = 0f;
 
     public static int currentTier = 1;
+
+    private FillViewport viewport;
 
     @Override
     // show is called whenever this screen is shown
@@ -90,8 +97,9 @@ public class Play implements Screen {
         };
 
         // create a new orthographic (no 3d perspective) camera, and set its position to the center of the map
-        camera = new OrthographicCamera();
-        camera.position.set(Map.MAP_WIDTH * Map.TILE_SIZE / 2f, Map.MAP_HEIGHT * Map.TILE_SIZE / 2f, 0);
+        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        viewport = new FillViewport(400, 200, camera);
+        //camera.position.set(Map.MAP_WIDTH * Map.TILE_SIZE / 2f, Map.MAP_HEIGHT * Map.TILE_SIZE / 2f, 0);
 
         // Add the player to the list of entities so he is updated and rendered, with a pistol in his inventory
         // and with his walk animation, and a red particle that is released when he is damaged
@@ -191,6 +199,7 @@ public class Play implements Screen {
     @Override
     // render is called once every frame
     public void render(float v) {
+
         // Handle input for every entity that requires input
         input();
 
@@ -203,9 +212,6 @@ public class Play implements Screen {
 
         // recalculate camera projection and view matrices, in case its properties have changed (position, size, etc...)
         camera.update();
-
-        // render the map to the camera
-        map.render(camera);
 
         //draw each entity
         draw();
@@ -381,7 +387,7 @@ public class Play implements Screen {
         batch.setProjectionMatrix(camera.combined);
         // Start loading things to render into the batch
         batch.begin();
-
+        map.renderWorld(batch);
         // Iterate through each entity and call their draw function to add them to the batch do draw passing in
         // the spritebatch so that all entities can be drawn at once
         for (Entity e : entities) {
@@ -392,12 +398,8 @@ public class Play implements Screen {
     }
 
     @Override
-    // resize is called whenever the window is resized
     public void resize(int width, int height) {
-        // resize the camera viewport to match the window size
-        // dividing the width and height by a scale zooms the camera
-        camera.viewportWidth = width / PIXEL_SCALE;
-        camera.viewportHeight = height / PIXEL_SCALE;
+        viewport.update(width, height);
     }
 
     @Override
@@ -412,8 +414,6 @@ public class Play implements Screen {
     @Override
     // dispose is called when this screen is destroyed, acting as a "destructor" for the screen
     public void dispose() {
-        // dispose of the map
-        map.dispose();
         // dispose of the spritebatch
         batch.dispose();
     }
