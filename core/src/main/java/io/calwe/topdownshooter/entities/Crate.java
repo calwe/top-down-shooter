@@ -14,16 +14,14 @@ import java.util.*;
 
 public class Crate extends Entity{
     float scale = 0.4f;
-    int tier;
 
-    public Crate(Texture texture, Vector2 position, int tier){
+    public Crate(Texture texture, Vector2 position){
         this.layer = 0;
         this.hasSolidCollision = false;
         this.width = 32;
         this.height = 32;
         this.sprite = new Sprite(texture, width, height);
         sprite.setScale(scale);
-        this.tier = tier;
         this.pos = new Vector2(position.x - (width*scale/2f), position.y-(height*scale/2f));
         this.momentum = new Vector2(0, 0);
         bounds.x = pos.x;
@@ -88,31 +86,31 @@ public class Crate extends Entity{
             if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
                 Random random = new Random();
                 if (random.nextInt(100) < 40){
-                    if (tier == 1){
+                    if (Play.currentTier == 1){
                         List<String> weapons = Collections.list(Play.commonWeapons.keys());
                         Weapon weaponChoice = Play.commonWeapons.get(weapons.get(random.nextInt(weapons.size())));
                         WeaponDrop weaponDrop = new WeaponDrop(weaponChoice, pos, true);
                         Play.entitiesToAdd.add(weaponDrop);
                     }
-                    else if (tier == 2){
+                    else if (Play.currentTier == 2){
                         List<String> weapons = Collections.list(Play.uncommonWeapons.keys());
                         Weapon weaponChoice = Play.uncommonWeapons.get(weapons.get(random.nextInt(weapons.size())));
                         WeaponDrop weaponDrop = new WeaponDrop(weaponChoice, pos, true);
                         Play.entitiesToAdd.add(weaponDrop);
                     }
-                    else if (tier == 3){
+                    else if (Play.currentTier == 3){
                         List<String> weapons = Collections.list(Play.rareWeapons.keys());
                         Weapon weaponChoice = Play.rareWeapons.get(weapons.get(random.nextInt(weapons.size())));
                         WeaponDrop weaponDrop = new WeaponDrop(weaponChoice, pos, true);
                         Play.entitiesToAdd.add(weaponDrop);
                     }
-                    else if (tier == 4){
+                    else if (Play.currentTier == 4){
                         List<String> weapons = Collections.list(Play.epicWeapons.keys());
                         Weapon weaponChoice = Play.epicWeapons.get(weapons.get(random.nextInt(weapons.size())));
                         WeaponDrop weaponDrop = new WeaponDrop(weaponChoice, pos, true);
                         Play.entitiesToAdd.add(weaponDrop);
                     }
-                    else if (tier == 5){
+                    else if (Play.currentTier == 5){
                         List<String> weapons = Collections.list(Play.legendaryWeapons.keys());
                         Weapon weaponChoice = Play.legendaryWeapons.get(weapons.get(random.nextInt(weapons.size())));
                         WeaponDrop weaponDrop = new WeaponDrop(weaponChoice, pos, true);

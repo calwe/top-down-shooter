@@ -54,10 +54,6 @@ public class Play implements Screen {
 
     //How long between a zombies spawning in
     private float spawnCooldown = 5f;
-    //Each time a zombie spawns, spawnCooldown should decrease by this amount, so zombies spawn in faster over time
-    private float spawnCooldownDecrease = 0.05f;
-    //Minimum spawn cooldown, used to prevent spawnCooldown being reduced to near zero and the player being buried in zombies
-    private float minSpawnCooldown = 1f;
     //Stores the timer used to calculated when spawnCooldown has elapsed
     private float timer = 0f;
 
@@ -65,6 +61,8 @@ public class Play implements Screen {
     public static int score;
     //Used to periodically increase the score based on how long the player has been alive
     private float scoreIncreaseTimer = 0f;
+
+    public static int currentTier = 1;
 
     @Override
     // show is called whenever this screen is shown
@@ -112,7 +110,7 @@ public class Play implements Screen {
             camera
         );
         entities.add(player);
-        Crate c = new Crate(new Texture("crate.png"), new Vector2(Map.MAP_WIDTH * Map.TILE_SIZE / 2f, Map.MAP_HEIGHT * Map.TILE_SIZE / 2f), 5);
+        Crate c = new Crate(new Texture("crate.png"), new Vector2(Map.MAP_WIDTH * Map.TILE_SIZE / 2f, Map.MAP_HEIGHT * Map.TILE_SIZE / 2f));
         entities.add(c);
     }
 
@@ -229,7 +227,7 @@ public class Play implements Screen {
 
         //periodically increase the score
         if (scoreIncreaseTimer > 1){
-            score += 5;
+            score += 10;
             scoreIncreaseTimer = 0;
         }
         scoreIncreaseTimer += Gdx.graphics.getDeltaTime();
@@ -243,11 +241,25 @@ public class Play implements Screen {
                 return 0;
             }
         });
+
+        if (score > 1000){
+            currentTier = 5;
+        }
+        else if (score > 750){
+            currentTier = 4;
+        }
+        else if (score > 500){
+            currentTier = 3;
+        }
+        else if (score > 250){
+            currentTier = 2;
+        }
+
     }
 
     public void handleEnemySpawning(){
         //Check if the cooldown to spawn a new enemy has elapsed
-        if (timer >= spawnCooldown){
+        if (timer >= spawnCooldown-(currentTier*0.5f)){
             //how far away from a player zombies should spawn
             float spawnRadius = 100;
             Random random = new Random();
@@ -328,10 +340,6 @@ public class Play implements Screen {
             entitiesToAdd.add(newEnemy);
             //reset the cooldown for spawning enemies
             timer = 0;
-            //If the spawning cooldown hasn't already been decreased to its minimum value, decrease it
-            if (spawnCooldown > minSpawnCooldown){
-                spawnCooldown -= spawnCooldownDecrease;
-            }
         }
         //increment the timer
         timer += Gdx.graphics.getDeltaTime();
