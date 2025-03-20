@@ -13,6 +13,8 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Vector2;
 import io.calwe.topdownshooter.entities.Crate;
+import io.calwe.topdownshooter.entities.Obstacle;
+import io.calwe.topdownshooter.entities.WorldFeature;
 
 import java.awt.image.BufferedImage;
 import java.util.List;
@@ -73,6 +75,32 @@ public class Map {
         return r.nextFloat();
     }
 
+    public void tryToGenerateCrate(float x, float y, List<Vector2> entitiesAlreadyGeneratedCoords) {
+        if (!entitiesAlreadyGeneratedCoords.contains(new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)))){
+            Crate c = new Crate(new Texture("crate.png"), new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)));
+            Play.entitiesToAdd.add(c);
+            entitiesAlreadyGeneratedCoords.add(new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)));
+        }
+    }
+
+    public void tryToGenerateTree(float x, float y, List<Vector2> entitiesAlreadyGeneratedCoords) {
+        if (!entitiesAlreadyGeneratedCoords.contains(new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)))){
+            WorldFeature tree = new WorldFeature(
+                new Texture("World/TreeTop.png"),
+                new Texture("World/TreeTopTransparent.png"),
+                new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)),
+                1,
+                36,
+                36,
+                new Obstacle[]{
+                    new Obstacle(new Texture("World/TreeTrunk.png"), new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)), 1, 12, 12)
+                }
+                );
+            Play.entitiesToAdd.add(tree);
+            entitiesAlreadyGeneratedCoords.add(new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)));
+        }
+    }
+
     public void renderWorld(SpriteBatch batch, List<Vector2> entitiesAlreadyGeneratedCoords) {
         Texture tilesetTexture = new Texture(Gdx.files.internal("map_tileset.png"));
         // create a new empty tile set
@@ -92,12 +120,13 @@ public class Map {
             for (int y = Math.round(Play.player.pos.y/tileSize)-viewDistance; y < Math.round(Play.player.pos.y/tileSize) + viewDistance; y++){
                 int tileId = Math.round(seededRandomLocationValue(x, y)*(tileCount-1)) + 1;
                 batch.draw(tileSet.getTile(tileId).getTextureRegion(), x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f));
+
+
                 if (seededRandomLocationValue(y, x) * 1000 >= 999){
-                    if (!entitiesAlreadyGeneratedCoords.contains(new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)))){
-                        Crate c = new Crate(new Texture("crate.png"), new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)));
-                        Play.entitiesToAdd.add(c);
-                        entitiesAlreadyGeneratedCoords.add(new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)));
-                    }
+                    tryToGenerateCrate(x, y,entitiesAlreadyGeneratedCoords);
+                }
+                else if (seededRandomLocationValue(y+100, x+100) * 1000 >= 998){
+                    tryToGenerateTree(x, y, entitiesAlreadyGeneratedCoords);
                 }
             }
         }
