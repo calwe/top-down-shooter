@@ -101,6 +101,62 @@ public class Map {
         }
     }
 
+    public void tryToGenerateHouse(float x, float y, List<Vector2> entitiesAlreadyGeneratedCoords) {
+        if (!entitiesAlreadyGeneratedCoords.contains(new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)))){
+            tryToGenerateCrate(x, y,entitiesAlreadyGeneratedCoords);
+            WorldFeature house = new WorldFeature(
+                new Texture("World/roof.png"),
+                new Texture("World/roofTransparent.png"),
+                new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)),
+                1,
+                60,
+                96,
+                new Obstacle[]{
+                    //Left wall
+                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+45), 1, 6, 6),
+                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+42), 1, 6, 6),
+                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+36), 1, 6, 6),
+                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+30), 1, 6, 6),
+                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+24), 1, 6, 6),
+                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+18), 1, 6, 6),
+                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+12), 1, 6, 6),
+                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+6), 1, 6, 6),
+                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+0), 1, 6, 6),
+                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)-6), 1, 6, 6),
+                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)-12), 1, 6, 6),
+                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)-18), 1, 6, 6),
+                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)-24), 1, 6, 6),
+                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)-30), 1, 6, 6),
+                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)-36), 1, 6, 6),
+                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)-42), 1, 6, 6),
+                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)-45), 1, 6, 6),
+
+                    //Right wall
+                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+45), 1, 6, 6),
+                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+42), 1, 6, 6),
+                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+36), 1, 6, 6),
+                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+30), 1, 6, 6),
+                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+24), 1, 6, 6),
+                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+18), 1, 6, 6),
+                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+12), 1, 6, 6),
+                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+6), 1, 6, 6),
+                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+0), 1, 6, 6),
+                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)-6), 1, 6, 6),
+                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)-12), 1, 6, 6),
+                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)-18), 1, 6, 6),
+                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)-24), 1, 6, 6),
+                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)-30), 1, 6, 6),
+                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)-36), 1, 6, 6),
+                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)-42), 1, 6, 6),
+                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)-45), 1, 6, 6),
+
+                }
+            );
+            Play.entitiesToAdd.add(house);
+            entitiesAlreadyGeneratedCoords.add(new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)));
+        }
+    }
+
     public void renderWorld(SpriteBatch batch, List<Vector2> entitiesAlreadyGeneratedCoords) {
         Texture tilesetTexture = new Texture(Gdx.files.internal("map_tileset.png"));
         // create a new empty tile set
@@ -122,11 +178,14 @@ public class Map {
                 batch.draw(tileSet.getTile(tileId).getTextureRegion(), x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f));
 
 
-                if (seededRandomLocationValue(y, x) * 1000 >= 999){
+                if (Math.ceil(seededRandomLocationValue(y, x) * 1000) == 999){
                     tryToGenerateCrate(x, y,entitiesAlreadyGeneratedCoords);
                 }
-                else if (seededRandomLocationValue(y+100, x+100) * 1000 >= 998){
+                else if (Math.ceil(seededRandomLocationValue(y+100, x+100) * 1000) >= 997){
                     tryToGenerateTree(x, y, entitiesAlreadyGeneratedCoords);
+                }
+                else if (Math.ceil(seededRandomLocationValue(y+200, x+200) * 1000) == 999){
+                    tryToGenerateHouse(x, y, entitiesAlreadyGeneratedCoords);
                 }
             }
         }
