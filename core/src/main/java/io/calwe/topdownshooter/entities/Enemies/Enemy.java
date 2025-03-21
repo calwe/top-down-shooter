@@ -7,12 +7,16 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import io.calwe.topdownshooter.entities.Entity;
+import io.calwe.topdownshooter.entities.Obstacle;
 import io.calwe.topdownshooter.entities.Particle;
 import io.calwe.topdownshooter.entities.Player;
 import io.calwe.topdownshooter.screens.Play;
 
+import java.util.Collections;
+import java.util.Dictionary;
 import java.util.Random;
 
 public class Enemy extends Entity {
@@ -72,29 +76,90 @@ public class Enemy extends Entity {
         bounds.height = height - (boundsHeightReduction*2f);
     }
 
-    //This overrides Entity's logic method
-    @Override
-    public void logic(){
+    Vector2 getMovementToPlayer(){
         //Calculate the direction to the player, and move in that direction
         Vector2 movementToPlayer = new Vector2(target.pos.x-pos.x,target.pos.y-pos.y);
         movementToPlayer.nor();
         movementToPlayer.scl(movementSpeed*Gdx.graphics.getDeltaTime());
-        momentum.add(movementToPlayer);
+        Vector2 newPos = new Vector2(pos.x + ((width/2f)-boundsWidthReduction), pos.y + ((height/2f)-boundsHeightReduction));
+        newPos.add(movementToPlayer);
+        float angleToLook = (float)Math.atan2(target.pos.x-(pos.x), target.pos.y-(pos.y));
+        if (!colliderCast(
+            new Vector2(pos.x + ((width/2f)-boundsWidthReduction), pos.y + ((height/2f)-boundsHeightReduction)),
+            newPos,
+            3
+        )){
+            // convert the angle given from radians to degrees, and rotate the enemy to look in that direction
+            sprite.setRotation(angleToLook*-180f/(float)Math.PI);
+
+            // Add an offset to the sprite to account for the fact that the sprite is not centered in its image.
+            Vector2 spriteOffset = new Vector2(0, 2).rotate(angleToLook*-180f/(float)Math.PI);
+            spriteOffset.add(pos);
+            sprite.setPosition(spriteOffset.x, spriteOffset.y);
+            return  movementToPlayer;
+        }
+        else{
+            int rotation = 90;
+//            if (pos.cpy().add(movementToPlayer.cpy().rotate(90)).dst(target.pos) > pos.cpy().add(movementToPlayer.cpy().rotate(-90)).dst(target.pos)){
+//                rotation = -90;
+//            }
+            //Calculate the direction to the player, and move in that direction
+            movementToPlayer = new Vector2(target.pos.x-pos.x,target.pos.y-pos.y);
+            movementToPlayer.rotateDeg(rotation);
+            movementToPlayer.nor();
+            movementToPlayer.scl(movementSpeed*Gdx.graphics.getDeltaTime());
+
+
+            // convert the angle given from radians to degrees, and rotate the enemy to look in that direction
+            sprite.setRotation(angleToLook*-180f/(float)Math.PI + rotation);
+
+            // Add an offset to the sprite to account for the fact that the sprite is not centered in its image.
+            Vector2 spriteOffset = new Vector2(0, 2).rotate(angleToLook*-180f/(float)Math.PI);
+            spriteOffset.rotate(rotation);
+            spriteOffset.add(pos);
+            sprite.setPosition(spriteOffset.x, spriteOffset.y);
+
+        }
         if (Math.round(movementToPlayer.x*100f)/100f == 0.0f && Math.round(movementToPlayer.y*100f)/100f == 0.0f){
             elapsedTime = 0.0f;
         }
+        return  movementToPlayer;
+    }
+
+    boolean colliderCast(Vector2 startPos, Vector2 endPos, int increment){
+        Vector2 direction = new Vector2(endPos.x-startPos.x,endPos.y-startPos.y);
+        direction.nor();
+        Dictionary<Rectangle, Entity> collideableRects = Play.getOtherColliderRects(this);
+        Object[] rects = Collections.list(collideableRects.keys()).toArray();
+        Rectangle currentBounds = new Rectangle();
+        for (int i = 0; i < startPos.dst(endPos)/increment; i++) {
+            Vector2 coordToCheck = startPos.cpy();
+            Vector2 tempDirection = direction.cpy();
+            tempDirection.scl(increment);
+            coordToCheck.add(tempDirection);
+            currentBounds.x = coordToCheck.x - (width/2f) + boundsWidthReduction;
+            currentBounds.y = coordToCheck.y  - (height/2f) + boundsHeightReduction;
+            currentBounds.width = width-(boundsWidthReduction/2f);
+            currentBounds.height = height-(boundsHeightReduction/2f);
+            for (Object rect : rects) {
+                if (currentBounds.overlaps((Rectangle) rect)) {
+                    if (collideableRects.get(rect) instanceof Obstacle) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    //This overrides Entity's logic method
+    @Override
+    public void logic(){
+        momentum.add(getMovementToPlayer());
+
         tryMove();
         //Reduce their momentum over time
         momentum.scl(slide);
-        //Turn to face the player
-        float angleToLook = (float)Math.atan2(target.pos.x-(pos.x), target.pos.y-(pos.y));
-        // convert the angle given from radians to degrees, and rotate the enemy to look in that direction
-        sprite.setRotation(angleToLook*-180f/(float)Math.PI);
-
-        // Add an offset to the sprite to account for the fact that the sprite is not centered in its image.
-        Vector2 spriteOffset = new Vector2(0, 2).rotate(angleToLook*-180f/(float)Math.PI);
-        spriteOffset.add(pos);
-        sprite.setPosition(spriteOffset.x, spriteOffset.y);
 
         //Check if the zombie is out of health - if it is, execute the die function
         if (health <= 0){
