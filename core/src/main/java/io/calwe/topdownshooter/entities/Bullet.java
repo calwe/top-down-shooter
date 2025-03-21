@@ -80,6 +80,10 @@ public class Bullet extends Entity {
             //Destroy this bullet
             Play.entitiesToRemove.add(this);
         }
+        if (e instanceof Obstacle){
+            //Destroy this bullet
+            Play.entitiesToRemove.add(this);
+        }
     }
 }
 

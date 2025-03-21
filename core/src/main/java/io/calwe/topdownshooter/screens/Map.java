@@ -83,6 +83,23 @@ public class Map {
         }
     }
 
+    public void tryToGenerateCar(float x, float y, List<Vector2> entitiesAlreadyGeneratedCoords) {
+        Texture[] carTextures = new Texture[]{
+            new Texture("World/Cars/BlackCar.png"),
+            new Texture("World/Cars/BlueCar.png"),
+            new Texture("World/Cars/GrayCar.png"),
+            new Texture("World/Cars/GreenCar.png"),
+            new Texture("World/Cars/RedCar.png"),
+            new Texture("World/Cars/WhiteCar.png"),
+        };
+        Random rand = new Random();
+        if (!entitiesAlreadyGeneratedCoords.contains(new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)))){
+            Obstacle car = new Obstacle(carTextures[rand.nextInt(carTextures.length)], new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)), 1, 26, 43);
+            Play.entitiesToAdd.add(car);
+            entitiesAlreadyGeneratedCoords.add(new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)));
+        }
+    }
+
     public void tryToGenerateTree(float x, float y, List<Vector2> entitiesAlreadyGeneratedCoords) {
         if (!entitiesAlreadyGeneratedCoords.contains(new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)))){
             WorldFeature tree = new WorldFeature(
@@ -187,6 +204,9 @@ public class Map {
                     tryToGenerateTree(x, y, entitiesAlreadyGeneratedCoords);
                 }
                 else if (Math.ceil(seededRandomLocationValue(y+200, x+200) * 1000) == 999){
+                    tryToGenerateCar(x, y, entitiesAlreadyGeneratedCoords);
+                }
+                else if (Math.ceil(seededRandomLocationValue(y+300, x+300) * 1000) == 999){
                     tryToGenerateHouse(x, y, entitiesAlreadyGeneratedCoords);
                 }
             }

@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import io.calwe.topdownshooter.entities.Entity;
+import io.calwe.topdownshooter.entities.Obstacle;
 import io.calwe.topdownshooter.entities.Player;
 import io.calwe.topdownshooter.screens.Play;
 
@@ -61,6 +62,10 @@ public class EnemyProjectile extends Entity {
             knockbackDirection.nor();
             knockbackDirection.scl(knockback);
             player.applyKnockback(knockbackDirection);
+            //Destroy this bullet
+            Play.entitiesToRemove.add(this);
+        }
+        if (e instanceof Obstacle){
             //Destroy this bullet
             Play.entitiesToRemove.add(this);
         }
