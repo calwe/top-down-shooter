@@ -197,16 +197,16 @@ public class Map {
                 batch.draw(tileSet.getTile(tileId).getTextureRegion(), x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f));
 
 
-                if (Math.ceil(seededRandomLocationValue(y, x) * 1000) == 999){
+                if (Math.ceil(seededRandomLocationValue(y, x) * 1000) >= 999){
                     tryToGenerateCrate(x, y,entitiesAlreadyGeneratedCoords);
                 }
                 else if (Math.ceil(seededRandomLocationValue(y+100, x+100) * 1000) >= 997){
                     tryToGenerateTree(x, y, entitiesAlreadyGeneratedCoords);
                 }
-                else if (Math.ceil(seededRandomLocationValue(y+200, x+200) * 1000) == 999){
+                else if (Math.ceil(seededRandomLocationValue(y+200, x+200) * 2000) == 999){
                     tryToGenerateCar(x, y, entitiesAlreadyGeneratedCoords);
                 }
-                else if (Math.ceil(seededRandomLocationValue(y+300, x+300) * 1000) == 999){
+                else if (Math.ceil(seededRandomLocationValue(y+300, x+300) * 2000) == 999){
                     tryToGenerateHouse(x, y, entitiesAlreadyGeneratedCoords);
                 }
             }

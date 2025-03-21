@@ -69,6 +69,14 @@ public class Play implements Screen {
 
     private FillViewport viewport;
 
+    private int[] enemyCapAtTier = new int[]{
+        3,
+        4,
+        5,
+        6,
+        7,
+    };
+
     @Override
     // show is called whenever this screen is shown
     // it essentially acts as a constructor for the screen
@@ -261,87 +269,100 @@ public class Play implements Screen {
 
     }
 
+    int getNumberOfEnemies(){
+        int numEnemies = 0;
+        for (Entity e : entities) {
+            if (e instanceof Enemy){
+                numEnemies++;
+            }
+        }
+        return numEnemies;
+    }
+
+
     public void handleEnemySpawning(){
         //Check if the cooldown to spawn a new enemy has elapsed
         if (timer >= spawnCooldown-(currentTier*0.5f)){
-            //how far away from a player zombies should spawn
-            float spawnRadius = 100;
-            Random random = new Random();
-            //Find a new random direction
-            Vector2 spawnPos = new Vector2(random.nextFloat(spawnRadius*2)-spawnRadius, random.nextFloat(spawnRadius*2)-spawnRadius);
-            spawnPos.nor();
-            //Multiply the direction by the radius and add the player's position to spawn the zombie 100 away
-            // from the player in a random direction
-            spawnPos.scl(spawnRadius);
-            spawnPos.add(player.pos);
-            // Create a new enemy, with the appropriate textures and sounds, and spawn him at the generated position
-            Entity newEnemy;
-            int enemyChoice = random.nextInt(100);
-            if (enemyChoice >= 85){
-                newEnemy = new ExplodingEnemy(
-                    new Texture("Enemies/blueZombie.png"),
-                    getAnimatedZombieTexture(),
-                    Gdx.audio.newSound(Gdx.files.internal("Enemies/zombieHit.mp3")),
-                    spawnPos,
-                    player,
-                    new Texture[]{
-                        new Texture("bloodParticle.png"),
-                        new Texture("Enemies/zombieParticle.png")
-                    },
-                    new Texture("Enemies/zombieProjectile.png"),
-                    1.5f
-                );
-            }
-            else if (enemyChoice >= 70){
-                newEnemy = new ChargingEnemy(
-                    new Texture("Enemies/redZombie.png"),
-                    getAnimatedZombieTexture(),
-                    Gdx.audio.newSound(Gdx.files.internal("Enemies/zombieHit.mp3")),
-                    spawnPos,
-                    player,
-                    new Texture[]{
-                        new Texture("bloodParticle.png"),
-                        new Texture("Enemies/zombieParticle.png")
-                    },
-                    new Texture("Enemies/ChargingZombieLockingOn.png"),
-                    4,
-                    0.5f,
-                    40,
-                    0.7f
-                );
-            }
-            else if (enemyChoice >= 55){
-                newEnemy = new RangedEnemy(
-                    new Texture("Enemies/greyZombie.png"),
-                    getAnimatedZombieTexture(),
-                    Gdx.audio.newSound(Gdx.files.internal("Enemies/zombieHit.mp3")),
-                    spawnPos,
-                    player,
-                    new Texture[]{
-                        new Texture("bloodParticle.png"),
-                        new Texture("Enemies/zombieParticle.png")
-                    },
-                    2,
-                    2f,
-                    new Texture("Enemies/zombieProjectile.png")
-                );
-            }
-            else{
-                newEnemy = new Enemy(
-                    new Texture("Enemies/orangeZombie.png"),
-                    getAnimatedZombieTexture(),
-                    Gdx.audio.newSound(Gdx.files.internal("Enemies/zombieHit.mp3")),
-                    spawnPos,
-                    player,
-                    new Texture[]{
-                        new Texture("bloodParticle.png"),
-                        new Texture("Enemies/zombieParticle.png")
-                    }
-                );
-            }
+            if (getNumberOfEnemies() < enemyCapAtTier[currentTier+1]){
+                //how far away from a player zombies should spawn
+                float spawnRadius = 100;
+                Random random = new Random();
+                //Find a new random direction
+                Vector2 spawnPos = new Vector2(random.nextFloat(spawnRadius*2)-spawnRadius, random.nextFloat(spawnRadius*2)-spawnRadius);
+                spawnPos.nor();
+                //Multiply the direction by the radius and add the player's position to spawn the zombie 100 away
+                // from the player in a random direction
+                spawnPos.scl(spawnRadius);
+                spawnPos.add(player.pos);
+                // Create a new enemy, with the appropriate textures and sounds, and spawn him at the generated position
+                Entity newEnemy;
+                int enemyChoice = random.nextInt(100);
+                if (enemyChoice >= 85){
+                    newEnemy = new ExplodingEnemy(
+                        new Texture("Enemies/blueZombie.png"),
+                        getAnimatedZombieTexture(),
+                        Gdx.audio.newSound(Gdx.files.internal("Enemies/zombieHit.mp3")),
+                        spawnPos,
+                        player,
+                        new Texture[]{
+                            new Texture("bloodParticle.png"),
+                            new Texture("Enemies/zombieParticle.png")
+                        },
+                        new Texture("Enemies/zombieProjectile.png"),
+                        1.5f
+                    );
+                }
+                else if (enemyChoice >= 70){
+                    newEnemy = new ChargingEnemy(
+                        new Texture("Enemies/redZombie.png"),
+                        getAnimatedZombieTexture(),
+                        Gdx.audio.newSound(Gdx.files.internal("Enemies/zombieHit.mp3")),
+                        spawnPos,
+                        player,
+                        new Texture[]{
+                            new Texture("bloodParticle.png"),
+                            new Texture("Enemies/zombieParticle.png")
+                        },
+                        new Texture("Enemies/ChargingZombieLockingOn.png"),
+                        4,
+                        0.5f,
+                        40,
+                        0.7f
+                    );
+                }
+                else if (enemyChoice >= 55){
+                    newEnemy = new RangedEnemy(
+                        new Texture("Enemies/greyZombie.png"),
+                        getAnimatedZombieTexture(),
+                        Gdx.audio.newSound(Gdx.files.internal("Enemies/zombieHit.mp3")),
+                        spawnPos,
+                        player,
+                        new Texture[]{
+                            new Texture("bloodParticle.png"),
+                            new Texture("Enemies/zombieParticle.png")
+                        },
+                        2,
+                        2f,
+                        new Texture("Enemies/zombieProjectile.png")
+                    );
+                }
+                else{
+                    newEnemy = new Enemy(
+                        new Texture("Enemies/orangeZombie.png"),
+                        getAnimatedZombieTexture(),
+                        Gdx.audio.newSound(Gdx.files.internal("Enemies/zombieHit.mp3")),
+                        spawnPos,
+                        player,
+                        new Texture[]{
+                            new Texture("bloodParticle.png"),
+                            new Texture("Enemies/zombieParticle.png")
+                        }
+                    );
+                }
 
-            //Add him to the entities list so he will be updated
-            entitiesToAdd.add(newEnemy);
+                //Add him to the entities list so he will be updated
+                entitiesToAdd.add(newEnemy);
+            }
             //reset the cooldown for spawning enemies
             timer = 0;
         }
