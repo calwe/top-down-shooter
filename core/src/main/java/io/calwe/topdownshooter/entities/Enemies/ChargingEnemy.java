@@ -111,6 +111,9 @@ public class ChargingEnemy extends Enemy {
         if (health <= 0){
             die();
         }
+        if (pos.dst(target.pos) > 300){
+            Play.entitiesToRemove.add(this);
+        }
     }
 
     // This overrides entity's draw method so we can have animation

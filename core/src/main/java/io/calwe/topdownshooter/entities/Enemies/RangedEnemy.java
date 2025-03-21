@@ -71,6 +71,9 @@ public class RangedEnemy extends Enemy {
         if (health <= 0){
             die();
         }
+        if (pos.dst(target.pos) > 300){
+            Play.entitiesToRemove.add(this);
+        }
     }
 
     @Override

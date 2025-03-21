@@ -67,10 +67,10 @@ public abstract class Entity {
     //This handles collisions while moving
     protected void tryMove () {
         //Calculate the current collider bounds
-        bounds.x = pos.x;
-        bounds.y = pos.y;
-        bounds.width = width;
-        bounds.height = height;
+        bounds.x = pos.x + boundsWidthReduction;
+        bounds.y = pos.y + boundsHeightReduction;
+        bounds.width = width - (boundsWidthReduction*2f);
+        bounds.height = height - (boundsHeightReduction*2f);
         //get the location we are going to move to in the x direction
         bounds.x += momentum.x;
         //Get all the other objects we could collide with
@@ -129,8 +129,8 @@ public abstract class Entity {
         }
         //Move us based on the collisions
         if (this.hasSolidCollision) {
-            pos.x = bounds.x;
-            pos.y = bounds.y;
+            pos.x = bounds.x - boundsWidthReduction;
+            pos.y = bounds.y - boundsHeightReduction;
         }
         else{
             pos = new Vector2(pos.x + momentum.x, pos.y + momentum.y);
