@@ -150,6 +150,8 @@ public class Map {
                     new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)-42), 1, 6, 6),
                     new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)-45), 1, 6, 6),
 
+                    //Floor
+                    new Obstacle(new Texture("World/Floor.png"), new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)), 1, 60, 96, false, -5)
                 }
             );
             Play.entitiesToAdd.add(house);
