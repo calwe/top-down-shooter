@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import io.calwe.topdownshooter.Weapon;
 import io.calwe.topdownshooter.screens.Play;
+import io.calwe.topdownshooter.ui.HUD;
 
 import java.util.Random;
 
@@ -49,6 +50,8 @@ public class Player extends Entity {
     //An array of textures for the particles that should be released when the player is damage
     Texture[] damageParticles;
 
+    public HUD hud;
+
     // The constructor - intialize all the variables
     public Player(Texture texture, Animation<TextureRegion> playerWalkAnimation, Vector2 startPos, Weapon[] inventory, Texture[] damageParticles, OrthographicCamera camera) {
         this.maxHealth = 100;
@@ -69,6 +72,8 @@ public class Player extends Entity {
         this.health = maxHealth;
         this.boundsHeightReduction = 3;
         this.boundsWidthReduction = 3;
+        this.hud = new HUD();
+        this.hud.create();
         //Calculate the player's collider bounds
         bounds.x = pos.x + boundsWidthReduction;
         bounds.y = pos.y + boundsHeightReduction;
@@ -261,6 +266,7 @@ public class Player extends Entity {
         for (int i = 0; i < inventory.length; i++) {
             if (inventory[i] == null){
                 inventory[i] = weaponToAdd;
+                hud.inventory.slots[i].weaponInSlot = weaponToAdd;
                 return;
             }
         }
@@ -272,5 +278,14 @@ public class Player extends Entity {
         }
         //And add the picked up weapon to our inventory in its place
         inventory[currentInventorySlot] = weaponToAdd;
+        hud.inventory.slots[currentInventorySlot].weaponInSlot = weaponToAdd;
+    }
+
+    public void resize(int width, int height) {
+        hud.resize(width, height);
+    }
+
+    public void dispose() {
+        hud.dispose();
     }
 }

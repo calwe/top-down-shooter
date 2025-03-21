@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import io.calwe.topdownshooter.Weapon;
 import io.calwe.topdownshooter.entities.*;
+import io.calwe.topdownshooter.ui.HUD;
 
 import java.util.*;
 import java.util.List;
@@ -79,16 +80,14 @@ public class Play implements Screen {
             new Texture("player_single_frame.png"),
             getAnimatedPlayerTexture(),
             new Vector2(Map.MAP_WIDTH * Map.TILE_SIZE / 2f, Map.MAP_HEIGHT * Map.TILE_SIZE / 2f),
-            new Weapon[]{
-                new Weapon(weapons.get("Pistol"),weapons.get("Pistol").ammo),
-                new Weapon(weapons.get("Assault Rifle"),weapons.get("Assault Rifle").ammo),
-                null
-            },
+            new Weapon[3],
             new Texture[]{
                 new Texture("bloodParticle.png")
             },
             camera
         );
+        player.addToInventory(new Weapon(weapons.get("Pistol"),weapons.get("Pistol").ammo));
+        player.addToInventory(new Weapon(weapons.get("Assault Rifle"),weapons.get("Assault Rifle").ammo));
         entities.add(player);
 
         //For testing purposes
@@ -148,6 +147,8 @@ public class Play implements Screen {
 
         //draw each entity
         draw();
+
+        player.hud.render();
 
         //check if new enemies need to be spawned in
         handleEnemySpawning();
@@ -327,6 +328,9 @@ public class Play implements Screen {
         // dividing the width and height by a scale zooms the camera
         camera.viewportWidth = width / PIXEL_SCALE;
         camera.viewportHeight = height / PIXEL_SCALE;
+
+        player.resize(width, height);
+
     }
 
     @Override
@@ -345,5 +349,7 @@ public class Play implements Screen {
         map.dispose();
         // dispose of the spritebatch
         batch.dispose();
+
+        player.dispose();
     }
 }
