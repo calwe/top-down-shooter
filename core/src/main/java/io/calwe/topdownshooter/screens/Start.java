@@ -31,13 +31,12 @@ public class Start implements Screen {
             Gdx.gl.glClearColor(0, 0, 0, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             batch.begin();
+            batch.draw(new Texture("Skull.png"), (Gdx.graphics.getWidth()/2f)-(Gdx.graphics.getHeight()*0.25f), Gdx.graphics.getHeight()*0.2f, Gdx.graphics.getHeight()*0.5f,Gdx.graphics.getHeight()*0.5f);
             BitmapFont font = new BitmapFont();
-            font.setColor(Color.RED);
+            font.setColor(Color.GREEN);
             font.getData().setScale(8f);
-            font.draw(batch, "ZOMBIES", Gdx.graphics.getWidth()/2f-250, Gdx.graphics.getHeight()*0.9f);
+            font.draw(batch, "ZOMBIES!", Gdx.graphics.getWidth()/2f-250, Gdx.graphics.getHeight()*0.9f);
             font.getData().setScale(3f);
-
-            font.setColor(Color.RED);
             font.draw(batch, "PRESS ENTER TO START.", Gdx.graphics.getWidth()/2f-250, Gdx.graphics.getHeight()*0.1f);
             batch.end();
         }
