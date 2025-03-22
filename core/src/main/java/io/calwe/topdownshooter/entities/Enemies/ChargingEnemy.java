@@ -70,11 +70,7 @@ public class ChargingEnemy extends Enemy {
         }
         else{
             if (target.pos.dst(pos) > 50){
-                //Calculate the direction to the player, and move in that direction
-                Vector2 movementToPlayer = new Vector2(target.pos.x-pos.x,target.pos.y-pos.y);
-                movementToPlayer.nor();
-                movementToPlayer.scl(movementSpeed * Gdx.graphics.getDeltaTime());
-                momentum.add(movementToPlayer);
+                momentum.add(getMovementToPlayer());
             }
             else{
                 elapsedTime = 0.0f;
@@ -107,10 +103,6 @@ public class ChargingEnemy extends Enemy {
         sprite.setPosition(spriteOffset.x, spriteOffset.y);
         chargingSprite.setPosition(spriteOffset.x, spriteOffset.y);
         attackCooldownTimer += Gdx.graphics.getDeltaTime();
-        //Check if the zombie is out of health - if it is, execute the die function
-        if (health <= 0){
-            die();
-        }
         if (pos.dst(target.pos) > 300){
             Play.entitiesToRemove.add(this);
         }
@@ -140,15 +132,6 @@ public class ChargingEnemy extends Enemy {
         }
         // Update how much time has passed since we started showing the animation
         elapsedTime += Gdx.graphics.getDeltaTime();
-    }
-
-    @Override
-    //executed when the enemy runs out of health
-    protected void die(){
-        //Add to the player's score
-        Play.score += 150;
-        //Remove this entity from the world
-        Play.entitiesToRemove.add(this);
     }
 
     //Run when we collide with another entity

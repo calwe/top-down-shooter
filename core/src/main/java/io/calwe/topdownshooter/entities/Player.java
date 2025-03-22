@@ -218,6 +218,7 @@ public class Player extends Entity {
     //If the player is out of health, remove them from the world
     private void die(){
         Play.entitiesToRemove.add(this);
+        Play.main.GameOver(Play.score);
     }
 
     // This overrides entity's draw method so we can have animation
@@ -254,6 +255,7 @@ public class Player extends Entity {
             p.momentum = movement;
             Play.entitiesToAdd.add(p);
         }
+        //Gdx.audio.newSound(Gdx.files.internal("playerHit.mp3")).play(0.5f);
     }
 
     //Add knockback to the player's momentum

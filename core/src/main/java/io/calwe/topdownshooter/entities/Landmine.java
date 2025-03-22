@@ -122,6 +122,7 @@ public class Landmine extends Entity{
         if (!detonating) {
             if (e instanceof Player || e instanceof Enemy){
                 detonate();
+                Gdx.audio.newSound(Gdx.files.internal("explosion.mp3")).play(0.3f);
             }
         }
     }

@@ -161,10 +161,6 @@ public class Enemy extends Entity {
         //Reduce their momentum over time
         momentum.scl(slide);
 
-        //Check if the zombie is out of health - if it is, execute the die function
-        if (health <= 0){
-            die();
-        }
         if (pos.dst(target.pos) > 300){
             Play.entitiesToRemove.add(this);
         }
@@ -176,6 +172,7 @@ public class Enemy extends Entity {
         Play.score += 100;
         //Remove this entity from the world
         Play.entitiesToRemove.add(this);
+        Gdx.audio.newSound(Gdx.files.internal("Enemies/zombieKilled.mp3")).play(0.3f);
     }
 
     // This overrides entity's draw method so we can have animation
@@ -219,7 +216,7 @@ public class Enemy extends Entity {
         //Subtract the damage from our health
         health -= damage;
         //Play the enemy damaged sound
-        hurtSound.play(0.1f);
+
         Random random = new Random();
         //Generate blood particles and release them from the enemy in random directions
         for (int i = 0; i < 6; i++) {
@@ -229,6 +226,13 @@ public class Enemy extends Entity {
             movement.scl(1);
             p.momentum = movement;
             Play.entitiesToAdd.add(p);
+        }
+        //Check if the zombie is out of health - if it is, execute the die function
+        if (health <= 0){
+            die();
+        }
+        else{
+            hurtSound.play(0.1f);
         }
     }
 

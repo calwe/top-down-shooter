@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FillViewport;
+import io.calwe.topdownshooter.Main;
 import io.calwe.topdownshooter.Shotgun;
 import io.calwe.topdownshooter.Weapon;
 import io.calwe.topdownshooter.entities.*;
@@ -67,6 +68,8 @@ public class Play implements Screen {
 
     public static int currentTier = 1;
 
+    public static Main main;
+
     private FillViewport viewport;
 
     private int[] enemyCapAtTier = new int[]{
@@ -94,9 +97,9 @@ public class Play implements Screen {
 
         equipment = new EquipmentDrop[]{
             new CritChanceDrop(new Texture("Equipment/RedDotSight.png"), "Red dot sight", "Crit chance +7%.", 7),
-            new CritDamageDrop(noTexture, "Armor piercing bullets", "Crit damage +25%", 0.5f),
+            new CritDamageDrop(new Texture("Equipment/AP-rounds.png"), "Armor piercing bullets", "Crit damage +25%", 0.5f),
             new DamageDrop(new Texture("Equipment/ammo.png"), "Hollow points", "Damage +20%", 0.2f),
-            new ExtraInventoryDrop(noTexture, "Backpack", "Carry an additional weapon."),
+            new ExtraInventoryDrop(new Texture("Equipment/Bag.png"), "Bag", "Carry an additional weapon."),
             new HealDrop(new Texture("Equipment/medkit.png"), "Medkit", "Heal 25%", 25),
             new HealthDrop(new Texture("Equipment/FlakVest.png"), "Kevlar vest", "Max health +10%", 10),
             new SaveAmmoDrop(new Texture("Equipment/Magazine.png"), "Extended magazine", "8% chance to save ammo.", 8)
@@ -124,8 +127,8 @@ public class Play implements Screen {
             camera
         );
         entities.add(player);
-        Crate c = new Crate(new Texture("crate.png"), new Vector2(0, 0));
-        entities.add(c);
+
+        Gdx.audio.newSound(Gdx.files.internal("backgroundMusic.mp3")).play(0.1f);
     }
 
     //Get the humanoid walk animation

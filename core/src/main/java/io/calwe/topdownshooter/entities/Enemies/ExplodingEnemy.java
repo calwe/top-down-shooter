@@ -1,5 +1,6 @@
 package io.calwe.topdownshooter.entities.Enemies;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -19,7 +20,6 @@ public class ExplodingEnemy extends Enemy {
         this.projectileSpeed = projectileSpeed;
         this.projectileTexture = projectileTexture;
     }
-
 
 
     //executed when the enemy runs out of health
@@ -52,6 +52,7 @@ public class ExplodingEnemy extends Enemy {
         }
         //Remove this entity from the world
         Play.entitiesToRemove.add(this);
+        Gdx.audio.newSound(Gdx.files.internal("Enemies/zombieKilled.mp3")).play(0.3f);
     }
 
 }

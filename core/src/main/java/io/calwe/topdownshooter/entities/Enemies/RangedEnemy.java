@@ -25,15 +25,12 @@ public class RangedEnemy extends Enemy {
         this.projectileTexture = projectileTexture;
     }
 
+
     //This overrides Enemy's logic method
     @Override
     public void logic(){
         if (target.pos.dst(pos) > 60){
-            //Calculate the direction to the player, and move in that direction
-            Vector2 movementToPlayer = new Vector2(target.pos.x-pos.x,target.pos.y-pos.y);
-            movementToPlayer.nor();
-            movementToPlayer.scl(movementSpeed* Gdx.graphics.getDeltaTime());
-            momentum.add(movementToPlayer);
+            momentum.add(getMovementToPlayer());
         }
         else{
             elapsedTime = 0.0f;
@@ -74,15 +71,6 @@ public class RangedEnemy extends Enemy {
         if (pos.dst(target.pos) > 300){
             Play.entitiesToRemove.add(this);
         }
-    }
-
-    @Override
-    //executed when the enemy runs out of health
-    protected void die(){
-        //Add to the player's score
-        Play.score += 150;
-        //Remove this entity from the world
-        Play.entitiesToRemove.add(this);
     }
 
     //Run when we collide with another entity
