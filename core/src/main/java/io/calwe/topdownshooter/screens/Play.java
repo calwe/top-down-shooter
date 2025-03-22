@@ -27,10 +27,9 @@ import java.util.*;
 import java.util.List;
 
 public class Play implements Screen {
-    // libGDX uses floats for viewport width/height, so the scale should also be a float
-    private static final float PIXEL_SCALE = 5f;
 
     private OrthographicCamera camera;
+    private FillViewport viewport;
 
     private Map map;
 
@@ -71,8 +70,6 @@ public class Play implements Screen {
 
     public static Main main;
 
-    private FillViewport viewport;
-
     private int[] enemyCapAtTier = new int[]{
         3,
         4,
@@ -111,7 +108,6 @@ public class Play implements Screen {
         // create a new orthographic (no 3d perspective) camera, and set its position to the center of the map
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         viewport = new FillViewport(400, 200, camera);
-        //camera.position.set(Map.MAP_WIDTH * Map.TILE_SIZE / 2f, Map.MAP_HEIGHT * Map.TILE_SIZE / 2f, 0);
 
         // Add the player to the list of entities so he is updated and rendered, with a pistol in his inventory
         // and with his walk animation, and a red particle that is released when he is damaged
