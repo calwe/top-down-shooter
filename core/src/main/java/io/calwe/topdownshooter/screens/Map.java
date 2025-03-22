@@ -46,10 +46,57 @@ public class Map {
 
     private final int viewDistance;
 
+    Texture crateTexture;
+    Texture treeTexture;
+    Texture treeTransparentTexture;
+    Texture trunkTexture;
+    Texture houseTexture;
+    Texture houseTransparentTexture;
+    Texture wallTexture;
+    Texture floorTexture;
+    Texture landmineTexture;
+    Animation<TextureRegion> explosionAnimation;
+    Texture[] carTextures;
+
+    TiledMapTileSet tileSet;
+
 
     public Map() {
         initialTime = System.currentTimeMillis();
         viewDistance = 20;
+        treeTexture = new Texture("World/TreeTop.png");
+        treeTransparentTexture = new Texture("World/TreeTopTransparent.png");
+        trunkTexture = new Texture("World/TreeTrunk.png");
+        crateTexture = new Texture("crate.png");
+        carTextures = new Texture[]{
+            new Texture("World/Cars/BlackCar.png"),
+            new Texture("World/Cars/BlueCar.png"),
+            new Texture("World/Cars/GrayCar.png"),
+            new Texture("World/Cars/GreenCar.png"),
+            new Texture("World/Cars/RedCar.png"),
+            new Texture("World/Cars/WhiteCar.png"),
+        };
+        houseTexture = new Texture("World/roof.png");
+        houseTransparentTexture = new Texture("World/roofTransparent.png");
+        wallTexture = new Texture("World/Wall.png");
+        floorTexture = new Texture("World/Floor.png");
+        landmineTexture = new Texture("World/Landmine.png");
+        explosionAnimation = getLandmineExplosionAnimation();
+
+        Texture tilesetTexture = new Texture(Gdx.files.internal("map_tileset.png"));
+        // create a new empty tile set
+        tileSet = new TiledMapTileSet();
+        // loop through each square region in the texture, and add this to the tile set
+        for (int i = 0; i < 5; i++) {
+            // get the correct region
+            TextureRegion region = new TextureRegion(tilesetTexture, 0, i * tileSize, tileSize, tileSize);
+            // turn the region into a tile
+            TiledMapTile tile = new StaticTiledMapTile(region);
+            // set the id of the tile to i+1, as tile IDs must start at 1
+            tile.setId(i + 1);
+            // put the tile into the tileSet, at the correct position
+            tileSet.putTile(i + 1, tile);
+        }
     }
 
     float seededRandomLocationValue(int x,int y) {
@@ -79,21 +126,13 @@ public class Map {
 
     public void tryToGenerateCrate(float x, float y, List<Vector2> entitiesAlreadyGeneratedCoords) {
         if (!entitiesAlreadyGeneratedCoords.contains(new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)))){
-            Crate c = new Crate(new Texture("crate.png"), new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)));
+            Crate c = new Crate(crateTexture, new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)));
             Play.entitiesToAdd.add(c);
             entitiesAlreadyGeneratedCoords.add(new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)));
         }
     }
 
     public void tryToGenerateCar(float x, float y, List<Vector2> entitiesAlreadyGeneratedCoords) {
-        Texture[] carTextures = new Texture[]{
-            new Texture("World/Cars/BlackCar.png"),
-            new Texture("World/Cars/BlueCar.png"),
-            new Texture("World/Cars/GrayCar.png"),
-            new Texture("World/Cars/GreenCar.png"),
-            new Texture("World/Cars/RedCar.png"),
-            new Texture("World/Cars/WhiteCar.png"),
-        };
         Random rand = new Random();
         if (!entitiesAlreadyGeneratedCoords.contains(new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)))){
             Obstacle car = new Obstacle(carTextures[rand.nextInt(carTextures.length)], new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)), 1, 26, 43);
@@ -105,14 +144,14 @@ public class Map {
     public void tryToGenerateTree(float x, float y, List<Vector2> entitiesAlreadyGeneratedCoords) {
         if (!entitiesAlreadyGeneratedCoords.contains(new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)))){
             WorldFeature tree = new WorldFeature(
-                new Texture("World/TreeTop.png"),
-                new Texture("World/TreeTopTransparent.png"),
+                treeTexture,
+                treeTransparentTexture,
                 new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)),
                 1,
                 36,
                 36,
                 new Obstacle[]{
-                    new Obstacle(new Texture("World/TreeTrunk.png"), new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)), 1, 12, 12)
+                    new Obstacle(trunkTexture, new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)), 1, 12, 12)
                 }
                 );
             Play.entitiesToAdd.add(tree);
@@ -124,53 +163,53 @@ public class Map {
         if (!entitiesAlreadyGeneratedCoords.contains(new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)))){
             tryToGenerateCrate(x, y,entitiesAlreadyGeneratedCoords);
             WorldFeature house = new WorldFeature(
-                new Texture("World/roof.png"),
-                new Texture("World/roofTransparent.png"),
+                houseTexture,
+                houseTransparentTexture,
                 new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)),
                 1,
                 60,
                 96,
                 new Obstacle[]{
                     //Left wall
-                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+45), 1, 6, 6),
-                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+42), 1, 6, 6),
-                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+36), 1, 6, 6),
-                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+30), 1, 6, 6),
-                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+24), 1, 6, 6),
-                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+18), 1, 6, 6),
-                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+12), 1, 6, 6),
-                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+6), 1, 6, 6),
-                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+0), 1, 6, 6),
-                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)-6), 1, 6, 6),
-                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)-12), 1, 6, 6),
-                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)-18), 1, 6, 6),
-                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)-24), 1, 6, 6),
-                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)-30), 1, 6, 6),
-                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)-36), 1, 6, 6),
-                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)-42), 1, 6, 6),
-                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)-45), 1, 6, 6),
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+45), 1, 6, 6),
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+42), 1, 6, 6),
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+36), 1, 6, 6),
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+30), 1, 6, 6),
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+24), 1, 6, 6),
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+18), 1, 6, 6),
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+12), 1, 6, 6),
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+6), 1, 6, 6),
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+0), 1, 6, 6),
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)-6), 1, 6, 6),
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)-12), 1, 6, 6),
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)-18), 1, 6, 6),
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)-24), 1, 6, 6),
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)-30), 1, 6, 6),
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)-36), 1, 6, 6),
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)-42), 1, 6, 6),
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)-45), 1, 6, 6),
 
                     //Right wall
-                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+45), 1, 6, 6),
-                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+42), 1, 6, 6),
-                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+36), 1, 6, 6),
-                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+30), 1, 6, 6),
-                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+24), 1, 6, 6),
-                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+18), 1, 6, 6),
-                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+12), 1, 6, 6),
-                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+6), 1, 6, 6),
-                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+0), 1, 6, 6),
-                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)-6), 1, 6, 6),
-                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)-12), 1, 6, 6),
-                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)-18), 1, 6, 6),
-                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)-24), 1, 6, 6),
-                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)-30), 1, 6, 6),
-                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)-36), 1, 6, 6),
-                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)-42), 1, 6, 6),
-                    new Obstacle(new Texture("World/Wall.png"), new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)-45), 1, 6, 6),
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+45), 1, 6, 6),
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+42), 1, 6, 6),
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+36), 1, 6, 6),
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+30), 1, 6, 6),
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+24), 1, 6, 6),
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+18), 1, 6, 6),
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+12), 1, 6, 6),
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+6), 1, 6, 6),
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+0), 1, 6, 6),
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)-6), 1, 6, 6),
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)-12), 1, 6, 6),
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)-18), 1, 6, 6),
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)-24), 1, 6, 6),
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)-30), 1, 6, 6),
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)-36), 1, 6, 6),
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)-42), 1, 6, 6),
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)-45), 1, 6, 6),
 
                     //Floor
-                    new Obstacle(new Texture("World/Floor.png"), new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)), 1, 60, 96, false, -5)
+                    new Obstacle(floorTexture, new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)), 1, 60, 96, false, -5)
                 }
             );
             Play.entitiesToAdd.add(house);
@@ -198,7 +237,7 @@ public class Map {
 
     public void tryToGenerateLandmine(float x, float y, List<Vector2> entitiesAlreadyGeneratedCoords){
         if (!entitiesAlreadyGeneratedCoords.contains(new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)))){
-            Landmine landmine = new Landmine(new Texture("World/Landmine.png"), new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)), getLandmineExplosionAnimation(), 10);
+            Landmine landmine = new Landmine(landmineTexture, new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)), explosionAnimation, 10);
 
             Play.entitiesToAdd.add(landmine);
             entitiesAlreadyGeneratedCoords.add(new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)));
@@ -206,20 +245,7 @@ public class Map {
     }
 
     public void renderWorld(SpriteBatch batch, List<Vector2> entitiesAlreadyGeneratedCoords) {
-        Texture tilesetTexture = new Texture(Gdx.files.internal("map_tileset.png"));
-        // create a new empty tile set
-        TiledMapTileSet tileSet = new TiledMapTileSet();
-        // loop through each square region in the texture, and add this to the tile set
-        for (int i = 0; i < 5; i++) {
-            // get the correct region
-            TextureRegion region = new TextureRegion(tilesetTexture, 0, i * tileSize, tileSize, tileSize);
-            // turn the region into a tile
-            TiledMapTile tile = new StaticTiledMapTile(region);
-            // set the id of the tile to i+1, as tile IDs must start at 1
-            tile.setId(i + 1);
-            // put the tile into the tileSet, at the correct position
-            tileSet.putTile(i + 1, tile);
-        }
+
         for (int x = Math.round(Play.player.pos.x/tileSize)-viewDistance; x < Math.round(Play.player.pos.x/tileSize) + viewDistance; x++){
             for (int y = Math.round(Play.player.pos.y/tileSize)-viewDistance; y < Math.round(Play.player.pos.y/tileSize) + viewDistance; y++){
                 int tileId = Math.round(seededRandomLocationValue(x, y)*(tileCount-1)) + 1;

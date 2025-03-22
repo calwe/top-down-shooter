@@ -80,6 +80,20 @@ public class Play implements Screen {
 
     private boolean paused = false;
 
+    Texture blueZombieTexture;
+    Texture redZombieTexture;
+    Texture orangeZombieTexture;
+    Texture greyZombieTexture;
+    Texture zombieProjectileTexture;
+    Texture chargingZombieLockingOnTexture;
+
+    Animation<TextureRegion> animatedZombieTexture;
+
+    Texture[] zombieParticles;
+
+    Sound zombieHurtSound;
+
+
     @Override
     // show is called whenever this screen is shown
     // it essentially acts as a constructor for the screen
@@ -89,11 +103,22 @@ public class Play implements Screen {
         batch = new SpriteBatch();
         entities = new ArrayList<Entity>();
 
-        //Load a dummy texture for things for which we do not yet have a texture
-        Texture noTexture = new Texture("NoTexture.png");
+        blueZombieTexture = new Texture("Enemies/blueZombie.png");
+        redZombieTexture = new Texture("Enemies/redZombie.png");
+        orangeZombieTexture = new Texture("Enemies/orangeZombie.png");
+        greyZombieTexture = new Texture("Enemies/greyZombie.png");
+        zombieProjectileTexture = new Texture("Enemies/zombieProjectile.png");
+        chargingZombieLockingOnTexture = new Texture("Enemies/ChargingZombieLockingOn.png");
+        zombieParticles = new Texture[]{
+            new Texture("bloodParticle.png"),
+            new Texture("Enemies/zombieParticle.png")
+        };
+        animatedZombieTexture = getAnimatedZombieTexture();
+        zombieHurtSound = Gdx.audio.newSound(Gdx.files.internal("Enemies/zombieHit.mp3"));
+
 
         //Populate the weapons dictionary with weapons
-        initializeWeapons(noTexture);
+        initializeWeapons();
 
         equipment = new EquipmentDrop[]{
             new CritChanceDrop(new Texture("Equipment/RedDotSight.png"), "Red dot sight", "Crit chance +7%.", 7),
@@ -166,7 +191,7 @@ public class Play implements Screen {
         return new Animation<TextureRegion>(0.0357f, playerAnimationTextures);
     }
 
-    private void initializeWeapons(Texture noTexture) {
+    private void initializeWeapons() {
         //Create each weapon and load it into the weapons dictionary
         Texture bulletTexture = new Texture("bullet.png");
         Sound fireSound = Gdx.audio.newSound(Gdx.files.internal("gunshot.mp3"));
@@ -207,7 +232,6 @@ public class Play implements Screen {
     @Override
     // render is called once every frame
     public void render(float v) {
-
         try{
             if (Gdx.input.isKeyJustPressed(Input.Keys.P)){
                 paused = !paused;
@@ -244,9 +268,7 @@ public class Play implements Screen {
             //See the initialisation of entitiesToRemove for why this is necessary
             //Then empty the entitiesToRemove list, since everything in it has already been removed.
             for (Entity e : entitiesToRemove) {
-                if (entities.contains(e)) {
-                    entities.remove(e);
-                }
+                entities.remove(e);
             }
             entitiesToRemove.clear();
 
@@ -319,31 +341,25 @@ public class Play implements Screen {
                 int enemyChoice = random.nextInt(100);
                 if (enemyChoice >= 85){
                     newEnemy = new ExplodingEnemy(
-                        new Texture("Enemies/blueZombie.png"),
-                        getAnimatedZombieTexture(),
-                        Gdx.audio.newSound(Gdx.files.internal("Enemies/zombieHit.mp3")),
+                        blueZombieTexture,
+                        animatedZombieTexture,
+                        zombieHurtSound,
                         spawnPos,
                         player,
-                        new Texture[]{
-                            new Texture("bloodParticle.png"),
-                            new Texture("Enemies/zombieParticle.png")
-                        },
-                        new Texture("Enemies/zombieProjectile.png"),
+                        zombieParticles,
+                        zombieProjectileTexture,
                         1.5f
                     );
                 }
                 else if (enemyChoice >= 70){
                     newEnemy = new ChargingEnemy(
-                        new Texture("Enemies/redZombie.png"),
-                        getAnimatedZombieTexture(),
-                        Gdx.audio.newSound(Gdx.files.internal("Enemies/zombieHit.mp3")),
+                        redZombieTexture,
+                        animatedZombieTexture,
+                        zombieHurtSound,
                         spawnPos,
                         player,
-                        new Texture[]{
-                            new Texture("bloodParticle.png"),
-                            new Texture("Enemies/zombieParticle.png")
-                        },
-                        new Texture("Enemies/ChargingZombieLockingOn.png"),
+                        zombieParticles,
+                        chargingZombieLockingOnTexture,
                         4,
                         0.5f,
                         40,
@@ -352,31 +368,25 @@ public class Play implements Screen {
                 }
                 else if (enemyChoice >= 55){
                     newEnemy = new RangedEnemy(
-                        new Texture("Enemies/greyZombie.png"),
-                        getAnimatedZombieTexture(),
-                        Gdx.audio.newSound(Gdx.files.internal("Enemies/zombieHit.mp3")),
+                        greyZombieTexture,
+                        animatedZombieTexture,
+                        zombieHurtSound,
                         spawnPos,
                         player,
-                        new Texture[]{
-                            new Texture("bloodParticle.png"),
-                            new Texture("Enemies/zombieParticle.png")
-                        },
+                        zombieParticles,
                         2,
                         2.5f,
-                        new Texture("Enemies/zombieProjectile.png")
+                        zombieProjectileTexture
                     );
                 }
                 else{
                     newEnemy = new Enemy(
-                        new Texture("Enemies/orangeZombie.png"),
-                        getAnimatedZombieTexture(),
-                        Gdx.audio.newSound(Gdx.files.internal("Enemies/zombieHit.mp3")),
+                        orangeZombieTexture,
+                        animatedZombieTexture,
+                        zombieHurtSound,
                         spawnPos,
                         player,
-                        new Texture[]{
-                            new Texture("bloodParticle.png"),
-                            new Texture("Enemies/zombieParticle.png")
-                        }
+                        zombieParticles
                     );
                 }
 
