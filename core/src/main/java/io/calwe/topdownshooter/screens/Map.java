@@ -3,6 +3,7 @@ package io.calwe.topdownshooter.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Vector2;
 import io.calwe.topdownshooter.entities.Crate;
+import io.calwe.topdownshooter.entities.Landmine;
 import io.calwe.topdownshooter.entities.Obstacle;
 import io.calwe.topdownshooter.entities.WorldFeature;
 
@@ -176,6 +178,33 @@ public class Map {
         }
     }
 
+    //Get the humanoid walk animation
+    private Animation<TextureRegion> getLandmineExplosionAnimation(){
+        // load the spritesheet as a texture, then make a textureRegion out of that texture.
+        TextureRegion texture = new TextureRegion(new Texture("World/explosionAnimation.png"));
+        //The number of sprites in the spritesheet showing each part of the animation
+        int numFrames = 4;
+        //Split the spritesheet into individual textureregions
+        TextureRegion[][] AnimationTextures2D = texture.split(texture.getRegionWidth(), texture.getRegionHeight()/numFrames);
+        //split can only split spritesheets into 2d arrays of textureregions, so convert it to a 1d array
+        TextureRegion[] AnimationTextures = new TextureRegion[numFrames];
+        for (int i = 0; i < numFrames; i++) {
+            AnimationTextures[i] = AnimationTextures2D[i][0];
+        }
+        //load all the textureregions into an animation, with a duration of 0.0357 per frame.
+        // This sums up to the entire animation being about 0.5 seconds, which appears to work best visually.
+        return new Animation<TextureRegion>(0.0357f, AnimationTextures);
+    }
+
+    public void tryToGenerateLandmine(float x, float y, List<Vector2> entitiesAlreadyGeneratedCoords){
+        if (!entitiesAlreadyGeneratedCoords.contains(new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)))){
+            Landmine landmine = new Landmine(new Texture("World/Landmine.png"), new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)), getLandmineExplosionAnimation(), 10);
+
+            Play.entitiesToAdd.add(landmine);
+            entitiesAlreadyGeneratedCoords.add(new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)));
+        }
+    }
+
     public void renderWorld(SpriteBatch batch, List<Vector2> entitiesAlreadyGeneratedCoords) {
         Texture tilesetTexture = new Texture(Gdx.files.internal("map_tileset.png"));
         // create a new empty tile set
@@ -208,6 +237,9 @@ public class Map {
                 }
                 else if (Math.ceil(seededRandomLocationValue(y+300, x+300) * 2000) == 999){
                     tryToGenerateHouse(x, y, entitiesAlreadyGeneratedCoords);
+                }
+                else if (Math.ceil(seededRandomLocationValue(y+400, x+400) * 1000) >= 998){
+                    tryToGenerateLandmine(x, y, entitiesAlreadyGeneratedCoords);
                 }
             }
         }

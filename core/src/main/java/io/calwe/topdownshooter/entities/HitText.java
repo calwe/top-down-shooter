@@ -14,7 +14,7 @@ public class HitText extends Entity {
     float timer;
     BitmapFont font;
 
-    HitText(String text, Vector2 startPos, Color color){
+    public HitText(String text, Vector2 startPos, Color color){
         this.font = new BitmapFont();
         this.font.setColor(color);
         this.font.getData().setScale(0.4f);
@@ -28,6 +28,27 @@ public class HitText extends Entity {
         this.boundsHeightReduction = 0;
         this.boundsWidthReduction = 0;
         this.lifeTime = 0.2f;
+        this.timer = 0;
+        bounds.x = pos.x + boundsWidthReduction;
+        bounds.y = pos.y + boundsHeightReduction;
+        bounds.width = width - (boundsWidthReduction*2f);
+        bounds.height = height - (boundsHeightReduction*2f);
+    }
+
+    public HitText(String text, Vector2 startPos, Color color, float lifeTime){
+        this.font = new BitmapFont();
+        this.font.setColor(color);
+        this.font.getData().setScale(0.4f);
+        this.pos = startPos;
+        this.momentum = new Vector2(0, 0.6f);
+        this.slide = 0.99f;
+        this.width = 1;
+        this.height = 1;
+        this.text = text;
+        this.hasSolidCollision = false;
+        this.boundsHeightReduction = 0;
+        this.boundsWidthReduction = 0;
+        this.lifeTime = lifeTime;
         this.timer = 0;
         bounds.x = pos.x + boundsWidthReduction;
         bounds.y = pos.y + boundsHeightReduction;

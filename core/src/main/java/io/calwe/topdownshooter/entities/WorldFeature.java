@@ -1,14 +1,10 @@
 package io.calwe.topdownshooter.entities;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import io.calwe.topdownshooter.Weapon;
-import io.calwe.topdownshooter.entities.Equipment.EquipmentDrop;
 import io.calwe.topdownshooter.screens.Play;
 
 import java.util.*;
@@ -37,9 +33,7 @@ public class WorldFeature extends Entity{
         bounds.y = pos.y;
         bounds.width = width;
         bounds.height = height;
-        for (Obstacle o : components) {
-            Play.entitiesToAdd.add(o);
-        }
+        Collections.addAll(Play.entitiesToAdd, components);
     }
 
     @Override
@@ -95,6 +89,12 @@ public class WorldFeature extends Entity{
         //If this object is colliding with a player
         if (e instanceof Player){
             playerIsInside = true;
+        }
+        if (e instanceof WorldFeature){
+            WorldFeature feature = (WorldFeature)e;
+            if (feature.width*feature.height < width*height){
+                Play.entitiesToAdd.remove(e);
+            }
         }
     }
 

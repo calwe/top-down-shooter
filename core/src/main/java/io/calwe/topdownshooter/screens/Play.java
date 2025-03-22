@@ -33,7 +33,7 @@ public class Play implements Screen {
     private Map map;
 
     // A master list of every moving object in the world, so that they can all be updated and rendered easily
-    private static List<Entity> entities;
+    public static List<Entity> entities;
     //Separate lists are required for adding and removing entities, as entities creating or destroying other entities
     //is generally handled in entities' logic function, which is run by a function iterating through each entity
     //and running their logic. Adding or removing from a list that is being iterated through can cause problems,
@@ -93,13 +93,13 @@ public class Play implements Screen {
         initializeWeapons(noTexture);
 
         equipment = new EquipmentDrop[]{
-            new CritChanceDrop(new Texture("Equipment/RedDotSight.png"), "Red dot sight", "Increases your critical hit chance by 7%.", 7),
-            new CritDamageDrop(noTexture, "Armor piercing bullets", "Increases your critical hit damage multiplier by 0.5.", 0.5f),
-            new DamageDrop(new Texture("Equipment/ammo.png"), "Hollow points", "Increases your damage by 20%", 0.2f),
-            new ExtraInventoryDrop(noTexture, "Backpack", "Allows you to carry an additional weapon."),
-            new HealDrop(new Texture("Equipment/medkit.png"), "Medkit", "Restores 25 health.", 25),
-            new HealthDrop(new Texture("Equipment/FlakVest.png"), "Kevlar vest", "Increases your current and maximum health by 10.", 10),
-            new SaveAmmoDrop(new Texture("Equipment/Magazine.png"), "Extended magazine", "Gives you a 8% chance not to consume ammo when firing a weapon.", 8)
+            new CritChanceDrop(new Texture("Equipment/RedDotSight.png"), "Red dot sight", "Crit chance +7%.", 7),
+            new CritDamageDrop(noTexture, "Armor piercing bullets", "Crit damage +25%", 0.5f),
+            new DamageDrop(new Texture("Equipment/ammo.png"), "Hollow points", "Damage +20%", 0.2f),
+            new ExtraInventoryDrop(noTexture, "Backpack", "Carry an additional weapon."),
+            new HealDrop(new Texture("Equipment/medkit.png"), "Medkit", "Heal 25%", 25),
+            new HealthDrop(new Texture("Equipment/FlakVest.png"), "Kevlar vest", "Max health +10%", 10),
+            new SaveAmmoDrop(new Texture("Equipment/Magazine.png"), "Extended magazine", "8% chance to save ammo.", 8)
         };
 
         // create a new orthographic (no 3d perspective) camera, and set its position to the center of the map
@@ -138,7 +138,7 @@ public class Play implements Screen {
         TextureRegion[][] playerAnimationTextures2D = playerTexture.split(playerTexture.getRegionWidth(), playerTexture.getRegionHeight()/numFrames);
         //split can only split spritesheets into 2d arrays of textureregions, so convert it to a 1d array
         TextureRegion[] playerAnimationTextures = new TextureRegion[numFrames];
-        for (int i = 0; i < 14; i++) {
+        for (int i = 0; i < numFrames; i++) {
             playerAnimationTextures[i] = playerAnimationTextures2D[i][0];
         }
         //load all the textureregions into an animation, with a duration of 0.0357 per frame.
@@ -156,7 +156,7 @@ public class Play implements Screen {
         TextureRegion[][] playerAnimationTextures2D = playerTexture.split(playerTexture.getRegionWidth(), playerTexture.getRegionHeight()/numFrames);
         //split can only split spritesheets into 2d arrays of textureregions, so convert it to a 1d array
         TextureRegion[] playerAnimationTextures = new TextureRegion[numFrames];
-        for (int i = 0; i < 14; i++) {
+        for (int i = 0; i < numFrames; i++) {
             playerAnimationTextures[i] = playerAnimationTextures2D[i][0];
         }
         //load all the textureregions into an animation, with a duration of 0.0357 per frame.
@@ -172,33 +172,33 @@ public class Play implements Screen {
 
         commonWeapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("PistolSideOn.png"), bulletTexture, fireSound, emptySound, 12, 10, 2.5f, 10, 10f, 1f, 1f, 5));
         commonWeapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMGSideOn.png"), bulletTexture, fireSound, emptySound, 60, 3, 10, 5, 15f, 0.5f, 0.4f, 5));
-        commonWeapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 50,  5, 5, 15, 5f, 1.5f, 0.7f, 10));
-        commonWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 7, 35, 0.5f, 50, 0.1f, 2f, 3f, 10));
-        commonWeapons.put("Shotgun", new Shotgun(new Texture("shotgun-aiming.png"), new Texture("shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 8, 8, 1, 5, 10, 2, 1, 5));
+        commonWeapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 50,  5, 5, 15, 5f, 1.5f, 0.7f, 7));
+        commonWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 7, 22, 0.75f, 50, 0.1f, 2f, 3f, 8));
+        commonWeapons.put("Shotgun", new Shotgun(new Texture("shotgun-aiming.png"), new Texture("shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 8, 6, 1, 5, 10, 2, 1, 5));
 
         uncommonWeapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("PistolSideOn.png"), bulletTexture, fireSound, emptySound, 12, 13, 2.5f, 10, 10f, 1f, 1f, 5));
         uncommonWeapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMGSideOn.png"), bulletTexture, fireSound, emptySound, 60, 4, 10, 5, 15f, 0.5f, 0.4f, 5));
-        uncommonWeapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 50,  7, 5, 15, 5f, 1.5f, 0.7f, 10));
-        uncommonWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 7, 47, 0.5f, 50, 0.1f, 2f, 3f, 10));
-        uncommonWeapons.put("Shotgun", new Shotgun(new Texture("shotgun-aiming.png"), new Texture("shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 8, 11, 1, 5, 10, 2, 1, 5));
+        uncommonWeapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 50,  7, 5, 15, 5f, 1.5f, 0.7f, 7));
+        uncommonWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 7, 29, 0.75f, 50, 0.1f, 2f, 3f, 8));
+        uncommonWeapons.put("Shotgun", new Shotgun(new Texture("shotgun-aiming.png"), new Texture("shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 8, 8, 1, 5, 10, 2, 1, 5));
 
         rareWeapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("PistolSideOn.png"), bulletTexture, fireSound, emptySound, 12, 17, 2.5f, 10, 10f, 1f, 1f, 5));
         rareWeapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMGSideOn.png"), bulletTexture, fireSound, emptySound, 60, 5, 10, 5, 15f, 0.5f, 0.4f, 5));
-        rareWeapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 50,  8, 5, 15, 5f, 1.5f, 0.7f, 10));
-        rareWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 7, 58, 0.5f, 50, 0.1f, 2f, 3f, 10));
-        rareWeapons.put("Shotgun", new Shotgun(new Texture("shotgun-aiming.png"), new Texture("shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 8, 13, 1, 5, 10, 2, 1, 5));
+        rareWeapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 50,  8, 5, 15, 5f, 1.5f, 0.7f, 7));
+        rareWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 7, 37, 0.75f, 50, 0.1f, 2f, 3f, 8));
+        rareWeapons.put("Shotgun", new Shotgun(new Texture("shotgun-aiming.png"), new Texture("shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 8, 10, 1, 5, 10, 2, 1, 5));
 
         epicWeapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("PistolSideOn.png"), bulletTexture, fireSound, emptySound, 12, 20, 2.5f, 10, 10f, 1f, 1f, 5));
         epicWeapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMGSideOn.png"), bulletTexture, fireSound, emptySound, 60, 6, 10, 5, 15f, 0.5f, 0.4f, 5));
-        epicWeapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 50,  10, 5, 15, 5f, 1.5f, 0.7f, 10));
-        epicWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 7, 70, 0.5f, 50, 0.1f, 2f, 3f, 10));
-        epicWeapons.put("Shotgun", new Shotgun(new Texture("shotgun-aiming.png"), new Texture("shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 8, 16, 1, 5, 10, 2, 1, 5));
+        epicWeapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 50,  10, 5, 15, 5f, 1.5f, 0.7f, 7));
+        epicWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 7, 44, 0.75f, 50, 0.1f, 2f, 3f, 8));
+        epicWeapons.put("Shotgun", new Shotgun(new Texture("shotgun-aiming.png"), new Texture("shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 8, 12, 1, 5, 10, 2, 1, 5));
 
         legendaryWeapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("PistolSideOn.png"), bulletTexture, fireSound, emptySound, 12, 23, 2.5f, 10, 10f, 1f, 1f, 5));
         legendaryWeapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMGSideOn.png"), bulletTexture, fireSound, emptySound, 60, 7, 10, 5, 15f, 0.5f, 0.4f, 5));
-        legendaryWeapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 50,  12, 5, 15, 5f, 1.5f, 0.7f, 10));
-        legendaryWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 7, 81, 0.5f, 50, 0.1f, 2f, 3f, 10));
-        legendaryWeapons.put("Shotgun", new Shotgun(new Texture("shotgun-aiming.png"), new Texture("shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 8, 19, 1, 5, 10, 2, 1, 5));
+        legendaryWeapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 50,  12, 5, 15, 5f, 1.5f, 0.7f, 7));
+        legendaryWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 7, 51, 0.75f, 50, 0.1f, 2f, 3f, 8));
+        legendaryWeapons.put("Shotgun", new Shotgun(new Texture("shotgun-aiming.png"), new Texture("shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 8, 14, 1, 5, 10, 2, 1, 5));
     }
 
 
@@ -206,67 +206,77 @@ public class Play implements Screen {
     // render is called once every frame
     public void render(float v) {
 
-        // Handle input for every entity that requires input
-        input();
+        try{
+            // Handle input for every entity that requires input
+            input();
 
-        // Handle the logic for each entity - this includes movement and attacks for example
-        logic();
+            // Handle the logic for each entity - this includes movement and attacks for example
+            logic();
 
-        // clear the screen to black
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            // clear the screen to black
+            Gdx.gl.glClearColor(0, 0, 0, 1);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // recalculate camera projection and view matrices, in case its properties have changed (position, size, etc...)
-        camera.update();
+            // recalculate camera projection and view matrices, in case its properties have changed (position, size, etc...)
+            camera.update();
 
-        //draw each entity
-        draw();
+            //draw each entity
+            draw();
 
-        //check if new enemies need to be spawned in
-        handleEnemySpawning();
+            //check if new enemies need to be spawned in
+            handleEnemySpawning();
 
-        //add all entities from the entitiesToAdd list to the main entities list
-        //See the initialisation of entitiesToAdd for why this is necessary
-        //Then empty the entitiesToAdd list, since everything in it has already been added.
-        entities.addAll(entitiesToAdd);
-        entitiesToAdd.clear();
+            //add all entities from the entitiesToAdd list to the main entities list
+            //See the initialisation of entitiesToAdd for why this is necessary
+            //Then empty the entitiesToAdd list, since everything in it has already been added.
+            entities.addAll(entitiesToAdd);
+            entitiesToAdd.clear();
 
-        //remove all entities from the entitiesToRemove list from the main entities list
-        //See the initialisation of entitiesToRemove for why this is necessary
-        //Then empty the entitiesToRemove list, since everything in it has already been removed.
-        entities.removeAll(entitiesToRemove);
-        entitiesToRemove.clear();
-
-        //periodically increase the score
-        if (scoreIncreaseTimer > 1){
-            score += 10;
-            scoreIncreaseTimer = 0;
-        }
-        scoreIncreaseTimer += Gdx.graphics.getDeltaTime();
-
-        //sort the entities in the entities by layer, so that entities with a lower layer will be rendered under
-        // entities with a higher layer
-        entities.sort(new Comparator<Entity>() {
-            public int compare(Entity entity1, Entity entity2) {
-                if (entity1.layer > entity2.layer) return 1;
-                if (entity1.layer < entity2.layer) return -1;
-                return 0;
+            //remove all entities from the entitiesToRemove list from the main entities list
+            //See the initialisation of entitiesToRemove for why this is necessary
+            //Then empty the entitiesToRemove list, since everything in it has already been removed.
+            for (Entity e : entitiesToRemove) {
+                if (entities.contains(e)) {
+                    entities.remove(e);
+                }
             }
-        });
+            entitiesToRemove.clear();
 
-        if (score > 2000){
-            currentTier = 5;
-        }
-        else if (score > 1200){
-            currentTier = 4;
-        }
-        else if (score > 600){
-            currentTier = 3;
-        }
-        else if (score > 200){
-            currentTier = 2;
-        }
+            //periodically increase the score
+            if (scoreIncreaseTimer > 1){
+                score += 10;
+                scoreIncreaseTimer = 0;
+            }
+            scoreIncreaseTimer += Gdx.graphics.getDeltaTime();
 
+            //sort the entities in the entities by layer, so that entities with a lower layer will be rendered under
+            // entities with a higher layer
+            entities.sort(new Comparator<Entity>() {
+                public int compare(Entity entity1, Entity entity2) {
+                    if (entity1.layer > entity2.layer) return 1;
+                    if (entity1.layer < entity2.layer) return -1;
+                    return 0;
+                }
+            });
+
+            if (score > 2100){
+                currentTier = 5;
+            }
+            else if (score > 1300){
+                currentTier = 4;
+            }
+            else if (score > 700){
+                currentTier = 3;
+            }
+            else if (score > 300){
+                currentTier = 2;
+            }
+        }
+        catch (Exception error){
+            //error.printStackTrace();
+            error.printStackTrace();
+            //System.out.println(error.getMessage());
+        }
     }
 
     int getNumberOfEnemies(){
@@ -283,7 +293,7 @@ public class Play implements Screen {
     public void handleEnemySpawning(){
         //Check if the cooldown to spawn a new enemy has elapsed
         if (timer >= spawnCooldown-(currentTier*0.5f)){
-            if (getNumberOfEnemies() < enemyCapAtTier[currentTier+1]){
+            if (getNumberOfEnemies() < enemyCapAtTier[currentTier-1]){
                 //how far away from a player zombies should spawn
                 float spawnRadius = 100;
                 Random random = new Random();
@@ -342,7 +352,7 @@ public class Play implements Screen {
                             new Texture("Enemies/zombieParticle.png")
                         },
                         2,
-                        2f,
+                        2.5f,
                         new Texture("Enemies/zombieProjectile.png")
                     );
                 }
@@ -397,7 +407,9 @@ public class Play implements Screen {
         // Iterate through each entity and call their logic function to handle
         // things like moving and attacking
         for (Entity e : entities) {
-            e.logic();
+            if (e.pos.dst(player.pos) < 300f) {
+                e.logic();
+            }
         }
     }
 
@@ -409,8 +421,11 @@ public class Play implements Screen {
         map.renderWorld(batch, entitysAlreadyGeneratedCoords);
         // Iterate through each entity and call their draw function to add them to the batch do draw passing in
         // the spritebatch so that all entities can be drawn at once
+
         for (Entity e : entities) {
-            e.draw(batch);
+            if (e.pos.dst(player.pos) < 300f){
+                e.draw(batch);
+            }
         }
         //Finish loading all entities to be drawn into the spritebatch, so that it can then render them all to the screen
         batch.end();

@@ -6,10 +6,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import io.calwe.topdownshooter.Weapon;
 import io.calwe.topdownshooter.entities.Entity;
+import io.calwe.topdownshooter.entities.HitText;
 import io.calwe.topdownshooter.entities.Player;
 import io.calwe.topdownshooter.screens.Play;
+import com.badlogic.gdx.graphics.Color;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,6 +57,8 @@ public class EquipmentDrop extends Entity {
             if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
                 Player p = (Player)e;
                 ApplyAffect(p);
+                HitText h = new HitText(upgradeDescription, new Vector2(p.pos.x, p.pos.y + p.height), Color.YELLOW, 1);
+                Play.entitiesToAdd.add(h);
                 //Destroy this drop
                 Play.entitiesToRemove.add(this);
             }
