@@ -1,6 +1,7 @@
 package io.calwe.topdownshooter.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
@@ -79,6 +80,8 @@ public class Play implements Screen {
         6,
         7,
     };
+
+    private boolean paused = false;
 
     @Override
     // show is called whenever this screen is shown
@@ -210,12 +213,19 @@ public class Play implements Screen {
     public void render(float v) {
 
         try{
-            // Handle input for every entity that requires input
-            input();
+            if (Gdx.input.isKeyJustPressed(Input.Keys.P)){
+                paused = !paused;
+            }
+            if (!paused){
+                // Handle input for every entity that requires input
+                input();
 
-            // Handle the logic for each entity - this includes movement and attacks for example
-            logic();
+                // Handle the logic for each entity - this includes movement and attacks for example
+                logic();
 
+                //check if new enemies need to be spawned in
+                handleEnemySpawning();
+            }
             // clear the screen to black
             Gdx.gl.glClearColor(0, 0, 0, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -226,8 +236,7 @@ public class Play implements Screen {
             //draw each entity
             draw();
 
-            //check if new enemies need to be spawned in
-            handleEnemySpawning();
+
 
             //add all entities from the entitiesToAdd list to the main entities list
             //See the initialisation of entitiesToAdd for why this is necessary
@@ -245,12 +254,15 @@ public class Play implements Screen {
             }
             entitiesToRemove.clear();
 
-            //periodically increase the score
-            if (scoreIncreaseTimer > 1){
-                score += 10;
-                scoreIncreaseTimer = 0;
+
+            if (!paused){
+                //periodically increase the score
+                if (scoreIncreaseTimer > 1){
+                    score += 10;
+                    scoreIncreaseTimer = 0;
+                }
+                scoreIncreaseTimer += Gdx.graphics.getDeltaTime();
             }
-            scoreIncreaseTimer += Gdx.graphics.getDeltaTime();
 
             //sort the entities in the entities by layer, so that entities with a lower layer will be rendered under
             // entities with a higher layer
@@ -276,7 +288,6 @@ public class Play implements Screen {
             }
         }
         catch (Exception error){
-            //error.printStackTrace();
             error.printStackTrace();
             //System.out.println(error.getMessage());
         }
