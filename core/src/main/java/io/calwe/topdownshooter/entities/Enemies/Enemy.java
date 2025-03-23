@@ -51,7 +51,8 @@ public class Enemy extends Entity {
 
     // The constructor - initialize all the variables
     public Enemy(Texture texture, Animation<TextureRegion> enemyWalkAnimation, Sound hurtSound, Vector2 startPos, Player target, Texture[] damageParticles) {
-        this.maxHealth = Math.round(25 * (1 + (0.33f*(Play.currentTier-1))));
+        this.maxHealth = Math.round(20 * (1 + (0.33f*(Play.currentTier-1))));
+        this.health = maxHealth;
         this.damage = 10;
         this.knockback = 2f;
         this.pos = startPos;
@@ -63,7 +64,6 @@ public class Enemy extends Entity {
         this.height = 16;
         this.damageParticles = damageParticles;
         this.sprite = new Sprite(texture, width, height);
-        this.health = maxHealth;
         this.target = target;
         this.enemyTexture = texture;
         this.hurtSound = hurtSound;

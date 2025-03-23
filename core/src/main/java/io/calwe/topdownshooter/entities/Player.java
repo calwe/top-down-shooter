@@ -255,7 +255,7 @@ public class Player extends Entity {
             p.momentum = movement;
             Play.entitiesToAdd.add(p);
         }
-        //Gdx.audio.newSound(Gdx.files.internal("playerHit.mp3")).play(0.5f);
+        Gdx.audio.newSound(Gdx.files.internal("playerHit.mp3")).play(1.5f);
     }
 
     //Add knockback to the player's momentum

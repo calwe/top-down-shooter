@@ -270,4 +270,16 @@ public class Map {
             }
         }
     }
+
+    public void dispose(){
+        treeTexture.dispose();
+        treeTransparentTexture.dispose();
+        trunkTexture.dispose();
+        crateTexture.dispose();
+        houseTexture.dispose();
+        houseTransparentTexture.dispose();
+        wallTexture.dispose();
+        floorTexture.dispose();
+        landmineTexture.dispose();
+    }
 }

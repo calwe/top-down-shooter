@@ -28,6 +28,8 @@ public class Weapon{
 
     long timeLastFired = 0;
 
+    boolean pierces = false;
+
     public Weapon(Texture texture, Texture sideOn, Texture bulletTexture, Sound fireSound, Sound emptySound, int ammo, int damage, float fireRate, int critChance, float inaccuracy, float recoil, float knockback, float bulletSpeed){
         this.texture = texture;
         this.sideOn = sideOn;
@@ -44,6 +46,23 @@ public class Weapon{
         this.emptySound = emptySound;
     }
 
+    public Weapon(Texture texture, Texture sideOn, Texture bulletTexture, Sound fireSound, Sound emptySound, int ammo, int damage, float fireRate, int critChance, float inaccuracy, float recoil, float knockback, float bulletSpeed, boolean pierces){
+        this.texture = texture;
+        this.sideOn = sideOn;
+        this.bulletTexture = bulletTexture;
+        this.bulletSpeed = bulletSpeed;
+        this.ammo = ammo;
+        this.damage = damage;
+        this.fireRate = fireRate;
+        this.critChance = critChance;
+        this.inaccuracy = inaccuracy;
+        this.recoil = recoil;
+        this.knockback = knockback;
+        this.fireSound = fireSound;
+        this.emptySound = emptySound;
+        this.pierces = pierces;
+    }
+
     public Weapon(Weapon weaponToCopy, int ammo){
         this.texture = weaponToCopy.texture;
         this.bulletTexture = weaponToCopy.bulletTexture;
@@ -58,6 +77,7 @@ public class Weapon{
         this.knockback = weaponToCopy.knockback;
         this.fireSound = weaponToCopy.fireSound;
         this.emptySound = weaponToCopy.emptySound;
+        this.pierces = weaponToCopy.pierces;
     }
 
 
@@ -77,7 +97,7 @@ public class Weapon{
             //Check if we still have ammunition left
             if (ammo > 0){
                 //Create an instance of bullet, give it the bullet texture, and its stats.
-                Bullet bullet = new Bullet(bulletTexture, gunPos, Math.round(damage*damageMultiplier), critChance + additionalCritChance, critMultiplier, knockback);
+                Bullet bullet = new Bullet(bulletTexture, gunPos, Math.round(damage*damageMultiplier), critChance + additionalCritChance, critMultiplier, knockback, pierces);
                 //Turn the bullet so it is facing towards the mouse
                 bullet.sprite.setRotation(bulletRotation);
                 // Move the bullet so it is emerging from the gun
@@ -95,13 +115,13 @@ public class Weapon{
                 if (random.nextInt(100) >= ammoSaveChance){
                     ammo--;
                 }
-                fireSound.play(0.02f);
+                fireSound.play(0.03f);
                 return true;
             }
             else{
                 //If we have no ammo in the gun, play the gun empty sound
                 timeLastFired = System.currentTimeMillis();
-                emptySound.play(0.2f);
+                emptySound.play(0.3f);
                 return false;
             }
 

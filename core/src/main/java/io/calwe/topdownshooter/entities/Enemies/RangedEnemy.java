@@ -19,6 +19,8 @@ public class RangedEnemy extends Enemy {
     // The constructor - initialize all the variables
     public RangedEnemy(Texture texture, Animation<TextureRegion> enemyWalkAnimation, Sound hurtSound, Vector2 startPos, Player target, Texture[] damageParticles, float attackCooldown, float projectileSpeed, Texture projectileTexture) {
         super(texture, enemyWalkAnimation, hurtSound, startPos, target, damageParticles);
+        this.maxHealth = Math.round(25 * (1 + (0.33f*(Play.currentTier-1))));
+        this.health = maxHealth;
         this.attackCooldown = attackCooldown;
         this.attackCooldownTimer = 0;
         this.projectileSpeed = projectileSpeed;

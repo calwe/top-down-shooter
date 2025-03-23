@@ -92,6 +92,7 @@ public class Play implements Screen {
     Texture[] zombieParticles;
 
     Sound zombieHurtSound;
+    Sound backgroundMusic;
 
 
     @Override
@@ -127,7 +128,8 @@ public class Play implements Screen {
             new ExtraInventoryDrop(new Texture("Equipment/Bag.png"), "Bag", "Carry an additional weapon."),
             new HealDrop(new Texture("Equipment/medkit.png"), "Medkit", "Heal 25%", 25),
             new HealthDrop(new Texture("Equipment/FlakVest.png"), "Kevlar vest", "Max health +10%", 10),
-            new SaveAmmoDrop(new Texture("Equipment/Magazine.png"), "Extended magazine", "8% chance to save ammo.", 8)
+            new SaveAmmoDrop(new Texture("Equipment/Magazine.png"), "Extended magazine", "8% chance to save ammo.", 8),
+            new BombDrop(new Texture("Equipment/Bomb.png"), "Bomb", "Clear all enemies on the screen. ")
         };
 
         // create a new orthographic (no 3d perspective) camera, and set its position to the center of the map
@@ -152,7 +154,9 @@ public class Play implements Screen {
         );
         entities.add(player);
 
-        Gdx.audio.newSound(Gdx.files.internal("backgroundMusic.mp3")).play(0.1f);
+        backgroundMusic = Gdx.audio.newSound(Gdx.files.internal("backgroundMusic.mp3"));
+        long id = backgroundMusic.play(0.1f);
+        backgroundMusic.setLooping(id, true);
     }
 
     //Get the humanoid walk animation
@@ -197,35 +201,35 @@ public class Play implements Screen {
         Sound fireSound = Gdx.audio.newSound(Gdx.files.internal("gunshot.mp3"));
         Sound emptySound = Gdx.audio.newSound(Gdx.files.internal("noAmmo.mp3"));
 
-        commonWeapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("PistolSideOn.png"), bulletTexture, fireSound, emptySound, 12, 10, 2.5f, 10, 10f, 1f, 1f, 5));
-        commonWeapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMGSideOn.png"), bulletTexture, fireSound, emptySound, 60, 3, 10, 5, 15f, 0.5f, 0.4f, 5));
-        commonWeapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 50,  5, 5, 15, 5f, 1.5f, 0.7f, 7));
-        commonWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 7, 22, 0.75f, 75, 0.1f, 2f, 3f, 8));
-        commonWeapons.put("Shotgun", new Shotgun(new Texture("shotgun-aiming.png"), new Texture("shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 8, 6, 1, 5, 10, 2, 1, 5));
+        commonWeapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("PistolSideOn.png"), bulletTexture, fireSound, emptySound, 18, 10, 2.5f, 10, 10f, 1f, 1f, 5));
+        commonWeapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMGSideOn.png"), bulletTexture, fireSound, emptySound, 90, 3, 10, 5, 15f, 0.5f, 0.4f, 5));
+        commonWeapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 60,  5, 5, 15, 5f, 1.5f, 0.7f, 7));
+        commonWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 8, 22, 0.75f, 75, 0.1f, 2f, 3f, 8, true));
+        commonWeapons.put("Shotgun", new Shotgun(new Texture("shotgun-aiming.png"), new Texture("shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 10, 6, 1, 5, 10, 2, 1, 5));
 
-        uncommonWeapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("PistolSideOn.png"), bulletTexture, fireSound, emptySound, 12, 13, 2.5f, 10, 10f, 1f, 1f, 5));
-        uncommonWeapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMGSideOn.png"), bulletTexture, fireSound, emptySound, 60, 4, 10, 5, 15f, 0.5f, 0.4f, 5));
-        uncommonWeapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 50,  7, 5, 15, 5f, 1.5f, 0.7f, 7));
-        uncommonWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 7, 29, 0.75f, 75, 0.1f, 2f, 3f, 8));
-        uncommonWeapons.put("Shotgun", new Shotgun(new Texture("shotgun-aiming.png"), new Texture("shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 8, 8, 1, 5, 10, 2, 1, 5));
+        uncommonWeapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("PistolSideOn.png"), bulletTexture, fireSound, emptySound, 18, 13, 2.5f, 10, 10f, 1f, 1f, 5));
+        uncommonWeapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMGSideOn.png"), bulletTexture, fireSound, emptySound, 90, 4, 10, 5, 15f, 0.5f, 0.4f, 5));
+        uncommonWeapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 60,  7, 5, 15, 5f, 1.5f, 0.7f, 7));
+        uncommonWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 8, 29, 0.75f, 75, 0.1f, 2f, 3f, 8, true));
+        uncommonWeapons.put("Shotgun", new Shotgun(new Texture("shotgun-aiming.png"), new Texture("shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 10, 8, 1, 5, 10, 2, 1, 5));
 
-        rareWeapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("PistolSideOn.png"), bulletTexture, fireSound, emptySound, 12, 17, 2.5f, 10, 10f, 1f, 1f, 5));
-        rareWeapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMGSideOn.png"), bulletTexture, fireSound, emptySound, 60, 5, 10, 5, 15f, 0.5f, 0.4f, 5));
-        rareWeapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 50,  8, 5, 15, 5f, 1.5f, 0.7f, 7));
-        rareWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 7, 37, 0.75f, 75, 0.1f, 2f, 3f, 8));
-        rareWeapons.put("Shotgun", new Shotgun(new Texture("shotgun-aiming.png"), new Texture("shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 8, 10, 1, 5, 10, 2, 1, 5));
+        rareWeapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("PistolSideOn.png"), bulletTexture, fireSound, emptySound, 18, 17, 2.5f, 10, 10f, 1f, 1f, 5));
+        rareWeapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMGSideOn.png"), bulletTexture, fireSound, emptySound, 90, 5, 10, 5, 15f, 0.5f, 0.4f, 5));
+        rareWeapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 60,  8, 5, 15, 5f, 1.5f, 0.7f, 7));
+        rareWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 8, 37, 0.75f, 75, 0.1f, 2f, 3f, 8, true));
+        rareWeapons.put("Shotgun", new Shotgun(new Texture("shotgun-aiming.png"), new Texture("shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 10, 10, 1, 5, 10, 2, 1, 5));
 
-        epicWeapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("PistolSideOn.png"), bulletTexture, fireSound, emptySound, 12, 20, 2.5f, 10, 10f, 1f, 1f, 5));
-        epicWeapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMGSideOn.png"), bulletTexture, fireSound, emptySound, 60, 6, 10, 5, 15f, 0.5f, 0.4f, 5));
-        epicWeapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 50,  10, 5, 15, 5f, 1.5f, 0.7f, 7));
-        epicWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 7, 44, 0.75f, 75, 0.1f, 2f, 3f, 8));
-        epicWeapons.put("Shotgun", new Shotgun(new Texture("shotgun-aiming.png"), new Texture("shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 8, 12, 1, 5, 10, 2, 1, 5));
+        epicWeapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("PistolSideOn.png"), bulletTexture, fireSound, emptySound, 18, 20, 2.5f, 10, 10f, 1f, 1f, 5));
+        epicWeapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMGSideOn.png"), bulletTexture, fireSound, emptySound, 90, 6, 10, 5, 15f, 0.5f, 0.4f, 5));
+        epicWeapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 60,  10, 5, 15, 5f, 1.5f, 0.7f, 7));
+        epicWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 8, 44, 0.75f, 75, 0.1f, 2f, 3f, 8, true));
+        epicWeapons.put("Shotgun", new Shotgun(new Texture("shotgun-aiming.png"), new Texture("shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 10, 12, 1, 5, 10, 2, 1, 5));
 
-        legendaryWeapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("PistolSideOn.png"), bulletTexture, fireSound, emptySound, 12, 23, 2.5f, 10, 10f, 1f, 1f, 5));
-        legendaryWeapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMGSideOn.png"), bulletTexture, fireSound, emptySound, 60, 7, 10, 5, 15f, 0.5f, 0.4f, 5));
-        legendaryWeapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 50,  12, 5, 15, 5f, 1.5f, 0.7f, 7));
-        legendaryWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 7, 51, 0.75f, 75, 0.1f, 2f, 3f, 8));
-        legendaryWeapons.put("Shotgun", new Shotgun(new Texture("shotgun-aiming.png"), new Texture("shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 8, 14, 1, 5, 10, 2, 1, 5));
+        legendaryWeapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("PistolSideOn.png"), bulletTexture, fireSound, emptySound, 18, 23, 2.5f, 10, 10f, 1f, 1f, 5));
+        legendaryWeapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMGSideOn.png"), bulletTexture, fireSound, emptySound, 90, 7, 10, 5, 15f, 0.5f, 0.4f, 5));
+        legendaryWeapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 60,  12, 5, 15, 5f, 1.5f, 0.7f, 7));
+        legendaryWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 8, 51, 0.75f, 75, 0.1f, 2f, 3f, 8, true));
+        legendaryWeapons.put("Shotgun", new Shotgun(new Texture("shotgun-aiming.png"), new Texture("shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 10, 14, 1, 5, 10, 2, 1, 5));
     }
 
 
@@ -236,9 +240,10 @@ public class Play implements Screen {
             if (Gdx.input.isKeyJustPressed(Input.Keys.P)){
                 paused = !paused;
             }
+            // Handle input for every entity that requires input
+            input();
             if (!paused){
-                // Handle input for every entity that requires input
-                input();
+
 
                 // Handle the logic for each entity - this includes movement and attacks for example
                 logic();
@@ -470,6 +475,14 @@ public class Play implements Screen {
     public void dispose() {
         // dispose of the spritebatch
         batch.dispose();
-
+        backgroundMusic.dispose();
+        blueZombieTexture.dispose();
+        redZombieTexture.dispose();
+        orangeZombieTexture.dispose();
+        greyZombieTexture.dispose();
+        zombieProjectileTexture.dispose();
+        chargingZombieLockingOnTexture.dispose();
+        zombieHurtSound.dispose();
+        map.dispose();
     }
 }

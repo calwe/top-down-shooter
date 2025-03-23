@@ -12,12 +12,12 @@ public class Shotgun extends Weapon{
     int numberOfBullets = 5;
 
     public Shotgun(Texture texture, Texture sideOn, Texture bulletTexture, Sound fireSound, Sound emptySound, int ammo, int damage, float fireRate, int critChance, float inaccuracy, float recoil, float knockback, float bulletSpeed) {
-        super(texture, sideOn, bulletTexture, fireSound, emptySound, ammo, damage, fireRate, critChance, inaccuracy, recoil, knockback, bulletSpeed);
+        super(texture, sideOn, bulletTexture, fireSound, emptySound, ammo, damage, fireRate, critChance, inaccuracy, recoil, knockback, bulletSpeed, false);
     }
 
 
     public Shotgun(Shotgun weaponToCopy, int ammo){
-        super(weaponToCopy.texture, weaponToCopy.sideOn, weaponToCopy.bulletTexture, weaponToCopy.fireSound, weaponToCopy.emptySound, ammo, weaponToCopy.damage, weaponToCopy.fireRate, weaponToCopy.critChance, weaponToCopy.inaccuracy, weaponToCopy.recoil, weaponToCopy.knockback, weaponToCopy.bulletSpeed);
+        super(weaponToCopy.texture, weaponToCopy.sideOn, weaponToCopy.bulletTexture, weaponToCopy.fireSound, weaponToCopy.emptySound, ammo, weaponToCopy.damage, weaponToCopy.fireRate, weaponToCopy.critChance, weaponToCopy.inaccuracy, weaponToCopy.recoil, weaponToCopy.knockback, weaponToCopy.bulletSpeed, false);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class Shotgun extends Weapon{
                 Random random = new Random();
                 for (int i = 0; i < numberOfBullets; i++){
                     //Create an instance of bullet, give it the bullet texture, and its stats.
-                    Bullet bullet = new Bullet(bulletTexture, gunPos, Math.round(damage*damageMultiplier), critChance + additionalCritChance, critMultiplier, knockback);
+                    Bullet bullet = new Bullet(bulletTexture, gunPos, Math.round(damage*damageMultiplier), critChance + additionalCritChance, critMultiplier, knockback, pierces);
                     //Turn the bullet so it is facing towards the mouse
                     bullet.sprite.setRotation(bulletRotation);
                     // Move the bullet so it is emerging from the gun
