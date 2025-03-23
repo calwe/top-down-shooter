@@ -24,6 +24,7 @@ public class Landmine extends Entity{
     int damage;
 
     public Landmine(Texture texture, Vector2 position, Animation<TextureRegion> explodeAnimation, float knockback){
+        this.damage = 30;
         this.knockback = knockback;
         this.layer = 0;
         this.hasSolidCollision = false;
@@ -41,7 +42,6 @@ public class Landmine extends Entity{
 
     @Override
     public void logic() {
-        damage = Math.round(25 * (1 + (0.33f*(Play.currentTier-1))));
         //The weapon shouldn't move, but this also checks for collisions.
         momentum = new Vector2(0,0);
         if (detonating){
@@ -93,14 +93,14 @@ public class Landmine extends Entity{
         }
     }
 
-    void  detonate(){
+    public void  detonate(){
         detonating = true;
         width = 36;
         height = 36;
         for (Entity e : Play.entities){
             if (pos.dst(e.pos) <= 18){
                 if (e instanceof Enemy){
-                    ((Enemy)e).takeDamage(damage);
+                    ((Enemy)e).takeDamage(Math.round(25 * (1 + (0.33f*(Play.currentTier-1)))));
                     Vector2 direction = new Vector2(e.pos.x- pos.x, e.pos.y - pos.y);
                     direction.nor();
                     direction.scl(knockback);

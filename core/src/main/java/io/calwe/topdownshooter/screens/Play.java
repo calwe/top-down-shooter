@@ -80,19 +80,19 @@ public class Play implements Screen {
 
     private boolean paused = false;
 
-    Texture blueZombieTexture;
-    Texture redZombieTexture;
-    Texture orangeZombieTexture;
-    Texture greyZombieTexture;
-    Texture zombieProjectileTexture;
-    Texture chargingZombieLockingOnTexture;
+    static Texture blueZombieTexture;
+    static Texture redZombieTexture;
+    static Texture orangeZombieTexture;
+    static Texture greyZombieTexture;
+    static Texture zombieProjectileTexture;
+    static Texture chargingZombieLockingOnTexture;
 
-    Animation<TextureRegion> animatedZombieTexture;
+    static Animation<TextureRegion> animatedZombieTexture;
 
-    Texture[] zombieParticles;
+    static Texture[] zombieParticles;
 
-    Sound zombieHurtSound;
-    Sound backgroundMusic;
+    static Sound zombieHurtSound;
+    static Sound backgroundMusic;
 
 
     @Override
@@ -122,13 +122,13 @@ public class Play implements Screen {
         initializeWeapons();
 
         equipment = new EquipmentDrop[]{
-            new CritChanceDrop(new Texture("Equipment/RedDotSight.png"), "Red dot sight", "Crit chance +7%.", 7),
-            new CritDamageDrop(new Texture("Equipment/AP-rounds.png"), "Armor piercing bullets", "Crit damage +25%", 0.5f),
-            new DamageDrop(new Texture("Equipment/ammo.png"), "Hollow points", "Damage +20%", 0.2f),
-            new ExtraInventoryDrop(new Texture("Equipment/Bag.png"), "Bag", "Carry an additional weapon."),
-            new HealDrop(new Texture("Equipment/medkit.png"), "Medkit", "Heal 25%", 25),
-            new HealthDrop(new Texture("Equipment/FlakVest.png"), "Kevlar vest", "Max health +10%", 10),
-            new SaveAmmoDrop(new Texture("Equipment/Magazine.png"), "Extended magazine", "8% chance to save ammo.", 8),
+//            new CritChanceDrop(new Texture("Equipment/RedDotSight.png"), "Red dot sight", "Crit chance +7%.", 7),
+//            new CritDamageDrop(new Texture("Equipment/AP-rounds.png"), "Armor piercing bullets", "Crit damage +25%", 0.5f),
+//            new DamageDrop(new Texture("Equipment/ammo.png"), "Hollow points", "Damage +20%", 0.2f),
+//            new ExtraInventoryDrop(new Texture("Equipment/Bag.png"), "Bag", "Carry an additional weapon."),
+//            new HealDrop(new Texture("Equipment/medkit.png"), "Medkit", "Heal 25%", 25),
+//            new HealthDrop(new Texture("Equipment/FlakVest.png"), "Kevlar vest", "Max health +10%", 10),
+//            new SaveAmmoDrop(new Texture("Equipment/Magazine.png"), "Extended magazine", "8% chance to save ammo.", 8),
             new BombDrop(new Texture("Equipment/Bomb.png"), "Bomb", "Clear all enemies on the screen. ")
         };
 
@@ -204,31 +204,31 @@ public class Play implements Screen {
         commonWeapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("PistolSideOn.png"), bulletTexture, fireSound, emptySound, 18, 10, 2.5f, 10, 10f, 1f, 1f, 5));
         commonWeapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMGSideOn.png"), bulletTexture, fireSound, emptySound, 90, 3, 10, 5, 15f, 0.5f, 0.4f, 5));
         commonWeapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 60,  5, 5, 15, 5f, 1.5f, 0.7f, 7));
-        commonWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 8, 22, 0.75f, 75, 0.1f, 2f, 3f, 8, true));
+        commonWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 8, 22, 0.75f, 75, 0.1f, 2f, 3f, 7, true));
         commonWeapons.put("Shotgun", new Shotgun(new Texture("shotgun-aiming.png"), new Texture("shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 10, 6, 1, 5, 10, 2, 1, 5));
 
         uncommonWeapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("PistolSideOn.png"), bulletTexture, fireSound, emptySound, 18, 13, 2.5f, 10, 10f, 1f, 1f, 5));
         uncommonWeapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMGSideOn.png"), bulletTexture, fireSound, emptySound, 90, 4, 10, 5, 15f, 0.5f, 0.4f, 5));
         uncommonWeapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 60,  7, 5, 15, 5f, 1.5f, 0.7f, 7));
-        uncommonWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 8, 29, 0.75f, 75, 0.1f, 2f, 3f, 8, true));
+        uncommonWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 8, 29, 0.75f, 75, 0.1f, 2f, 3f, 7, true));
         uncommonWeapons.put("Shotgun", new Shotgun(new Texture("shotgun-aiming.png"), new Texture("shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 10, 8, 1, 5, 10, 2, 1, 5));
 
         rareWeapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("PistolSideOn.png"), bulletTexture, fireSound, emptySound, 18, 17, 2.5f, 10, 10f, 1f, 1f, 5));
         rareWeapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMGSideOn.png"), bulletTexture, fireSound, emptySound, 90, 5, 10, 5, 15f, 0.5f, 0.4f, 5));
         rareWeapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 60,  8, 5, 15, 5f, 1.5f, 0.7f, 7));
-        rareWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 8, 37, 0.75f, 75, 0.1f, 2f, 3f, 8, true));
+        rareWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 8, 37, 0.75f, 75, 0.1f, 2f, 3f, 7, true));
         rareWeapons.put("Shotgun", new Shotgun(new Texture("shotgun-aiming.png"), new Texture("shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 10, 10, 1, 5, 10, 2, 1, 5));
 
         epicWeapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("PistolSideOn.png"), bulletTexture, fireSound, emptySound, 18, 20, 2.5f, 10, 10f, 1f, 1f, 5));
         epicWeapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMGSideOn.png"), bulletTexture, fireSound, emptySound, 90, 6, 10, 5, 15f, 0.5f, 0.4f, 5));
         epicWeapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 60,  10, 5, 15, 5f, 1.5f, 0.7f, 7));
-        epicWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 8, 44, 0.75f, 75, 0.1f, 2f, 3f, 8, true));
+        epicWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 8, 44, 0.75f, 75, 0.1f, 2f, 3f, 7, true));
         epicWeapons.put("Shotgun", new Shotgun(new Texture("shotgun-aiming.png"), new Texture("shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 10, 12, 1, 5, 10, 2, 1, 5));
 
         legendaryWeapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("PistolSideOn.png"), bulletTexture, fireSound, emptySound, 18, 23, 2.5f, 10, 10f, 1f, 1f, 5));
         legendaryWeapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMGSideOn.png"), bulletTexture, fireSound, emptySound, 90, 7, 10, 5, 15f, 0.5f, 0.4f, 5));
         legendaryWeapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 60,  12, 5, 15, 5f, 1.5f, 0.7f, 7));
-        legendaryWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 8, 51, 0.75f, 75, 0.1f, 2f, 3f, 8, true));
+        legendaryWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 8, 51, 0.75f, 75, 0.1f, 2f, 3f, 7, true));
         legendaryWeapons.put("Shotgun", new Shotgun(new Texture("shotgun-aiming.png"), new Texture("shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 10, 14, 1, 5, 10, 2, 1, 5));
     }
 

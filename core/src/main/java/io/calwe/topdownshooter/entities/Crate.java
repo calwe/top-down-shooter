@@ -85,7 +85,7 @@ public class Crate extends Entity{
             //if the e key has just been pressed down
             if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
                 Random random = new Random();
-                if (random.nextInt(100) < 60){
+                if (random.nextInt(100) < 55){
                     if (Play.currentTier == 1){
                         List<String> weapons = Collections.list(Play.commonWeapons.keys());
                         Weapon weaponChoice = Play.commonWeapons.get(weapons.get(random.nextInt(weapons.size())));

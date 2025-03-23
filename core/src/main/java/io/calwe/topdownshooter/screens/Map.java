@@ -46,19 +46,19 @@ public class Map {
 
     private final int viewDistance;
 
-    Texture crateTexture;
-    Texture treeTexture;
-    Texture treeTransparentTexture;
-    Texture trunkTexture;
-    Texture houseTexture;
-    Texture houseTransparentTexture;
-    Texture wallTexture;
-    Texture floorTexture;
-    Texture landmineTexture;
-    Animation<TextureRegion> explosionAnimation;
-    Texture[] carTextures;
+    static Texture crateTexture;
+    static Texture treeTexture;
+    static Texture treeTransparentTexture;
+    static Texture trunkTexture;
+    static Texture houseTexture;
+    static Texture houseTransparentTexture;
+    static Texture wallTexture;
+    static Texture floorTexture;
+    static Texture landmineTexture;
+    public static Animation<TextureRegion> explosionAnimation;
+    static Texture[] carTextures;
 
-    TiledMapTileSet tileSet;
+    static TiledMapTileSet tileSet;
 
 
     public Map() {
@@ -252,7 +252,7 @@ public class Map {
                 batch.draw(tileSet.getTile(tileId).getTextureRegion(), x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f));
 
 
-                if (Math.ceil(seededRandomLocationValue(y, x) * 1000) >= 999){
+                if (Math.ceil(seededRandomLocationValue(y, x) * 2000) >= 1998){
                     tryToGenerateCrate(x, y,entitiesAlreadyGeneratedCoords);
                 }
                 else if (Math.ceil(seededRandomLocationValue(y+100, x+100) * 1000) >= 997){

@@ -14,16 +14,18 @@ public class GameOver implements Screen {
     SpriteBatch batch;
     public int score = 0;
     public Main main;
+    Texture gravestone;
 
     @Override
     public void show() {
         batch = new SpriteBatch();
+        gravestone = new Texture("Gravestone.png");
     }
 
     @Override
     public void render(float delta) {
         try{
-            if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
                 main.restart();
             }
 
@@ -31,7 +33,7 @@ public class GameOver implements Screen {
             Gdx.gl.glClearColor(0, 0, 0, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             batch.begin();
-            batch.draw(new Texture("Gravestone.png"), Gdx.graphics.getWidth()/2f-Gdx.graphics.getHeight()*0.25f, Gdx.graphics.getHeight()*0.2f, Gdx.graphics.getHeight()*0.5f,Gdx.graphics.getHeight()*0.5f);
+            batch.draw(gravestone, Gdx.graphics.getWidth()/2f-Gdx.graphics.getHeight()*0.25f, Gdx.graphics.getHeight()*0.2f, Gdx.graphics.getHeight()*0.5f,Gdx.graphics.getHeight()*0.5f);
             BitmapFont font = new BitmapFont();
             font.setColor(Color.RED);
             font.getData().setScale(8f);

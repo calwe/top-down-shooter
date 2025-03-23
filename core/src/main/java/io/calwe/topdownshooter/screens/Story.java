@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import io.calwe.topdownshooter.Main;
 
-public class Intro implements Screen {
+public class Story implements Screen {
     SpriteBatch batch;
     public int score = 0;
     public Main main;
@@ -23,8 +23,11 @@ public class Intro implements Screen {
     @Override
     public void render(float delta) {
         try{
-            if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
-                main.restart();
+            if (Gdx.input.isKeyJustPressed(Input.Keys.X)) {
+                main.StartMenu();
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+                main.info();
             }
 
             // clear the screen to black
@@ -34,12 +37,14 @@ public class Intro implements Screen {
             BitmapFont font = new BitmapFont();
             font.setColor(Color.WHITE);
             font.getData().setScale(8f);
-            font.draw(batch, "Intro", Gdx.graphics.getWidth()/2f-350, Gdx.graphics.getHeight()*0.9f);
-            font.getData().setScale(3f);
-            font.setColor(Color.BLACK);
-            font.draw(batch, "", Gdx.graphics.getWidth()/2f-80, Gdx.graphics.getHeight()*0.4f);
+            font.draw(batch, "BACKGROUND", Gdx.graphics.getWidth()/2f-400, Gdx.graphics.getHeight()*0.9f);
 
-            font.draw(batch, "PRESS ENTER TO CONTINUE.", Gdx.graphics.getWidth()/2f-250, Gdx.graphics.getHeight()*0.1f);
+            font.getData().setScale(3f);
+            font.draw(batch, "THE WORLD HAS BEEN OVERRUN BY ZOMBIES.\nYOU MUST TRY TO STAY ALIVE AS LONG AS\nPOSSIBLE WHILE THEY HUNT YOU DOWN.\nYOU CAN FIND WEAPONS AND EQUIPMENT IN CRATES\nSCATTERED AROUND TO HELP YOU STAY ALIVE.\nKEEP MOVING AND DON'T GET CAUGHT!", Gdx.graphics.getWidth()*0.5f-550, Gdx.graphics.getHeight()*0.65f);
+
+            font.getData().setScale(3f);
+            font.draw(batch, "PRESS ENTER TO CONTINUE TO THE NEXT PAGE (CONTROLS).", Gdx.graphics.getWidth()/2f-550, Gdx.graphics.getHeight()*0.15f);
+            font.draw(batch, "PRESS X TO RETURN TO THE START MENU.", Gdx.graphics.getWidth()/2f-550, Gdx.graphics.getHeight()*0.1f);
             batch.end();
         }
         catch (Exception e){
@@ -72,4 +77,3 @@ public class Intro implements Screen {
         batch.dispose();
     }
 }
-

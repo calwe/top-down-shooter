@@ -13,31 +13,36 @@ import io.calwe.topdownshooter.Main;
 public class Start implements Screen {
     SpriteBatch batch;
     public Main main;
+    Texture skull;
 
 
     @Override
     public void show() {
         batch = new SpriteBatch();
+        skull = new Texture("Skull.png");
     }
 
     @Override
     public void render(float delta) {
         try{
-            if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
                 main.restart();
             }
-
+            if (Gdx.input.isKeyJustPressed(Input.Keys.I)) {
+                main.Story();
+            }
             // clear the screen to black
             Gdx.gl.glClearColor(0, 0, 0, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             batch.begin();
-            batch.draw(new Texture("Skull.png"), (Gdx.graphics.getWidth()/2f)-(Gdx.graphics.getHeight()*0.25f), Gdx.graphics.getHeight()*0.2f, Gdx.graphics.getHeight()*0.5f,Gdx.graphics.getHeight()*0.5f);
+            batch.draw(skull, (Gdx.graphics.getWidth()/2f)-(Gdx.graphics.getHeight()*0.25f), Gdx.graphics.getHeight()*0.2f, Gdx.graphics.getHeight()*0.5f,Gdx.graphics.getHeight()*0.5f);
             BitmapFont font = new BitmapFont();
             font.setColor(Color.GREEN);
             font.getData().setScale(8f);
             font.draw(batch, "ZOMBIES!", Gdx.graphics.getWidth()/2f-250, Gdx.graphics.getHeight()*0.9f);
             font.getData().setScale(3f);
-            font.draw(batch, "PRESS ENTER TO START.", Gdx.graphics.getWidth()/2f-250, Gdx.graphics.getHeight()*0.1f);
+            font.draw(batch, "PRESS ENTER TO START.", Gdx.graphics.getWidth()/2f-250, Gdx.graphics.getHeight()*0.14f);
+            font.draw(batch, "PRESS I FOR INFO.", Gdx.graphics.getWidth()/2f-250, Gdx.graphics.getHeight()*0.08f);
             batch.end();
         }
         catch (Exception e){
