@@ -16,7 +16,7 @@ public class WeaponDrop extends Entity{
 
     public WeaponDrop(Weapon weapon, Vector2 position){
         this.randomlyGenerateAmmo = false;
-
+        this.layer = 0;
         this.weapon = weapon;
         this.hasSolidCollision = false;
         this.width = 32;

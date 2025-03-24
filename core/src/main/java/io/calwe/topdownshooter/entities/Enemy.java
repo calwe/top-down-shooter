@@ -49,7 +49,7 @@ public class Enemy extends Entity {
         this.knockback = 2f;
         this.pos = startPos;
         this.momentum = new Vector2(0, 0);
-        this.movementSpeed = 5f;
+        this.movementSpeed = 7f;
         this.enemyWalkAnimation = enemyWalkAnimation;
         this.slide = 0.85f;
         this.width = 12;
@@ -77,6 +77,9 @@ public class Enemy extends Entity {
         movementToPlayer.nor();
         movementToPlayer.scl(movementSpeed*Gdx.graphics.getDeltaTime());
         momentum.add(movementToPlayer);
+        if (Math.round(movementToPlayer.x*100f)/100f == 0.0f && Math.round(movementToPlayer.y*100f)/100f == 0.0f){
+            elapsedTime = 0.0f;
+        }
         tryMove();
         //Reduce their momentum over time
         momentum.scl(slide);
@@ -97,7 +100,7 @@ public class Enemy extends Entity {
     }
 
     //executed when the enemy runs out of health
-    private void die(){
+    protected void die(){
         //Add to the player's score
         Play.score += 100;
         //Remove this entity from the world

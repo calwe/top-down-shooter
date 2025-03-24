@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import io.calwe.topdownshooter.Weapon;
 import io.calwe.topdownshooter.entities.*;
+import io.calwe.topdownshooter.ui.HUD;
 
 import java.util.*;
 import java.util.List;
@@ -79,20 +80,18 @@ public class Play implements Screen {
             new Texture("player_single_frame.png"),
             getAnimatedPlayerTexture(),
             new Vector2(Map.MAP_WIDTH * Map.TILE_SIZE / 2f, Map.MAP_HEIGHT * Map.TILE_SIZE / 2f),
-            new Weapon[]{
-                weapons.get("Pistol"),
-                null,
-                null
-            },
+            new Weapon[3],
             new Texture[]{
                 new Texture("bloodParticle.png")
             },
             camera
         );
+        player.addToInventory(new Weapon(weapons.get("Pistol"),weapons.get("Pistol").ammo));
+        player.addToInventory(new Weapon(weapons.get("Assault Rifle"),weapons.get("Assault Rifle").ammo));
         entities.add(player);
 
         //For testing purposes
-        WeaponDrop w = new WeaponDrop(weapons.get("SMG"), new Vector2(Map.MAP_WIDTH * Map.TILE_SIZE / 2f, Map.MAP_HEIGHT * Map.TILE_SIZE / 2f));
+        WeaponDrop w = new WeaponDrop(weapons.get("Sniper Rifle"), new Vector2(Map.MAP_WIDTH * Map.TILE_SIZE / 2f, Map.MAP_HEIGHT * Map.TILE_SIZE / 2f));
         entities.add(w);
     }
 
@@ -120,10 +119,10 @@ public class Play implements Screen {
         Sound fireSound = Gdx.audio.newSound(Gdx.files.internal("gunshot.mp3"));
         Sound emptySound = Gdx.audio.newSound(Gdx.files.internal("noAmmo.mp3"));
 
-        weapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("pistol-firing.png"), new Texture("PistolSideOn.png"), bulletTexture, fireSound, emptySound, 12, 10, 2, 10, 10f, 1f, 1f, 5));
-        weapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMG-firing.png"), new Texture("SMGSideOn.png"), bulletTexture, fireSound, emptySound, 60, 2, 10, 5, 15f, 0.5f, 0.4f, 5));
-        weapons.put("Assault Rifle", new Weapon(noTexture, noTexture, new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 50,  4, 5, 15, 5f, 1.5f, 0.7f, 10));
-        weapons.put("Sniper Rifle", new Weapon(noTexture, noTexture, noTexture, bulletTexture, fireSound, emptySound, 7, 30, 0.5f, 50, 0f, 2f, 3f, 15));
+        weapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("PistolSideOn.png"), bulletTexture, fireSound, emptySound, 12, 10, 2, 10, 10f, 1f, 1f, 5));
+        weapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMGSideOn.png"), bulletTexture, fireSound, emptySound, 60, 2, 10, 5, 15f, 0.5f, 0.4f, 5));
+        weapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 50,  4, 5, 15, 5f, 1.5f, 0.7f, 10));
+        weapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 7, 40, 0.5f, 50, 0.1f, 2f, 3f, 10));
     }
 
 
@@ -148,6 +147,8 @@ public class Play implements Screen {
 
         //draw each entity
         draw();
+
+        player.hud.render();
 
         //check if new enemies need to be spawned in
         handleEnemySpawning();
@@ -196,17 +197,71 @@ public class Play implements Screen {
             spawnPos.scl(spawnRadius);
             spawnPos.add(player.pos);
             // Create a new enemy, with the appropriate textures and sounds, and spawn him at the generated position
-            Entity newEnemy = new Enemy(
-                new Texture("zombie.png"),
-                getAnimatedPlayerTexture(),
-                Gdx.audio.newSound(Gdx.files.internal("zombieHit.mp3")),
-                spawnPos,
-                player,
-                new Texture[]{
-                    new Texture("bloodParticle.png"),
-                    new Texture("zombieParticle.png")
-                }
-            );
+            Entity newEnemy;
+            int enemyChoice = random.nextInt(100);
+            if (enemyChoice >= 85){
+                newEnemy = new ExplodingEnemy(
+                    new Texture("blueZombie.png"),
+                    getAnimatedPlayerTexture(),
+                    Gdx.audio.newSound(Gdx.files.internal("zombieHit.mp3")),
+                    spawnPos,
+                    player,
+                    new Texture[]{
+                        new Texture("bloodParticle.png"),
+                        new Texture("zombieParticle.png")
+                    },
+                    new Texture("zombieProjectile.png"),
+                    1.5f
+                );
+            }
+            else if (enemyChoice >= 70){
+                newEnemy = new ChargingEnemy(
+                    new Texture("redZombie.png"),
+                    getAnimatedPlayerTexture(),
+                    Gdx.audio.newSound(Gdx.files.internal("zombieHit.mp3")),
+                    spawnPos,
+                    player,
+                    new Texture[]{
+                        new Texture("bloodParticle.png"),
+                        new Texture("zombieParticle.png")
+                    },
+                    new Texture("ChargingZombieLockingOn.png"),
+                    4,
+                    0.5f,
+                    40,
+                    0.8f
+                );
+            }
+            else if (enemyChoice >= 55){
+                newEnemy = new RangedEnemy(
+                    new Texture("greyZombie.png"),
+                    getAnimatedPlayerTexture(),
+                    Gdx.audio.newSound(Gdx.files.internal("zombieHit.mp3")),
+                    spawnPos,
+                    player,
+                    new Texture[]{
+                        new Texture("bloodParticle.png"),
+                        new Texture("zombieParticle.png")
+                    },
+                    2,
+                    2f,
+                    new Texture("zombieProjectile.png")
+                );
+            }
+            else{
+                newEnemy = new Enemy(
+                    new Texture("orangeZombie.png"),
+                    getAnimatedPlayerTexture(),
+                    Gdx.audio.newSound(Gdx.files.internal("zombieHit.mp3")),
+                    spawnPos,
+                    player,
+                    new Texture[]{
+                        new Texture("bloodParticle.png"),
+                        new Texture("zombieParticle.png")
+                    }
+                );
+            }
+
             //Add him to the entities list so he will be updated
             entitiesToAdd.add(newEnemy);
             //reset the cooldown for spawning enemies
@@ -273,6 +328,9 @@ public class Play implements Screen {
         // dividing the width and height by a scale zooms the camera
         camera.viewportWidth = width / PIXEL_SCALE;
         camera.viewportHeight = height / PIXEL_SCALE;
+
+        player.resize(width, height);
+
     }
 
     @Override
@@ -291,5 +349,7 @@ public class Play implements Screen {
         map.dispose();
         // dispose of the spritebatch
         batch.dispose();
+
+        player.dispose();
     }
 }

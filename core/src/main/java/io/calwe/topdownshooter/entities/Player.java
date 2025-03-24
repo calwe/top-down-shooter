@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import io.calwe.topdownshooter.Weapon;
 import io.calwe.topdownshooter.screens.Play;
+import io.calwe.topdownshooter.ui.HUD;
 
 import java.util.Random;
 
@@ -49,6 +50,8 @@ public class Player extends Entity {
     //An array of textures for the particles that should be released when the player is damage
     Texture[] damageParticles;
 
+    public HUD hud;
+
     // The constructor - intialize all the variables
     public Player(Texture texture, Animation<TextureRegion> playerWalkAnimation, Vector2 startPos, Weapon[] inventory, Texture[] damageParticles, OrthographicCamera camera) {
         this.maxHealth = 100;
@@ -60,6 +63,7 @@ public class Player extends Entity {
         this.mouseCoords = new Vector2(0,0);
         this.slide = 0.85f;
         this.width = 12;
+        this.layer = 15;
         this.height = 16;
         this.inventory = inventory;
         this.damageParticles = damageParticles;
@@ -68,6 +72,8 @@ public class Player extends Entity {
         this.health = maxHealth;
         this.boundsHeightReduction = 3;
         this.boundsWidthReduction = 3;
+        this.hud = new HUD();
+        this.hud.create();
         //Calculate the player's collider bounds
         bounds.x = pos.x + boundsWidthReduction;
         bounds.y = pos.y + boundsHeightReduction;
@@ -181,7 +187,6 @@ public class Player extends Entity {
                 direction.nor();
                 direction.scl(-0.01f*weapon.recoil);
                 momentum.add(direction);
-                playerTexture = inventory[currentInventorySlot].firingTexture;
             }
             // reset mouseDown
             mouseDown = false;
@@ -200,8 +205,7 @@ public class Player extends Entity {
         // Add an offset to the sprite to account for the fact that the player sprite is not centered in its image.
         Vector2 spriteOffset = new Vector2(0, 2).rotateDeg(angleToLook*-180f/(float)Math.PI);
         spriteOffset.add(pos);
-        //sprite.setPosition(spriteOffset.x, spriteOffset.y);
-        sprite.setPosition(pos.x, pos.y);
+        sprite.setPosition(spriteOffset.x, spriteOffset.y);
 
         //Check if the player has no health remaining - execute the die function if they don't
         if (health <= 0){
@@ -222,10 +226,11 @@ public class Player extends Entity {
         TextureRegion currentFrame = playerWalkAnimation.getKeyFrame(elapsedTime, true);
         // Set the animation's current frame to the player sprite's image
         sprite.setRegion(currentFrame);
-
+        sprite.setSize(width, height);
         // Render the player's animated legs
         sprite.draw(batch);
 
+        sprite.setSize(width, 18);
         //Render the player's body with the weapon they are holding
         sprite.setRegion(playerTexture);
         sprite.draw(batch);
@@ -261,6 +266,7 @@ public class Player extends Entity {
         for (int i = 0; i < inventory.length; i++) {
             if (inventory[i] == null){
                 inventory[i] = weaponToAdd;
+                hud.inventory.slots[i].weaponInSlot = weaponToAdd;
                 return;
             }
         }
@@ -272,5 +278,14 @@ public class Player extends Entity {
         }
         //And add the picked up weapon to our inventory in its place
         inventory[currentInventorySlot] = weaponToAdd;
+        hud.inventory.slots[currentInventorySlot].weaponInSlot = weaponToAdd;
+    }
+
+    public void resize(int width, int height) {
+        hud.resize(width, height);
+    }
+
+    public void dispose() {
+        hud.dispose();
     }
 }

@@ -1,17 +1,13 @@
 package io.calwe.topdownshooter;
 
-import com.badlogic.gdx.Game;
-import io.calwe.topdownshooter.screens.Play;
-import io.calwe.topdownshooter.entities.Entity;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 
-/** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
-public class Main extends Game {
-
-
-    @Override
-    public void create() {
-        // set the initial "screen" to the play screen (as we don't have a main menu)
-        setScreen(new Play());
+public class Main {
+    public static void main(String[] args) {
+        Lwjgl3ApplicationConfiguration cfg = new Lwjgl3ApplicationConfiguration();
+        cfg.setTitle("Top Down Shooter");
+        cfg.setWindowedMode(1280, 720);
+        new Lwjgl3Application(new Game(), cfg);
     }
 }

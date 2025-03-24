@@ -89,10 +89,12 @@ public abstract class Entity {
                 //If both objects have solid colliders
                 if (collideableRects.get(rect).hasSolidCollision && hasSolidCollision){
                     //prevent us from moving through us
-                    if (momentum.x < 0)
+                    if (momentum.x < 0){
                         bounds.x = rect.x + rect.width + 0.1f;
-                    else
+                    }
+                    else{
                         bounds.x = rect.x - bounds.width - 0.1f;
+                    }
                     momentum.x = 0;
                 }
             }
@@ -113,8 +115,10 @@ public abstract class Entity {
                     //prevent us from moving through us
                     if (momentum.y < 0) {
                         bounds.y = rect.y + rect.height + 0.1f;
-                    } else
+                    }
+                    else{
                         bounds.y = rect.y - bounds.height - 0.1f;
+                    }
                     momentum.y = 0;
                 }
             }
