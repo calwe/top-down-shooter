@@ -31,6 +31,7 @@ public class RangedEnemy extends Enemy {
     //This overrides Enemy's logic method
     @Override
     public void logic(){
+        //If the enemy is more than 60 away, move towards the player
         if (target.pos.dst(pos) > 60){
             momentum.add(getMovementToPlayer());
         }
@@ -38,6 +39,7 @@ public class RangedEnemy extends Enemy {
             elapsedTime = 0.0f;
         }
 
+        //If we are less than 120 away, and the attack is not on cooldown, launch a projectile at the player
         if (target.pos.dst(pos) < 120){
             if (attackCooldownTimer >= attackCooldown){
                 EnemyProjectile p = new EnemyProjectile(projectileTexture, new Vector2(pos.x + (width/2f), pos.y + (height/2f)), damage, knockback);
@@ -49,6 +51,7 @@ public class RangedEnemy extends Enemy {
                 p.momentum.set(new Vector2(0, projectileSpeed).rotateDeg(rotation));
                 // Add the projectile to the entitiesToAdd list so it can be added to the master entities list, and rendered and have its logic handled
                 Play.entitiesToAdd.add(p);
+                //Reset the attack cooldown
                 attackCooldownTimer = 0;
             }
         }
@@ -65,11 +68,14 @@ public class RangedEnemy extends Enemy {
         spriteOffset.add(pos);
         sprite.setPosition(spriteOffset.x, spriteOffset.y);
 
+        //Increase the attack cooldown timer over time
         attackCooldownTimer += Gdx.graphics.getDeltaTime();
         //Check if the zombie is out of health - if it is, execute the die function
         if (health <= 0){
             die();
         }
+        //If the zombie is too far away from the player to reasonably catch up or be seen, it is nothing but a drain on
+        // resources and should be removed
         if (pos.dst(target.pos) > 300){
             Play.entitiesToRemove.add(this);
         }
@@ -78,7 +84,7 @@ public class RangedEnemy extends Enemy {
     //Run when we collide with another entity
     @Override
     public void OnEntityCollision(Entity e){
-
+        //Don't do anything - this enemy doesn't deal damage on collision since it has ranged attacks instead.
     }
 
 }

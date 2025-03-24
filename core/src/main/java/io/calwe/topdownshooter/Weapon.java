@@ -115,6 +115,7 @@ public class Weapon{
                 if (random.nextInt(100) >= ammoSaveChance){
                     ammo--;
                 }
+                //Play the shooting sound
                 fireSound.play(0.03f);
                 return true;
             }

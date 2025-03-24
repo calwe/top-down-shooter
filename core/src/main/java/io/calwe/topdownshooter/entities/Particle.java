@@ -6,8 +6,12 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import io.calwe.topdownshooter.screens.Play;
 
+//Particles are 1x1 images that exist for a short time before disappearing - like
+// the blood particles released when players are damaged
 public class Particle extends Entity {
+    //How long the particle exists for
     float lifeTime;
+    //how long the particle has existed for
     float timer = 0;
 
     public Particle(Texture texture, Vector2 startPos){
@@ -30,6 +34,7 @@ public class Particle extends Entity {
 
     @Override
     public void logic() {
+        //Move and check for collisions
         tryMove();
         //Reduce their momentum over time
         momentum.scl(slide);

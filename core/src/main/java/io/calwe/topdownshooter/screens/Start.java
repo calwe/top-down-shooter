@@ -18,6 +18,7 @@ public class Start implements Screen {
 
     @Override
     public void show() {
+        //Initialise the spritebatch and load the texture
         batch = new SpriteBatch();
         skull = new Texture("Skull.png");
     }
@@ -25,9 +26,11 @@ public class Start implements Screen {
     @Override
     public void render(float delta) {
         try{
+            //Start the game if enter is pressed
             if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
                 main.restart();
             }
+            //Load the backstory screen if I is pressed
             if (Gdx.input.isKeyJustPressed(Input.Keys.I)) {
                 main.Story();
             }
@@ -36,11 +39,17 @@ public class Start implements Screen {
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             batch.begin();
             batch.draw(skull, (Gdx.graphics.getWidth()/2f)-(Gdx.graphics.getHeight()*0.25f), Gdx.graphics.getHeight()*0.2f, Gdx.graphics.getHeight()*0.5f,Gdx.graphics.getHeight()*0.5f);
+            //Initialise a new font
             BitmapFont font = new BitmapFont();
+            //Set the font color and size
             font.setColor(Color.GREEN);
             font.getData().setScale(8f);
+            //draw the title
             font.draw(batch, "ZOMBIES!", Gdx.graphics.getWidth()/2f-250, Gdx.graphics.getHeight()*0.9f);
+
+            //Set the font size
             font.getData().setScale(3f);
+            //draw the text
             font.draw(batch, "PRESS ENTER TO START.", Gdx.graphics.getWidth()/2f-250, Gdx.graphics.getHeight()*0.14f);
             font.draw(batch, "PRESS I FOR INFO.", Gdx.graphics.getWidth()/2f-250, Gdx.graphics.getHeight()*0.08f);
             batch.end();
@@ -72,6 +81,8 @@ public class Start implements Screen {
 
     @Override
     public void dispose() {
+        //dispose of the spritebatch and the textures now they aren't needed
         batch.dispose();
+        skull.dispose();
     }
 }

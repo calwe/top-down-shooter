@@ -13,6 +13,7 @@ public class HealDrop extends EquipmentDrop{
 
     @Override
     public void ApplyAffect(Player p){
+        //Restore the player's health
         p.heal(healAmount);
     }
     @Override

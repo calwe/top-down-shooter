@@ -22,6 +22,7 @@ public class WeaponsInfo implements Screen {
 
     @Override
     public void show() {
+        //Initialise the spritebatch and load the textures
         batch = new SpriteBatch();
         pistolTexture = new Texture("PistolSideOn.png");
         SMGTexture = new Texture("SMGSideOn.png");
@@ -33,9 +34,11 @@ public class WeaponsInfo implements Screen {
     @Override
     public void render(float delta) {
         try{
+            //Return to the start menu if x is pressed
             if (Gdx.input.isKeyJustPressed(Input.Keys.X)) {
                 main.StartMenu();
             }
+            //Go on to the next info screen if enter is pressed
             if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
                 main.EquipmentInfo();
             }
@@ -44,18 +47,24 @@ public class WeaponsInfo implements Screen {
             Gdx.gl.glClearColor(0, 0, 0, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             batch.begin();
+            //Initialise a new font
             BitmapFont font = new BitmapFont();
+            //Set the font color and size
             font.setColor(Color.WHITE);
             font.getData().setScale(8f);
+            //draw the title
             font.draw(batch, "WEAPONS", Gdx.graphics.getWidth()/2f-300, Gdx.graphics.getHeight()*0.9f);
 
+            //draw the weapon icons
             batch.draw(pistolTexture, 50, Gdx.graphics.getHeight()*0.75f-36, 96,36);
             batch.draw(SMGTexture, 50, Gdx.graphics.getHeight()*0.55f-36, 96,36);
             batch.draw(assaultTexture, 50, Gdx.graphics.getHeight()*0.35f-36, 96,36);
             batch.draw(sniperTexture, Gdx.graphics.getWidth()*0.5f, Gdx.graphics.getHeight()*0.75f-36, 96,36);
             batch.draw(shotgunTexture, Gdx.graphics.getWidth()*0.5f, Gdx.graphics.getHeight()*0.55f-36, 96,36);
 
+            //change the text size
             font.getData().setScale(2f);
+            //draw the text
             font.draw(batch, "PISTOL:", Gdx.graphics.getWidth()*0.1f+50, Gdx.graphics.getHeight()*0.75f);
             font.draw(batch, "DAMAGE: MEDIUM\nRATE OF FIRE: MEDIUM\nAMMO: MEDIUM\nACCURACY: LOW", Gdx.graphics.getWidth()*0.1f+300, Gdx.graphics.getHeight()*0.75f);
 
@@ -70,8 +79,9 @@ public class WeaponsInfo implements Screen {
 
             font.draw(batch, "SHOTGUN:", Gdx.graphics.getWidth()*0.6f+50, Gdx.graphics.getHeight()*0.55f);
             font.draw(batch, "DAMAGE: HIGH\nRATE OF FIRE: LOW\nAMMO: LOW\nACCURACY: LOW\nSPECIAL: FIRES A SPRAY OF BULLETS", Gdx.graphics.getWidth()*0.6f+300, Gdx.graphics.getHeight()*0.55f);
-
+            //change the text size
             font.getData().setScale(3f);
+            //draw the text
             font.draw(batch, "PRESS ENTER TO CONTINUE TO THE NEXT PAGE (EQUIPMENT).", Gdx.graphics.getWidth()/2f-550, Gdx.graphics.getHeight()*0.15f);
             font.draw(batch, "PRESS X TO RETURN TO THE START MENU.", Gdx.graphics.getWidth()/2f-550, Gdx.graphics.getHeight()*0.1f);
             batch.end();
@@ -103,6 +113,7 @@ public class WeaponsInfo implements Screen {
 
     @Override
     public void dispose() {
+        //dispose of the spritebatch and the textures now they aren't needed
         batch.dispose();
         pistolTexture.dispose();
         SMGTexture.dispose();

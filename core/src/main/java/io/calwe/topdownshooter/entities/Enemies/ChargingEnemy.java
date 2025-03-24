@@ -48,6 +48,7 @@ public class ChargingEnemy extends Enemy {
     //This overrides Enemy's logic method
     @Override
     public void logic(){
+        //If we are locking on and preparing to charge, count down the timer until we actually charge
         if (preparingToCharge){
             if (chargeUpTimer > chargeUpTime){
                 chargeUpTimer = 0;
@@ -57,6 +58,7 @@ public class ChargingEnemy extends Enemy {
             chargeUpTimer += Gdx.graphics.getDeltaTime();
             elapsedTime = 0.0f;
         }
+        //If we are charging, disable collisions so we dont get stuck behind other zombies and move forward at high speeds until the timer runs out
         else if (charging){
             if (chargeTimer <= chargeDuration){
                 hasSolidCollision = false;
@@ -70,6 +72,7 @@ public class ChargingEnemy extends Enemy {
             chargeTimer += Gdx.graphics.getDeltaTime();
 
         }
+        // If we aren't preparing to charge or charging, move us towards the player until we are within 50 of them
         else{
             if (target.pos.dst(pos) > 50){
                 momentum.add(getMovementToPlayer());
@@ -78,6 +81,7 @@ public class ChargingEnemy extends Enemy {
                 elapsedTime = 0.0f;
             }
 
+            //If we are within 70 of the player, and the cooldown for the charge attack has elapsed, lock on to the player's current position, and prepare to charge
             if (target.pos.dst(pos) < 70){
                 if (attackCooldownTimer >= attackCooldown){
                     chargeDirection = new Vector2(target.pos.x-pos.x,target.pos.y-pos.y);
@@ -105,6 +109,7 @@ public class ChargingEnemy extends Enemy {
         sprite.setPosition(spriteOffset.x, spriteOffset.y);
         chargingSprite.setPosition(spriteOffset.x, spriteOffset.y);
         attackCooldownTimer += Gdx.graphics.getDeltaTime();
+        //If we are really far away from the player, destroy this enemy since it will likely never catch up and thus is just a performance drain
         if (pos.dst(target.pos) > 300){
             Play.entitiesToRemove.add(this);
         }
@@ -121,8 +126,8 @@ public class ChargingEnemy extends Enemy {
         sprite.setSize(width, height);
         // Render the sprite
         sprite.draw(batch);
+        //Render the sprite with the red indicator of where its going to charge if it is preparing to charge, otherwise render the normal sprite
         if (preparingToCharge){
-            //chargingSprite.draw(batch);
             sprite.setRegion(chargingSprite);
             sprite.setSize(width, 128);
             sprite.draw(batch);

@@ -62,8 +62,12 @@ public class Map {
 
 
     public Map() {
+        //The time the map was first loaded
         initialTime = System.currentTimeMillis();
+        //The distance away map tiles are loaded from the player
         viewDistance = 20;
+
+        //Load all of the textures
         treeTexture = new Texture("World/TreeTop.png");
         treeTransparentTexture = new Texture("World/TreeTopTransparent.png");
         trunkTexture = new Texture("World/TreeTrunk.png");
@@ -83,6 +87,7 @@ public class Map {
         landmineTexture = new Texture("World/Landmine.png");
         explosionAnimation = getLandmineExplosionAnimation();
 
+        //Create the grass tileset
         Texture tilesetTexture = new Texture(Gdx.files.internal("map_tileset.png"));
         // create a new empty tile set
         tileSet = new TiledMapTileSet();
@@ -99,7 +104,11 @@ public class Map {
         }
     }
 
+    //Get a random value based on coordinates and the starttime as the seed - so that parts of the world remain
+    // consistent each time they are generated
     float seededRandomLocationValue(int x,int y) {
+        //Convert all positive numbers into even numbers and all negative numbers into odd numbers, because odd numbers
+        // don't work with my system, so we need all numbers to be even but different
         if (x >= 0){
             x *= 2;
         }
@@ -112,6 +121,8 @@ public class Map {
         else{
             y = (Math.abs(y) * 2) + 1;
         }
+        //Build the seed for the random out of two parts - the first 6 characters of the seed are from the x coordinate,
+        // the second 6 the y coordinate, both padded with zeroes to make them six characters long
         StringBuilder xString = new StringBuilder(String.valueOf(x));
         StringBuilder yString = new StringBuilder(String.valueOf(y));
         while (xString.length() < 6) {
@@ -120,27 +131,33 @@ public class Map {
         while (yString.length() < 6) {
             yString.insert(0, "0");
         }
+        //Generate a new random using the seed and the start time, then get a new random float using it.
         Random r = new Random((Long.parseLong(xString + yString.toString())) * initialTime);
         return r.nextFloat();
     }
 
+    //Generate a crate at the provided coords if nothing has already been generated there
     public void tryToGenerateCrate(float x, float y, List<Vector2> entitiesAlreadyGeneratedCoords) {
         if (!entitiesAlreadyGeneratedCoords.contains(new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)))){
             Crate c = new Crate(crateTexture, new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)));
             Play.entitiesToAdd.add(c);
+            //Add the current coords to the list of coords things have already been generated at
             entitiesAlreadyGeneratedCoords.add(new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)));
         }
     }
 
+    //Generate a car of a random color  at the provided coords if nothing has already been generated there
     public void tryToGenerateCar(float x, float y, List<Vector2> entitiesAlreadyGeneratedCoords) {
         Random rand = new Random();
         if (!entitiesAlreadyGeneratedCoords.contains(new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)))){
             Obstacle car = new Obstacle(carTextures[rand.nextInt(carTextures.length)], new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)), 1, 26, 43);
             Play.entitiesToAdd.add(car);
+            //Add the current coords to the list of coords things have already been generated at
             entitiesAlreadyGeneratedCoords.add(new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)));
         }
     }
 
+    //Generate a tree at the provided coords if nothing has already been generated there
     public void tryToGenerateTree(float x, float y, List<Vector2> entitiesAlreadyGeneratedCoords) {
         if (!entitiesAlreadyGeneratedCoords.contains(new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)))){
             WorldFeature tree = new WorldFeature(
@@ -155,10 +172,12 @@ public class Map {
                 }
                 );
             Play.entitiesToAdd.add(tree);
+            //Add the current coords to the list of coords things have already been generated at
             entitiesAlreadyGeneratedCoords.add(new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)));
         }
     }
 
+    //Generate a house at the provided coords if nothing has already been generated there
     public void tryToGenerateHouse(float x, float y, List<Vector2> entitiesAlreadyGeneratedCoords) {
         if (!entitiesAlreadyGeneratedCoords.contains(new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)))){
             tryToGenerateCrate(x, y,entitiesAlreadyGeneratedCoords);
@@ -213,11 +232,12 @@ public class Map {
                 }
             );
             Play.entitiesToAdd.add(house);
+            //Add the current coords to the list of coords things have already been generated at
             entitiesAlreadyGeneratedCoords.add(new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)));
         }
     }
 
-    //Get the humanoid walk animation
+    //Get the landmine explosion animation
     private Animation<TextureRegion> getLandmineExplosionAnimation(){
         // load the spritesheet as a texture, then make a textureRegion out of that texture.
         TextureRegion texture = new TextureRegion(new Texture("World/explosionAnimation.png"));
@@ -235,35 +255,42 @@ public class Map {
         return new Animation<TextureRegion>(0.0357f, AnimationTextures);
     }
 
+    //Generate a landmine at the provided coords if nothing has already been generated there
     public void tryToGenerateLandmine(float x, float y, List<Vector2> entitiesAlreadyGeneratedCoords){
         if (!entitiesAlreadyGeneratedCoords.contains(new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)))){
             Landmine landmine = new Landmine(landmineTexture, new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)), explosionAnimation, 10);
-
             Play.entitiesToAdd.add(landmine);
+            //Add the current coords to the list of coords things have already been generated at
             entitiesAlreadyGeneratedCoords.add(new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)));
         }
     }
 
     public void renderWorld(SpriteBatch batch, List<Vector2> entitiesAlreadyGeneratedCoords) {
-
+        // Iterate through the tiles around the player, and load them and randomly generate crates, trees, landmines, cars and houses
         for (int x = Math.round(Play.player.pos.x/tileSize)-viewDistance; x < Math.round(Play.player.pos.x/tileSize) + viewDistance; x++){
             for (int y = Math.round(Play.player.pos.y/tileSize)-viewDistance; y < Math.round(Play.player.pos.y/tileSize) + viewDistance; y++){
+                //Generate a random tile based the coordinates
                 int tileId = Math.round(seededRandomLocationValue(x, y)*(tileCount-1)) + 1;
                 batch.draw(tileSet.getTile(tileId).getTextureRegion(), x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f));
 
-
+                //Randomly generate features
+                //3/2000 chance to generate a crate
                 if (Math.ceil(seededRandomLocationValue(y, x) * 2000) >= 1998){
                     tryToGenerateCrate(x, y,entitiesAlreadyGeneratedCoords);
                 }
+                //1/250 chance to generate a tree
                 else if (Math.ceil(seededRandomLocationValue(y+100, x+100) * 1000) >= 997){
                     tryToGenerateTree(x, y, entitiesAlreadyGeneratedCoords);
                 }
+                //1/2000 chance to generate a car
                 else if (Math.ceil(seededRandomLocationValue(y+200, x+200) * 2000) == 999){
                     tryToGenerateCar(x, y, entitiesAlreadyGeneratedCoords);
                 }
+                //1/2000 chance to generate a house
                 else if (Math.ceil(seededRandomLocationValue(y+300, x+300) * 2000) == 999){
                     tryToGenerateHouse(x, y, entitiesAlreadyGeneratedCoords);
                 }
+                // 3/1000 chance to generate a landmine
                 else if (Math.ceil(seededRandomLocationValue(y+400, x+400) * 1000) >= 998){
                     tryToGenerateLandmine(x, y, entitiesAlreadyGeneratedCoords);
                 }
@@ -272,6 +299,7 @@ public class Map {
     }
 
     public void dispose(){
+        //dispose of all the loaded textures
         treeTexture.dispose();
         treeTransparentTexture.dispose();
         trunkTexture.dispose();

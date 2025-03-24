@@ -12,6 +12,7 @@ public class ExtraInventoryDrop extends EquipmentDrop{
 
     @Override
     public void ApplyAffect(Player p){
+        //copy the current inventory, add on slot to it and replace the player's current inventory with the new one
         Weapon[] temp = p.inventory;
         Weapon[] newInventory = new Weapon[temp.length+1];
         System.arraycopy(temp, 0, newInventory, 0, temp.length);

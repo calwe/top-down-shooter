@@ -7,11 +7,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import io.calwe.topdownshooter.screens.Play;
 
+//Floating text that rises up from its position - used for showing the damage when you hit an enemy
 public class HitText extends Entity {
+    //The text to be displayed
     String text;
     //How long before the text should disappear
     float lifeTime;
+    //The timer to keep track of how long the text has existed
     float timer;
+    //The font
     BitmapFont font;
 
     public HitText(String text, Vector2 startPos, Color color){
@@ -70,6 +74,7 @@ public class HitText extends Entity {
 
     @Override
     public void draw(SpriteBatch batch) {
+        //draw the text
         font.draw(batch, text, pos.x, pos.y);
     }
 }

@@ -13,6 +13,7 @@ public class SaveAmmoDrop extends EquipmentDrop{
 
     @Override
     public void ApplyAffect(Player p){
+        //Give the player a chance not to consume ammunition while firing
         p.saveAmmoChance = ammoSaveChance;
     }
     @Override

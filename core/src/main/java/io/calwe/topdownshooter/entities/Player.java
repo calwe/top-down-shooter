@@ -50,6 +50,7 @@ public class Player extends Entity {
     //An array of textures for the particles that should be released when the player is damage
     Texture[] damageParticles;
 
+    // These are used so that upgrades can improve your capabilities - otherwise they would be hardcoded
     public float damageMultiplier = 1;
     public int saveAmmoChance = 0;
     public float critMultiplier = 2;
@@ -215,9 +216,8 @@ public class Player extends Entity {
         }
     }
 
-    //If the player is out of health, remove them from the world
+    //If the player is out of health, switch to the game over screen
     private void die(){
-        Play.entitiesToRemove.add(this);
         Play.main.GameOver(Play.score);
     }
 
@@ -232,7 +232,7 @@ public class Player extends Entity {
         sprite.setSize(width, height);
         // Render the player's animated legs
         sprite.draw(batch);
-
+        //The player's body is slightly larger, so render it bigger
         sprite.setSize(width, 18);
         //Render the player's body with the weapon they are holding
         sprite.setRegion(playerTexture);
@@ -255,6 +255,7 @@ public class Player extends Entity {
             p.momentum = movement;
             Play.entitiesToAdd.add(p);
         }
+        //Play the player hurt sound
         Gdx.audio.newSound(Gdx.files.internal("playerHit.mp3")).play(1.5f);
     }
 
@@ -283,6 +284,7 @@ public class Player extends Entity {
         inventory[currentInventorySlot] = weaponToAdd;
     }
 
+    //Increase the player's current health by the amount provided, up to the limit of their maximum health
     public void heal(int healAmount){
         health += healAmount;
         if (health > maxHealth){

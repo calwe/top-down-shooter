@@ -63,6 +63,7 @@ public class Bullet extends Entity {
         //If the thing we hit is an enemy
         if (e instanceof Enemy){
             Enemy enemy = (Enemy)e;
+            //Don't hit the same enemy twice - if the bullet pierces, this prevents it from damage the same enemy twice
             if (!alreadyHit.contains(enemy)) {
                 Random random = new Random();
                 //Generate some hovering text showing the damage
@@ -83,14 +84,16 @@ public class Bullet extends Entity {
                 knockbackDirection.nor();
                 knockbackDirection.scl(knockback);
                 enemy.applyKnockback(knockbackDirection);
+                //If this is a piercing bullet, add the enemy to the list of enemies we've already hit and keep going
                 if (pierces) {
                     alreadyHit.add(enemy);
                 } else {
-                    //Destroy this bullet
+                    //If this isn't a piercing bullet, destroy this bullet on hit
                     Play.entitiesToRemove.add(this);
                 }
             }
         }
+        //If we hit a wall or tree or other solid object, destroy the bullet
         if (e instanceof Obstacle){
             //Destroy this bullet
             Play.entitiesToRemove.add(this);

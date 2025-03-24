@@ -85,39 +85,45 @@ public class Crate extends Entity{
             //if the e key has just been pressed down
             if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
                 Random random = new Random();
+                //55% chance of giving a weapon, with the quality of the weapon depending on the current tier.
                 if (random.nextInt(100) < 55){
                     if (Play.currentTier == 1){
+                        //Pick a random common weapon and spawn it in
                         List<String> weapons = Collections.list(Play.commonWeapons.keys());
                         Weapon weaponChoice = Play.commonWeapons.get(weapons.get(random.nextInt(weapons.size())));
                         WeaponDrop weaponDrop = new WeaponDrop(weaponChoice, pos, true);
                         Play.entitiesToAdd.add(weaponDrop);
                     }
                     else if (Play.currentTier == 2){
+                        //Pick a random uncommon weapon and spawn it in
                         List<String> weapons = Collections.list(Play.uncommonWeapons.keys());
                         Weapon weaponChoice = Play.uncommonWeapons.get(weapons.get(random.nextInt(weapons.size())));
                         WeaponDrop weaponDrop = new WeaponDrop(weaponChoice, pos, true);
                         Play.entitiesToAdd.add(weaponDrop);
                     }
                     else if (Play.currentTier == 3){
+                        //Pick a random rare weapon and spawn it in
                         List<String> weapons = Collections.list(Play.rareWeapons.keys());
                         Weapon weaponChoice = Play.rareWeapons.get(weapons.get(random.nextInt(weapons.size())));
                         WeaponDrop weaponDrop = new WeaponDrop(weaponChoice, pos, true);
                         Play.entitiesToAdd.add(weaponDrop);
                     }
                     else if (Play.currentTier == 4){
+                        //Pick a random epic weapon and spawn it in
                         List<String> weapons = Collections.list(Play.epicWeapons.keys());
                         Weapon weaponChoice = Play.epicWeapons.get(weapons.get(random.nextInt(weapons.size())));
                         WeaponDrop weaponDrop = new WeaponDrop(weaponChoice, pos, true);
                         Play.entitiesToAdd.add(weaponDrop);
                     }
                     else if (Play.currentTier == 5){
+                        //Pick a random legendary weapon and spawn it in
                         List<String> weapons = Collections.list(Play.legendaryWeapons.keys());
                         Weapon weaponChoice = Play.legendaryWeapons.get(weapons.get(random.nextInt(weapons.size())));
                         WeaponDrop weaponDrop = new WeaponDrop(weaponChoice, pos, true);
                         Play.entitiesToAdd.add(weaponDrop);
                     }
-
                 }
+                //45% chance of giving a random piece of equipment
                 else{
                     EquipmentDrop equipment = Play.equipment[random.nextInt(Play.equipment.length)].getCopy();
                     equipment.pos = this.pos;

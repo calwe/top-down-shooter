@@ -40,6 +40,7 @@ public class Shotgun extends Weapon{
             if (ammo > 0){
                 // initialize a new instance of Random, which will be used for providing inaccuracy
                 Random random = new Random();
+                //Fire multiple bullets at a time
                 for (int i = 0; i < numberOfBullets; i++){
                     //Create an instance of bullet, give it the bullet texture, and its stats.
                     Bullet bullet = new Bullet(bulletTexture, gunPos, Math.round(damage*damageMultiplier), critChance + additionalCritChance, critMultiplier, knockback, pierces);
@@ -59,6 +60,7 @@ public class Shotgun extends Weapon{
                 if (random.nextInt(100) >= ammoSaveChance){
                     ammo--;
                 }
+                //play the shooting sound
                 fireSound.play(0.02f);
                 return true;
             }

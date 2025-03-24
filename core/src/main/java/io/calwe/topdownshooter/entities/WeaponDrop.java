@@ -14,6 +14,7 @@ public class WeaponDrop extends Entity{
     Weapon weapon;
     //Should we randomly generate the ammunition or use that provided
     boolean randomlyGenerateAmmo;
+    //Make the weapon drop graphic smaller as it is to large by default
     float scale = 0.6f;
 
     public WeaponDrop(Weapon weapon, Vector2 position){
@@ -53,8 +54,10 @@ public class WeaponDrop extends Entity{
     public void logic() {
         //The weapon shouldn't move, but this also checks for collisions.
         momentum = new Vector2(0,0);
-        sprite.setPosition(pos.x-(width*((1-scale)/2f)), pos.y-(height*((1-scale)/2f)));
         tryMove();
+        //Calculate the sprite offset, based on the scale
+        sprite.setPosition(pos.x-(width*((1-scale)/2f)), pos.y-(height*((1-scale)/2f)));
+
     }
 
     @Override

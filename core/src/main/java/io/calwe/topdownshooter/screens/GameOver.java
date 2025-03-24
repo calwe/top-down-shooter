@@ -18,6 +18,7 @@ public class GameOver implements Screen {
 
     @Override
     public void show() {
+        //Initialise the spritebatch and load the texture
         batch = new SpriteBatch();
         gravestone = new Texture("Gravestone.png");
     }
@@ -25,6 +26,7 @@ public class GameOver implements Screen {
     @Override
     public void render(float delta) {
         try{
+            //if enter is pressed start a new game
             if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
                 main.restart();
             }
@@ -33,21 +35,29 @@ public class GameOver implements Screen {
             Gdx.gl.glClearColor(0, 0, 0, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             batch.begin();
+            //draw a gravestone
             batch.draw(gravestone, Gdx.graphics.getWidth()/2f-Gdx.graphics.getHeight()*0.25f, Gdx.graphics.getHeight()*0.2f, Gdx.graphics.getHeight()*0.5f,Gdx.graphics.getHeight()*0.5f);
+
+            //Initialise a new font
             BitmapFont font = new BitmapFont();
+            //Set the font color and size
             font.setColor(Color.RED);
             font.getData().setScale(8f);
+            //draw the title
             font.draw(batch, "GAME OVER...", Gdx.graphics.getWidth()/2f-350, Gdx.graphics.getHeight()*0.9f);
+            //set the font size and color
             font.getData().setScale(3f);
             font.setColor(Color.BLACK);
+            //draw the score text
             font.draw(batch, "SCORE", Gdx.graphics.getWidth()/2f-80, Gdx.graphics.getHeight()*0.4f);
             StringBuilder s = new StringBuilder("" + score);
             while (s.length() < 7){
                 s.insert(0, "0");
             }
             font.draw(batch, s.toString(), Gdx.graphics.getWidth()/2f-80, Gdx.graphics.getHeight()*0.4f-50);
-
+            //set the text color
             font.setColor(Color.RED);
+            //draw the text
             font.draw(batch, "PRESS ENTER TO RESTART.", Gdx.graphics.getWidth()/2f-250, Gdx.graphics.getHeight()*0.1f);
             batch.end();
         }
@@ -78,6 +88,8 @@ public class GameOver implements Screen {
 
     @Override
     public void dispose() {
+        //dispose of the spritebatch and the textures now they aren't needed
         batch.dispose();
+        gravestone.dispose();
     }
 }

@@ -9,6 +9,8 @@ import io.calwe.topdownshooter.screens.Play;
 
 import java.util.*;
 
+
+//Worldfeature is used for houses and trees. It represents a feature in the world you should be able to go into/under
 public class WorldFeature extends Entity{
     float scale;
     boolean playerIsInside = false;
@@ -40,8 +42,10 @@ public class WorldFeature extends Entity{
     public void logic() {
         //The weapon shouldn't move, but this also checks for collisions.
         momentum = new Vector2(0,0);
-        sprite.setPosition(pos.x-(width*((1-scale)/2f)), pos.y-(height*((1-scale)/2f)));
         tryMove();
+        //Calculate the graphic position based on the scale
+        sprite.setPosition(pos.x-(width*((1-scale)/2f)), pos.y-(height*((1-scale)/2f)));
+
     }
 
     @Override
@@ -88,11 +92,13 @@ public class WorldFeature extends Entity{
     public void OnEntityCollision(Entity e){
         //If this object is colliding with a player
         if (e instanceof Player){
+            //set playerIsInside to true
             playerIsInside = true;
         }
+        //If we are overlapping with a smaller or equal worldfeature, destroy it. This is to prevent trees from spawing inside houses
         if (e instanceof WorldFeature){
             WorldFeature feature = (WorldFeature)e;
-            if (feature.width*feature.height < width*height){
+            if (feature.width*feature.height <= width*height){
                 Play.entitiesToAdd.remove(e);
             }
         }
@@ -100,13 +106,16 @@ public class WorldFeature extends Entity{
 
     @Override
     public void draw(SpriteBatch batch){
+        //If the player is inside/under, draw the transparent texture so the player can be seen
         if (playerIsInside){
             sprite.setRegion(insideTexture);
         }
+        //Else draw the normal texture
         else{
             sprite.setRegion(normalTexture);
         }
         sprite.draw(batch);
+        //Reset this each update loop
         playerIsInside = false;
     }
 }

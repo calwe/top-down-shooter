@@ -29,6 +29,7 @@ public class ExplodingEnemy extends Enemy {
     protected void die(){
         //Add to the player's score
         Play.score += 100;
+        //Release projectiles in 8 directions.
         Vector2[] directions = new Vector2[]{
             new Vector2(0, 1),
             new Vector2(1, 1),
@@ -41,7 +42,7 @@ public class ExplodingEnemy extends Enemy {
         };
         for (Vector2 direction : directions) {
             EnemyProjectile p = new EnemyProjectile(projectileTexture, new Vector2(pos.x + (width/2f), pos.y + (height/2f)), damage, knockback);
-            //Turn the bullet so it is facing towards the target
+            //Turn the bullet so it is facing in the right direction
             float angleToLook = (float)Math.atan2(direction.x-(pos.x), direction.y-(pos.y));
             float rotation = angleToLook*-180f/(float)Math.PI;
             p.sprite.setRotation(rotation);
@@ -54,6 +55,7 @@ public class ExplodingEnemy extends Enemy {
         }
         //Remove this entity from the world
         Play.entitiesToRemove.add(this);
+        //Play the zombie killed sound
         Gdx.audio.newSound(Gdx.files.internal("Enemies/zombieKilled.mp3")).play(0.3f);
     }
 

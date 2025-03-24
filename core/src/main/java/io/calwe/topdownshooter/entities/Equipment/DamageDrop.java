@@ -13,6 +13,7 @@ public class DamageDrop extends EquipmentDrop{
 
     @Override
     public void ApplyAffect(Player p){
+        // increase the player's damage
         p.damageMultiplier += damageMultiplier;
     }
     @Override

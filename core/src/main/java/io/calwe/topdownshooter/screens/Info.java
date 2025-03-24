@@ -16,15 +16,18 @@ public class Info implements Screen {
 
     @Override
     public void show() {
+        //Initialise the spritebatch
         batch = new SpriteBatch();
     }
 
     @Override
     public void render(float delta) {
         try{
+            //Return to the start menu if x is pressed
             if (Gdx.input.isKeyJustPressed(Input.Keys.X)) {
                 main.StartMenu();
             }
+            //Go on to the next info screen if enter is pressed
             if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
                 main.WeaponsInfo();
             }
@@ -33,11 +36,16 @@ public class Info implements Screen {
             Gdx.gl.glClearColor(0, 0, 0, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             batch.begin();
+            //Initialise a new font
             BitmapFont font = new BitmapFont();
+            //Set the font color and size
             font.setColor(Color.WHITE);
             font.getData().setScale(8f);
+            //draw the title
             font.draw(batch, "CONTROLS", Gdx.graphics.getWidth()/2f-300, Gdx.graphics.getHeight()*0.9f);
+            //set the font size
             font.getData().setScale(3f);
+            //draw the text
             font.draw(batch, "UP: W", Gdx.graphics.getWidth()/2f-350, Gdx.graphics.getHeight()*0.7f);
             font.draw(batch, "DOWN: S", Gdx.graphics.getWidth()/2f-350, Gdx.graphics.getHeight()*0.65f);
             font.draw(batch, "LEFT: A", Gdx.graphics.getWidth()/2f-350, Gdx.graphics.getHeight()*0.6f);
@@ -77,6 +85,7 @@ public class Info implements Screen {
 
     @Override
     public void dispose() {
+        //dispose of the spritebatch now it isn't needed
         batch.dispose();
     }
 }

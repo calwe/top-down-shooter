@@ -13,6 +13,7 @@ public class HealthDrop extends EquipmentDrop{
 
     @Override
     public void ApplyAffect(Player p){
+        //Increase the player's max health and current health by healthIncreaseAmount
         p.maxHealth += healthIncreaseAmount;
         p.heal(healthIncreaseAmount);
     }

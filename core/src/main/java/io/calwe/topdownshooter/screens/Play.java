@@ -48,12 +48,16 @@ public class Play implements Screen {
     public static Dictionary<String, Weapon> epicWeapons = new Hashtable<>();
     public static Dictionary<String, Weapon> legendaryWeapons = new Hashtable<>();
 
+    //List of all the places world entites have already been generated
     private List<Vector2> entitysAlreadyGeneratedCoords = new ArrayList<>();
 
+    //All the equipment drop options
     public static EquipmentDrop[] equipment;
     //This is used by the draw method of entities so that all entities can rendered in a single batch draw,
     // rather than in multiple batches
     public SpriteBatch batch;
+
+    //The player
     public static Player player;
 
     //How long between a zombies spawning in
@@ -66,10 +70,12 @@ public class Play implements Screen {
     //Used to periodically increase the score based on how long the player has been alive
     private float scoreIncreaseTimer = 0f;
 
+    //The current tier of play, which determines the power of weapon drops and enemies
     public static int currentTier = 1;
 
     public static Main main;
 
+    //The enemy cap at each tier
     private int[] enemyCapAtTier = new int[]{
         3,
         4,
@@ -78,8 +84,10 @@ public class Play implements Screen {
         7,
     };
 
+    //Whether the game is paused
     private boolean paused = false;
 
+    //All the textures
     static Texture blueZombieTexture;
     static Texture redZombieTexture;
     static Texture orangeZombieTexture;
@@ -91,6 +99,7 @@ public class Play implements Screen {
 
     static Texture[] zombieParticles;
 
+    //The sounds
     static Sound zombieHurtSound;
     static Sound backgroundMusic;
 
@@ -103,7 +112,7 @@ public class Play implements Screen {
         map = new Map();
         batch = new SpriteBatch();
         entities = new ArrayList<Entity>();
-
+        //Load the textures and sounds
         blueZombieTexture = new Texture("Enemies/blueZombie.png");
         redZombieTexture = new Texture("Enemies/redZombie.png");
         orangeZombieTexture = new Texture("Enemies/orangeZombie.png");
@@ -121,19 +130,21 @@ public class Play implements Screen {
         //Populate the weapons dictionary with weapons
         initializeWeapons();
 
+        //Load the equipment drops
         equipment = new EquipmentDrop[]{
-//            new CritChanceDrop(new Texture("Equipment/RedDotSight.png"), "Red dot sight", "Crit chance +7%.", 7),
-//            new CritDamageDrop(new Texture("Equipment/AP-rounds.png"), "Armor piercing bullets", "Crit damage +25%", 0.5f),
-//            new DamageDrop(new Texture("Equipment/ammo.png"), "Hollow points", "Damage +20%", 0.2f),
-//            new ExtraInventoryDrop(new Texture("Equipment/Bag.png"), "Bag", "Carry an additional weapon."),
-//            new HealDrop(new Texture("Equipment/medkit.png"), "Medkit", "Heal 25%", 25),
-//            new HealthDrop(new Texture("Equipment/FlakVest.png"), "Kevlar vest", "Max health +10%", 10),
-//            new SaveAmmoDrop(new Texture("Equipment/Magazine.png"), "Extended magazine", "8% chance to save ammo.", 8),
+            new CritChanceDrop(new Texture("Equipment/RedDotSight.png"), "Red dot sight", "Crit chance +7%.", 7),
+            new CritDamageDrop(new Texture("Equipment/AP-rounds.png"), "Armor piercing bullets", "Crit damage +25%", 0.5f),
+            new DamageDrop(new Texture("Equipment/ammo.png"), "Hollow points", "Damage +20%", 0.2f),
+            new ExtraInventoryDrop(new Texture("Equipment/Bag.png"), "Bag", "Carry an additional weapon."),
+            new HealDrop(new Texture("Equipment/medkit.png"), "Medkit", "Heal 25%", 25),
+            new HealthDrop(new Texture("Equipment/FlakVest.png"), "Kevlar vest", "Max health +10%", 10),
+            new SaveAmmoDrop(new Texture("Equipment/Magazine.png"), "Extended magazine", "8% chance to save ammo.", 8),
             new BombDrop(new Texture("Equipment/Bomb.png"), "Bomb", "Clear all enemies on the screen. ")
         };
 
         // create a new orthographic (no 3d perspective) camera, and set its position to the center of the map
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        //Create a viewport
         viewport = new FillViewport(400, 200, camera);
 
         // Add the player to the list of entities so he is updated and rendered, with a pistol in his inventory
@@ -152,8 +163,10 @@ public class Play implements Screen {
             },
             camera
         );
+        //Add the player to the list of entities
         entities.add(player);
 
+        //Start the background and loop it
         backgroundMusic = Gdx.audio.newSound(Gdx.files.internal("backgroundMusic.mp3"));
         long id = backgroundMusic.play(0.1f);
         backgroundMusic.setLooping(id, true);
@@ -195,36 +208,43 @@ public class Play implements Screen {
         return new Animation<TextureRegion>(0.0357f, playerAnimationTextures);
     }
 
+    //Create each weapon and load it into the weapons dictionary
     private void initializeWeapons() {
-        //Create each weapon and load it into the weapons dictionary
+        //Load the bullet texture all weapons use
         Texture bulletTexture = new Texture("bullet.png");
+        //Load the sounds the weapons use
         Sound fireSound = Gdx.audio.newSound(Gdx.files.internal("gunshot.mp3"));
         Sound emptySound = Gdx.audio.newSound(Gdx.files.internal("noAmmo.mp3"));
 
+        //Initialise the common weapons
         commonWeapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("PistolSideOn.png"), bulletTexture, fireSound, emptySound, 18, 10, 2.5f, 10, 10f, 1f, 1f, 5));
         commonWeapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMGSideOn.png"), bulletTexture, fireSound, emptySound, 90, 3, 10, 5, 15f, 0.5f, 0.4f, 5));
         commonWeapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 60,  5, 5, 15, 5f, 1.5f, 0.7f, 7));
         commonWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 8, 22, 0.75f, 75, 0.1f, 2f, 3f, 7, true));
         commonWeapons.put("Shotgun", new Shotgun(new Texture("shotgun-aiming.png"), new Texture("shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 10, 6, 1, 5, 10, 2, 1, 5));
 
+        //Initialise the uncommon weapons
         uncommonWeapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("PistolSideOn.png"), bulletTexture, fireSound, emptySound, 18, 13, 2.5f, 10, 10f, 1f, 1f, 5));
         uncommonWeapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMGSideOn.png"), bulletTexture, fireSound, emptySound, 90, 4, 10, 5, 15f, 0.5f, 0.4f, 5));
         uncommonWeapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 60,  7, 5, 15, 5f, 1.5f, 0.7f, 7));
         uncommonWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 8, 29, 0.75f, 75, 0.1f, 2f, 3f, 7, true));
         uncommonWeapons.put("Shotgun", new Shotgun(new Texture("shotgun-aiming.png"), new Texture("shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 10, 8, 1, 5, 10, 2, 1, 5));
 
+        //Initialise the rare weapons
         rareWeapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("PistolSideOn.png"), bulletTexture, fireSound, emptySound, 18, 17, 2.5f, 10, 10f, 1f, 1f, 5));
         rareWeapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMGSideOn.png"), bulletTexture, fireSound, emptySound, 90, 5, 10, 5, 15f, 0.5f, 0.4f, 5));
         rareWeapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 60,  8, 5, 15, 5f, 1.5f, 0.7f, 7));
         rareWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 8, 37, 0.75f, 75, 0.1f, 2f, 3f, 7, true));
         rareWeapons.put("Shotgun", new Shotgun(new Texture("shotgun-aiming.png"), new Texture("shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 10, 10, 1, 5, 10, 2, 1, 5));
 
+        //Initialise the epic weapons
         epicWeapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("PistolSideOn.png"), bulletTexture, fireSound, emptySound, 18, 20, 2.5f, 10, 10f, 1f, 1f, 5));
         epicWeapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMGSideOn.png"), bulletTexture, fireSound, emptySound, 90, 6, 10, 5, 15f, 0.5f, 0.4f, 5));
         epicWeapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 60,  10, 5, 15, 5f, 1.5f, 0.7f, 7));
         epicWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 8, 44, 0.75f, 75, 0.1f, 2f, 3f, 7, true));
         epicWeapons.put("Shotgun", new Shotgun(new Texture("shotgun-aiming.png"), new Texture("shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 10, 12, 1, 5, 10, 2, 1, 5));
 
+        //Initialise the legendary weapons
         legendaryWeapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("PistolSideOn.png"), bulletTexture, fireSound, emptySound, 18, 23, 2.5f, 10, 10f, 1f, 1f, 5));
         legendaryWeapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMGSideOn.png"), bulletTexture, fireSound, emptySound, 90, 7, 10, 5, 15f, 0.5f, 0.4f, 5));
         legendaryWeapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 60,  12, 5, 15, 5f, 1.5f, 0.7f, 7));
@@ -242,8 +262,8 @@ public class Play implements Screen {
             }
             // Handle input for every entity that requires input
             input();
+            //Carry out the logic and spawning only if we aren't paused
             if (!paused){
-
 
                 // Handle the logic for each entity - this includes movement and attacks for example
                 logic();
@@ -261,8 +281,6 @@ public class Play implements Screen {
             //draw each entity
             draw();
 
-
-
             //add all entities from the entitiesToAdd list to the main entities list
             //See the initialisation of entitiesToAdd for why this is necessary
             //Then empty the entitiesToAdd list, since everything in it has already been added.
@@ -277,9 +295,9 @@ public class Play implements Screen {
             }
             entitiesToRemove.clear();
 
-
+            //If we aren't paused
             if (!paused){
-                //periodically increase the score
+                //periodically increase the score every second
                 if (scoreIncreaseTimer > 1){
                     score += 10;
                     scoreIncreaseTimer = 0;
@@ -297,25 +315,27 @@ public class Play implements Screen {
                 }
             });
 
-            if (score > 2100){
+            //Update the current tier in case the score has gone over the boundary into the next tier
+            if (score > 3500){
                 currentTier = 5;
             }
-            else if (score > 1300){
+            else if (score > 2000){
                 currentTier = 4;
             }
-            else if (score > 700){
+            else if (score > 1000){
                 currentTier = 3;
             }
-            else if (score > 300){
+            else if (score > 500){
                 currentTier = 2;
             }
         }
+        //Log any errors
         catch (Exception error){
             error.printStackTrace();
-            //System.out.println(error.getMessage());
         }
     }
 
+    // Iterate through all entities and count the number of enemy entities that exist
     int getNumberOfEnemies(){
         int numEnemies = 0;
         for (Entity e : entities) {
@@ -344,6 +364,7 @@ public class Play implements Screen {
                 // Create a new enemy, with the appropriate textures and sounds, and spawn him at the generated position
                 Entity newEnemy;
                 int enemyChoice = random.nextInt(100);
+                //15% chance to spawn a blue exploding zombie
                 if (enemyChoice >= 85){
                     newEnemy = new ExplodingEnemy(
                         blueZombieTexture,
@@ -356,6 +377,7 @@ public class Play implements Screen {
                         1.5f
                     );
                 }
+                //15% chance to spawn a red charging zombie
                 else if (enemyChoice >= 70){
                     newEnemy = new ChargingEnemy(
                         redZombieTexture,
@@ -371,6 +393,7 @@ public class Play implements Screen {
                         0.7f
                     );
                 }
+                //15% chance to spawn a grey ranged zombie
                 else if (enemyChoice >= 55){
                     newEnemy = new RangedEnemy(
                         greyZombieTexture,
@@ -384,6 +407,7 @@ public class Play implements Screen {
                         zombieProjectileTexture
                     );
                 }
+                //55% to spawn an orange normal zombie
                 else{
                     newEnemy = new Enemy(
                         orangeZombieTexture,
@@ -446,7 +470,6 @@ public class Play implements Screen {
         map.renderWorld(batch, entitysAlreadyGeneratedCoords);
         // Iterate through each entity and call their draw function to add them to the batch do draw passing in
         // the spritebatch so that all entities can be drawn at once
-
         for (Entity e : entities) {
             if (e.pos.dst(player.pos) < 300f){
                 e.draw(batch);
@@ -458,6 +481,7 @@ public class Play implements Screen {
 
     @Override
     public void resize(int width, int height) {
+        //Resize the viewport
         viewport.update(width, height);
     }
 
@@ -473,7 +497,7 @@ public class Play implements Screen {
     @Override
     // dispose is called when this screen is destroyed, acting as a "destructor" for the screen
     public void dispose() {
-        // dispose of the spritebatch
+        // dispose of the spritebatch and all the textures and sounds
         batch.dispose();
         backgroundMusic.dispose();
         blueZombieTexture.dispose();

@@ -25,6 +25,7 @@ public class EquipmentInfo implements Screen {
 
     @Override
     public void show() {
+        //Initialise the spritebatch and load all the textures
         batch = new SpriteBatch();
         hollowPoint = new Texture("Equipment/ammo.png");
         APBullets = new Texture("Equipment/AP-rounds.png");
@@ -39,9 +40,11 @@ public class EquipmentInfo implements Screen {
     @Override
     public void render(float delta) {
         try{
+            //Return to the start menu if x is pressed
             if (Gdx.input.isKeyJustPressed(Input.Keys.X)) {
                 main.StartMenu();
             }
+            //Go on to the next info screen if enter is pressed
             if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
                 main.ZombiesInfo();
             }
@@ -49,12 +52,16 @@ public class EquipmentInfo implements Screen {
             // clear the screen to black
             Gdx.gl.glClearColor(0, 0, 0, 1);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
             batch.begin();
+            //Initialise a new font
             BitmapFont font = new BitmapFont();
+            //Set the font color and size
             font.setColor(Color.WHITE);
             font.getData().setScale(8f);
+            //draw the title
             font.draw(batch, "EQUIPMENT", Gdx.graphics.getWidth()/2f-300, Gdx.graphics.getHeight()*0.9f);
-
+            //Draw all the equipment icons
             batch.draw(hollowPoint, Gdx.graphics.getWidth()*0.1f, Gdx.graphics.getHeight()*0.75f-32, 48,48);
             batch.draw(medkit, Gdx.graphics.getWidth()*0.1f, Gdx.graphics.getHeight()*0.68f-32, 48,48);
             batch.draw(kevlar, Gdx.graphics.getWidth()*0.1f, Gdx.graphics.getHeight()*0.61f-32, 48,48);
@@ -64,8 +71,9 @@ public class EquipmentInfo implements Screen {
             batch.draw(bag, Gdx.graphics.getWidth()*0.1f, Gdx.graphics.getHeight()*0.33f-32, 48,48);
             batch.draw(bomb, Gdx.graphics.getWidth()*0.1f, Gdx.graphics.getHeight()*0.26f-32, 48,48);
 
-
+            //set the text size
             font.getData().setScale(3f);
+            //draw all the text
             font.draw(batch, "HOLLOW POINT BULLETS: DAMAGE +20%", Gdx.graphics.getWidth()/2f-700, Gdx.graphics.getHeight()*0.75f);
             font.draw(batch, "MEDKIT: RESTORE 25% HEALTH", Gdx.graphics.getWidth()/2f-700, Gdx.graphics.getHeight()*0.68f);
             font.draw(batch, "KEVLAR VEST: INCREASE HEALTH AND MAX HEALTH BY 10%", Gdx.graphics.getWidth()/2f-700, Gdx.graphics.getHeight()*0.61f);
@@ -106,6 +114,7 @@ public class EquipmentInfo implements Screen {
 
     @Override
     public void dispose() {
+        //dispose of the spritebatch now its not needed
         batch.dispose();
     }
 }

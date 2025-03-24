@@ -13,7 +13,7 @@ import io.calwe.topdownshooter.screens.Play;
 import java.util.*;
 
 public class Obstacle extends Entity{
-    float scale = 0.4f;
+    float scale;
 
     public Obstacle(Texture texture, Vector2 position, float scale, int width, int height) {
         this.layer = 20;
@@ -31,6 +31,7 @@ public class Obstacle extends Entity{
         bounds.height = height;
     }
 
+    //Some obstacles need to be on a specific layer
     public Obstacle(Texture texture, Vector2 position, float scale, int width, int height, boolean solidCollision, int layer) {
         this.layer = layer;
         this.hasSolidCollision = solidCollision;
@@ -51,8 +52,9 @@ public class Obstacle extends Entity{
     public void logic() {
         //The weapon shouldn't move, but this also checks for collisions.
         momentum = new Vector2(0,0);
-        sprite.setPosition(pos.x-(width*((1-scale)/2f)), pos.y-(height*((1-scale)/2f)));
         tryMove();
+        //Offset the sprite to account for the scale
+        sprite.setPosition(pos.x-(width*((1-scale)/2f)), pos.y-(height*((1-scale)/2f)));
     }
 
     @Override

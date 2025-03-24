@@ -13,6 +13,7 @@ public class CritDamageDrop extends EquipmentDrop{
 
     @Override
     public void ApplyAffect(Player p){
+        //Increase the player's crit damage
         p.critMultiplier += additionalCritMultiplier;
     }
     @Override

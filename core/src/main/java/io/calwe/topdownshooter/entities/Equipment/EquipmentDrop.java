@@ -43,7 +43,7 @@ public class EquipmentDrop extends Entity {
 
     @Override
     public void logic() {
-        //The weapon shouldn't move, but this also checks for collisions.
+        //The drop shouldn't move, but this also checks for collisions so we still need to run just with no movement
         momentum = new Vector2(0,0);
         sprite.setPosition(pos.x-(width*((1-scale)/2f)), pos.y-(height*((1-scale)/2f)));
         tryMove();
@@ -55,6 +55,7 @@ public class EquipmentDrop extends Entity {
         if (e instanceof Player){
             //if the e key has just been pressed down
             if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+                //Apply the drop's current effect to the player, and show floating text saying what bonus the drop gave us
                 Player p = (Player)e;
                 ApplyAffect(p);
                 HitText h = new HitText(upgradeDescription, new Vector2(p.pos.x, p.pos.y + p.height), Color.YELLOW, 1);
@@ -105,10 +106,12 @@ public class EquipmentDrop extends Entity {
         }
     }
 
+    //Unimplemented, but supposed to be overriden by each subclass so that the drop actually provides a benefit
     public void ApplyAffect(Player p){
 
     }
 
+    //Duplicate the equipment provided
     public EquipmentDrop getCopy(){
         return new EquipmentDrop(texture, upgradeName, upgradeDescription);
     }

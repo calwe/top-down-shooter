@@ -13,6 +13,7 @@ public class CritChanceDrop extends EquipmentDrop{
 
     @Override
     public void ApplyAffect(Player p){
+        //Increase the player's crit chance
         p.additionalCritChance += this.additionalCritChance;
     }
     @Override

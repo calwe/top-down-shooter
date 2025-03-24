@@ -27,6 +27,7 @@ public class Enemy extends Entity {
     int health;
     // The amount of damage done to the player on contact
     int damage;
+    //The amount of knockback inflicted on the player on contact
     float knockback;
     //how fast the player move
     float movementSpeed;
@@ -84,6 +85,7 @@ public class Enemy extends Entity {
         Vector2 newPos = new Vector2(pos.x + ((width/2f)-boundsWidthReduction), pos.y + ((height/2f)-boundsHeightReduction));
         newPos.add(movementToPlayer);
         float angleToLook = (float)Math.atan2(target.pos.x-(pos.x), target.pos.y-(pos.y));
+        //Check if there is anything blocking the way towards the player
         if (!colliderCast(
             new Vector2(pos.x + ((width/2f)-boundsWidthReduction), pos.y + ((height/2f)-boundsHeightReduction)),
             newPos,
@@ -99,6 +101,7 @@ public class Enemy extends Entity {
             return  movementToPlayer;
         }
         else{
+            //If there is something in the way to get to the player, turn to the right and move in that direction instead.
             int rotation = 90;
 //            if (pos.cpy().add(movementToPlayer.cpy().rotate(90)).dst(target.pos) > pos.cpy().add(movementToPlayer.cpy().rotate(-90)).dst(target.pos)){
 //                rotation = -90;
@@ -126,12 +129,15 @@ public class Enemy extends Entity {
         return  movementToPlayer;
     }
 
+    //Project the enemy's collider in a direction to check if moving in that direction will cause it to collide with anityhing
     boolean colliderCast(Vector2 startPos, Vector2 endPos, int increment){
         Vector2 direction = new Vector2(endPos.x-startPos.x,endPos.y-startPos.y);
         direction.nor();
+        //Get all the possible things it could collide with
         Dictionary<Rectangle, Entity> collideableRects = Play.getOtherColliderRects(this);
         Object[] rects = Collections.list(collideableRects.keys()).toArray();
         Rectangle currentBounds = new Rectangle();
+        // Iterate from the start positon to the end position in steps of increment
         for (int i = 0; i < startPos.dst(endPos)/increment; i++) {
             Vector2 coordToCheck = startPos.cpy();
             Vector2 tempDirection = direction.cpy();
@@ -141,8 +147,12 @@ public class Enemy extends Entity {
             currentBounds.y = coordToCheck.y  - (height/2f) + boundsHeightReduction;
             currentBounds.width = width-(boundsWidthReduction/2f);
             currentBounds.height = height-(boundsHeightReduction/2f);
+            //Check if the collider overlaps at the current position
             for (Object rect : rects) {
                 if (currentBounds.overlaps((Rectangle) rect)) {
+                    //Check if the thing it is overlapping with is an Obstacle
+                    //Because we want to collide with the player, and colliding
+                    // with other zombies doesn't matter since theyll also be moving
                     if (collideableRects.get(rect) instanceof Obstacle) {
                         return true;
                     }
@@ -155,12 +165,14 @@ public class Enemy extends Entity {
     //This overrides Entity's logic method
     @Override
     public void logic(){
+        //Add moving towards the player to our current movement
         momentum.add(getMovementToPlayer());
 
         tryMove();
         //Reduce their momentum over time
         momentum.scl(slide);
 
+        //If we are too far from the player to reasonably catch up, destroy this enemy as it is nothing but a resource drain
         if (pos.dst(target.pos) > 300){
             Play.entitiesToRemove.add(this);
         }
@@ -172,6 +184,7 @@ public class Enemy extends Entity {
         Play.score += 100;
         //Remove this entity from the world
         Play.entitiesToRemove.add(this);
+        //Play the zombie death sound.
         Gdx.audio.newSound(Gdx.files.internal("Enemies/zombieKilled.mp3")).play(0.3f);
     }
 
@@ -232,6 +245,7 @@ public class Enemy extends Entity {
             die();
         }
         else{
+            //If the zombie is injured, play the zombie hurt sound.
             hurtSound.play(0.1f);
         }
     }
