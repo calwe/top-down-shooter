@@ -23,7 +23,6 @@ public class Inventory extends Table {
             public boolean keyDown(int keycode) {
                 switch (keycode) {
                     case Input.Keys.NUM_1:
-                        System.out.println("1");
                         selectSlot(0);
                         return true;
                     case Input.Keys.NUM_2:
@@ -45,8 +44,10 @@ public class Inventory extends Table {
     }
 
     public void selectSlot(int slot) {
-        slots[currentInventorySlot].setSelected(false);
-        slots[slot].setSelected(true);
-        currentInventorySlot = slot;
+        if (slots[slot].weaponInSlot != null) {
+            slots[currentInventorySlot].setSelected(false);
+            slots[slot].setSelected(true);
+            currentInventorySlot = slot;
+        }
     }
 }

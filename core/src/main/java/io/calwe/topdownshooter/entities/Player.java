@@ -8,13 +8,14 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import io.calwe.topdownshooter.Weapon;
 import io.calwe.topdownshooter.screens.Play;
 import io.calwe.topdownshooter.ui.HUD;
 
-import java.util.Random;
+import java.util.*;
 
 // A subclass of entity, which is the player - the main character
 public class Player extends Entity {
@@ -24,12 +25,12 @@ public class Player extends Entity {
     Vector2 mouseCoords;
 
     //The character's inventory
-    Weapon[] inventory;
+    public Weapon[] inventory;
     // What slot in the character's inventory they currently have selected
     int currentInventorySlot = 0;
 
     // The maximum amount of health the player can have, and how much health they start with
-    int maxHealth;
+    public int maxHealth;
     // The amount of health the player currently has remaining
     int health;
     //how fast the player move
@@ -53,6 +54,12 @@ public class Player extends Entity {
     //An array of textures for the particles that should be released when the player is damage
     Texture[] damageParticles;
 
+    // These are used so that upgrades can improve your capabilities - otherwise they would be hardcoded
+    public float damageMultiplier = 1;
+    public int saveAmmoChance = 0;
+    public float critMultiplier = 2;
+    public int additionalCritChance = 0;
+
     public HUD hud;
 
     // The constructor - intialize all the variables
@@ -68,6 +75,7 @@ public class Player extends Entity {
         this.width = 12;
         this.layer = 15;
         this.height = 16;
+        this.hud = new HUD(this.health, this.score);
         this.inventory = inventory;
         this.damageParticles = damageParticles;
         this.camera = camera;
@@ -182,7 +190,7 @@ public class Player extends Entity {
             float bulletRotation = bulletAngleToLook*-180f/(float)Math.PI;
 
             // attempt to fire the weapon at the mouse position
-            boolean fireSuccessful = weapon.fire(firingPos, bulletRotation);
+            boolean fireSuccessful = weapon.fire(firingPos, bulletRotation, damageMultiplier, critMultiplier, additionalCritChance, saveAmmoChance);
             if (fireSuccessful){
                 //if the weapon fired, apply recoil and show the firing texture
                 Vector2 direction = new Vector2(mouseCoords.x - (firingPos.x), mouseCoords.y - (firingPos.y));
@@ -213,13 +221,12 @@ public class Player extends Entity {
         if (health <= 0){
             die();
         }
-
         hud.updateStatistics(health, score);
     }
 
-    //If the player is out of health, remove them from the world
+    //If the player is out of health, switch to the game over screen
     private void die(){
-        Play.entitiesToRemove.add(this);
+        Play.game.GameOver(score);
     }
 
     // This overrides entity's draw method so we can have animation
@@ -233,7 +240,7 @@ public class Player extends Entity {
         sprite.setSize(width, height);
         // Render the player's animated legs
         sprite.draw(batch);
-
+        //The player's body is slightly larger, so render it bigger
         sprite.setSize(width, 18);
         //Render the player's body with the weapon they are holding
         sprite.setRegion(playerTexture);
@@ -256,6 +263,8 @@ public class Player extends Entity {
             p.momentum = movement;
             Play.entitiesToAdd.add(p);
         }
+        //Play the player hurt sound
+        Gdx.audio.newSound(Gdx.files.internal("playerHit.mp3")).play(1.5f);
     }
 
     //Add knockback to the player's momentum
@@ -276,13 +285,21 @@ public class Player extends Entity {
         }
         //if there are no empty slots in the inventory
         //drop the current weapon
-        WeaponDrop droppedWeapon = new WeaponDrop(new Weapon(inventory[currentInventorySlot], inventory[currentInventorySlot].ammo), new Vector2(pos.x + (width/2f), pos.y + height/2f));
+        WeaponDrop droppedWeapon = new WeaponDrop(inventory[currentInventorySlot].copy(), new Vector2(pos.x + (width/2f), pos.y + height/2f));
         if (droppedWeapon.weapon.ammo > 0){
             Play.entitiesToAdd.add(droppedWeapon);
         }
         //And add the picked up weapon to our inventory in its place
         inventory[currentInventorySlot] = weaponToAdd;
         hud.inventory.slots[currentInventorySlot].weaponInSlot = weaponToAdd;
+    }
+
+    //Increase the player's current health by the amount provided, up to the limit of their maximum health
+    public void heal(int healAmount){
+        health += healAmount;
+        if (health > maxHealth){
+            health = maxHealth;
+        }
     }
 
     public void resize(int width, int height) {

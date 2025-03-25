@@ -28,6 +28,8 @@ public class Weapon{
 
     long timeLastFired = 0;
 
+    boolean pierces = false;
+
     public Weapon(Texture texture, Texture sideOn, Texture bulletTexture, Sound fireSound, Sound emptySound, int ammo, int damage, float fireRate, int critChance, float inaccuracy, float recoil, float knockback, float bulletSpeed){
         this.texture = texture;
         this.sideOn = sideOn;
@@ -44,6 +46,23 @@ public class Weapon{
         this.emptySound = emptySound;
     }
 
+    public Weapon(Texture texture, Texture sideOn, Texture bulletTexture, Sound fireSound, Sound emptySound, int ammo, int damage, float fireRate, int critChance, float inaccuracy, float recoil, float knockback, float bulletSpeed, boolean pierces){
+        this.texture = texture;
+        this.sideOn = sideOn;
+        this.bulletTexture = bulletTexture;
+        this.bulletSpeed = bulletSpeed;
+        this.ammo = ammo;
+        this.damage = damage;
+        this.fireRate = fireRate;
+        this.critChance = critChance;
+        this.inaccuracy = inaccuracy;
+        this.recoil = recoil;
+        this.knockback = knockback;
+        this.fireSound = fireSound;
+        this.emptySound = emptySound;
+        this.pierces = pierces;
+    }
+
     public Weapon(Weapon weaponToCopy, int ammo){
         this.texture = weaponToCopy.texture;
         this.bulletTexture = weaponToCopy.bulletTexture;
@@ -58,17 +77,27 @@ public class Weapon{
         this.knockback = weaponToCopy.knockback;
         this.fireSound = weaponToCopy.fireSound;
         this.emptySound = weaponToCopy.emptySound;
+        this.pierces = weaponToCopy.pierces;
+    }
+
+
+    public Weapon copy(){
+        return new Weapon(this, ammo);
+    }
+
+    public Weapon copy(int ammo){
+        return new Weapon(this, ammo);
     }
 
     //This function returns true or false depending on whether the weapon was still cooling down
     //or it fired successfully
-    public boolean fire(Vector2 gunPos, float bulletRotation){
+    public boolean fire(Vector2 gunPos, float bulletRotation, float damageMultiplier, float critMultiplier, int additionalCritChance, int ammoSaveChance){
         //Check if the weapon is ready to fire another shot
         if (timeLastFired + (long)(1000f/fireRate) < System.currentTimeMillis()){
             //Check if we still have ammunition left
             if (ammo > 0){
                 //Create an instance of bullet, give it the bullet texture, and its stats.
-                Bullet bullet = new Bullet(bulletTexture, gunPos, damage, critChance, knockback);
+                Bullet bullet = new Bullet(bulletTexture, gunPos, Math.round(damage*damageMultiplier), critChance + additionalCritChance, critMultiplier, knockback, pierces);
                 //Turn the bullet so it is facing towards the mouse
                 bullet.sprite.setRotation(bulletRotation);
                 // Move the bullet so it is emerging from the gun
@@ -83,14 +112,17 @@ public class Weapon{
                 timeLastFired = System.currentTimeMillis();
                 // Add the bullet to the entitiesToAdd list so it can be added to the master entities list, and rendered and have its logic handled
                 Play.entitiesToAdd.add(bullet);
-                ammo--;
-                fireSound.play(0.02f);
+                if (random.nextInt(100) >= ammoSaveChance){
+                    ammo--;
+                }
+                //Play the shooting sound
+                fireSound.play(0.03f);
                 return true;
             }
             else{
                 //If we have no ammo in the gun, play the gun empty sound
                 timeLastFired = System.currentTimeMillis();
-                emptySound.play(0.2f);
+                emptySound.play(0.3f);
                 return false;
             }
 
