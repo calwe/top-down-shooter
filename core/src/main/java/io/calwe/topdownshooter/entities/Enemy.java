@@ -102,7 +102,7 @@ public class Enemy extends Entity {
     //executed when the enemy runs out of health
     protected void die(){
         //Add to the player's score
-        Play.score += 100;
+        target.score += 100;
         //Remove this entity from the world
         Play.entitiesToRemove.add(this);
     }

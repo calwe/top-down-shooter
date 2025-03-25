@@ -14,8 +14,10 @@ public class HUD {
     private Table table;
 
     public Inventory inventory;
+    public Statistic healthUI;
+    public Statistic scoreUI;
 
-    public void create() {
+    public HUD(int health, int score) {
         ScreenViewport viewport = new ScreenViewport();
         viewport.setUnitsPerPixel(0.2f);
         stage = new Stage(viewport);
@@ -24,8 +26,14 @@ public class HUD {
         table.setFillParent(true);
 
         inventory = new Inventory();
-        table.top().left();
-        table.add(inventory);
+        table.top();
+        table.add(inventory).top().left().expandX();
+
+        healthUI = new Statistic("health", health);
+        scoreUI = new Statistic("score", score);
+        table.add(healthUI);
+        table.row();
+        table.add(scoreUI).colspan(2).right();
 
         stage.addActor(table);
 
@@ -37,6 +45,11 @@ public class HUD {
 
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
+    }
+
+    public void updateStatistics(int health, int score) {
+        healthUI.setValue(health);
+        scoreUI.setValue(score);
     }
 
     public void render() {

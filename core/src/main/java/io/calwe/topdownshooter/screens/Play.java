@@ -50,8 +50,6 @@ public class Play implements Screen {
     //Stores the timer used to calculated when spawnCooldown has elapsed
     private float timer = 0f;
 
-    // The player's score, based on how many zombies have been killed and how long the player has been alive
-    public static int score;
     //Used to periodically increase the score based on how long the player has been alive
     private float scoreIncreaseTimer = 0f;
 
@@ -167,7 +165,7 @@ public class Play implements Screen {
 
         //periodically increase the score
         if (scoreIncreaseTimer > 1){
-            score += 5;
+            player.score += 5;
             scoreIncreaseTimer = 0;
         }
         scoreIncreaseTimer += Gdx.graphics.getDeltaTime();

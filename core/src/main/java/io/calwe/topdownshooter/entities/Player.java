@@ -35,6 +35,9 @@ public class Player extends Entity {
     //how fast the player move
     float movementSpeed;
 
+    // The player's score, based on how many zombies have been killed and how long the player has been alive
+    public int score;
+
     // The camera - this is used to keep the camera's position over the player
     OrthographicCamera camera;
 
@@ -72,8 +75,7 @@ public class Player extends Entity {
         this.health = maxHealth;
         this.boundsHeightReduction = 3;
         this.boundsWidthReduction = 3;
-        this.hud = new HUD();
-        this.hud.create();
+        this.hud = new HUD(this.health, this.score);
         //Calculate the player's collider bounds
         bounds.x = pos.x + boundsWidthReduction;
         bounds.y = pos.y + boundsHeightReduction;
@@ -211,6 +213,8 @@ public class Player extends Entity {
         if (health <= 0){
             die();
         }
+
+        hud.updateStatistics(health, score);
     }
 
     //If the player is out of health, remove them from the world
