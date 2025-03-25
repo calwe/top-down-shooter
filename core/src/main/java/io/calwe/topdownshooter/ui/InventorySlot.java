@@ -46,8 +46,17 @@ public class InventorySlot extends Actor {
         }
 
         if (weaponInSlot != null) {
-            batch.draw(weaponInSlot.sideOn, getX(), getY(), getOriginX(), getOriginY(),
-                getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation(), 0, 0,
+            // aspect ratio for the weapon texture
+            float aspectRatio = (float) weaponInSlot.sideOn.getHeight() / weaponInSlot.sideOn.getWidth();
+            // use the aspect ratio to find the correct height for the rendered texture
+            float height = getWidth() * aspectRatio;
+            // y position to render the texture:
+            //     getY(): bottom of the slot
+            //     + (getHeight() / 2): add half the height of the inventory slot
+            //     - (height / 2): subtract half the height of the texture, as the draw origin is from the bottom of the texture, not the middle
+            float yCenter = getY() + (getHeight() / 2) - (height / 2);
+            batch.draw(weaponInSlot.sideOn, getX(), yCenter, getOriginX(), getOriginY(),
+                getWidth(), height, getScaleX(), getScaleY(), getRotation(), 0, 0,
                 weaponInSlot.sideOn.getWidth(), weaponInSlot.sideOn.getHeight(), false, false);
         }
         batch.setColor(Color.WHITE);
