@@ -21,18 +21,18 @@ import java.util.Random;
 
 public class Enemy extends Entity {
 
-    // The maximum amount of health the player can have, and how much health they start with
+    // The maximum amount of health the enemy can have, and how much health they start with
     int maxHealth;
-    // The amount of health the player currently has remaining
+    // The amount of health the enemy currently has remaining
     int health;
     // The amount of damage done to the player on contact
     int damage;
     //The amount of knockback inflicted on the player on contact
     float knockback;
-    //how fast the player move
+    //how fast the enemy moves
     float movementSpeed;
 
-    // The player's movement animation
+    // The enemy's movement animation
     Animation<TextureRegion> enemyWalkAnimation;
     // A float that stores the time since the animation started playing so we can figure out what frame
     // of the animation to display
