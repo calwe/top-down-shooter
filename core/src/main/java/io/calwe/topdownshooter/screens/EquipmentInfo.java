@@ -8,12 +8,13 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import io.calwe.topdownshooter.Game;
 import io.calwe.topdownshooter.Main;
 
 public class EquipmentInfo implements Screen {
     SpriteBatch batch;
     public int score = 0;
-    public Main main;
+    public Game game;
     Texture hollowPoint;
     Texture APBullets;
     Texture medkit;
@@ -42,11 +43,11 @@ public class EquipmentInfo implements Screen {
         try{
             //Return to the start menu if x is pressed
             if (Gdx.input.isKeyJustPressed(Input.Keys.X)) {
-                main.StartMenu();
+                game.StartMenu();
             }
             //Go on to the next info screen if enter is pressed
             if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-                main.ZombiesInfo();
+                game.ZombiesInfo();
             }
 
             // clear the screen to black

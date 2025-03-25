@@ -8,12 +8,13 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import io.calwe.topdownshooter.Game;
 import io.calwe.topdownshooter.Main;
 
 public class Story implements Screen {
     SpriteBatch batch;
     public int score = 0;
-    public Main main;
+    public Game game;
 
     @Override
     public void show() {
@@ -26,11 +27,11 @@ public class Story implements Screen {
         try{
             //Return to the start menu if x is pressed
             if (Gdx.input.isKeyJustPressed(Input.Keys.X)) {
-                main.StartMenu();
+                game.StartMenu();
             }
             //Go on to the next info screen if enter is pressed
             if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-                main.info();
+                game.info();
             }
 
             // clear the screen to black

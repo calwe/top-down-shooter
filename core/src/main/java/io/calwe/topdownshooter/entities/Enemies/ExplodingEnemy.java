@@ -28,7 +28,7 @@ public class ExplodingEnemy extends Enemy {
     @Override
     protected void die(){
         //Add to the player's score
-        Play.score += 100;
+        target.score += 100;
         //Release projectiles in 8 directions.
         Vector2[] directions = new Vector2[]{
             new Vector2(0, 1),

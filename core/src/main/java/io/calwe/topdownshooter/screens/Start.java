@@ -8,11 +8,12 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import io.calwe.topdownshooter.Game;
 import io.calwe.topdownshooter.Main;
 
 public class Start implements Screen {
     SpriteBatch batch;
-    public Main main;
+    public Game game;
     Texture skull;
 
 
@@ -28,11 +29,11 @@ public class Start implements Screen {
         try{
             //Start the game if enter is pressed
             if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-                main.restart();
+                game.restart();
             }
             //Load the backstory screen if I is pressed
             if (Gdx.input.isKeyJustPressed(Input.Keys.I)) {
-                main.Story();
+                game.Story();
             }
             // clear the screen to black
             Gdx.gl.glClearColor(0, 0, 0, 1);

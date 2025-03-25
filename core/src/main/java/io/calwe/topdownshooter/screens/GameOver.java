@@ -8,12 +8,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.Color;
+import io.calwe.topdownshooter.Game;
 import io.calwe.topdownshooter.Main;
 
 public class GameOver implements Screen {
     SpriteBatch batch;
     public int score = 0;
-    public Main main;
+    public Game game;
     Texture gravestone;
 
     @Override
@@ -28,7 +29,7 @@ public class GameOver implements Screen {
         try{
             //if enter is pressed start a new game
             if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-                main.restart();
+                game.restart();
             }
 
             // clear the screen to black

@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import io.calwe.topdownshooter.Weapon;
 import io.calwe.topdownshooter.screens.Play;
+import io.calwe.topdownshooter.ui.HUD;
 
 import java.util.*;
 
@@ -35,6 +36,9 @@ public class Player extends Entity {
     //how fast the player move
     float movementSpeed;
 
+    // The player's score, based on how many zombies have been killed and how long the player has been alive
+    public int score;
+
     // The camera - this is used to keep the camera's position over the player
     OrthographicCamera camera;
 
@@ -56,6 +60,8 @@ public class Player extends Entity {
     public float critMultiplier = 2;
     public int additionalCritChance = 0;
 
+    public HUD hud;
+
 
     // The constructor - intialize all the variables
     public Player(Texture texture, Animation<TextureRegion> playerWalkAnimation, Vector2 startPos, Weapon[] inventory, Texture[] damageParticles, OrthographicCamera camera) {
@@ -70,6 +76,7 @@ public class Player extends Entity {
         this.width = 12;
         this.layer = 15;
         this.height = 16;
+        this.hud = new HUD(this.health, this.score);
         this.inventory = inventory;
         this.damageParticles = damageParticles;
         this.camera = camera;
@@ -214,11 +221,12 @@ public class Player extends Entity {
         if (health <= 0){
             die();
         }
+        hud.updateStatistics(health, score);
     }
 
     //If the player is out of health, switch to the game over screen
     private void die(){
-        Play.main.GameOver(Play.score);
+        Play.game.GameOver(score);
     }
 
     // This overrides entity's draw method so we can have animation
@@ -271,6 +279,7 @@ public class Player extends Entity {
         for (int i = 0; i < inventory.length; i++) {
             if (inventory[i] == null){
                 inventory[i] = weaponToAdd;
+                hud.inventory.slots[i].weaponInSlot = weaponToAdd;
                 return;
             }
         }
@@ -282,6 +291,7 @@ public class Player extends Entity {
         }
         //And add the picked up weapon to our inventory in its place
         inventory[currentInventorySlot] = weaponToAdd;
+        hud.inventory.slots[currentInventorySlot].weaponInSlot = weaponToAdd;
     }
 
     //Increase the player's current health by the amount provided, up to the limit of their maximum health
@@ -290,5 +300,13 @@ public class Player extends Entity {
         if (health > maxHealth){
             health = maxHealth;
         }
+    }
+
+    public void resize(int width, int height) {
+        hud.resize(width, height);
+    }
+
+    public void dispose() {
+        hud.dispose();
     }
 }

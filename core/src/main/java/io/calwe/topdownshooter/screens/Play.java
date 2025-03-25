@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FillViewport;
+import io.calwe.topdownshooter.Game;
 import io.calwe.topdownshooter.Main;
 import io.calwe.topdownshooter.Shotgun;
 import io.calwe.topdownshooter.Weapon;
@@ -65,15 +66,13 @@ public class Play implements Screen {
     //Stores the timer used to calculated when spawnCooldown has elapsed
     private float timer = 0f;
 
-    // The player's score, based on how many zombies have been killed and how long the player has been alive
-    public static int score;
     //Used to periodically increase the score based on how long the player has been alive
     private float scoreIncreaseTimer = 0f;
 
     //The current tier of play, which determines the power of weapon drops and enemies
     public static int currentTier = 1;
 
-    public static Main main;
+    public static Game game;
 
     //The enemy cap at each tier
     private int[] enemyCapAtTier = new int[]{
@@ -135,7 +134,6 @@ public class Play implements Screen {
             new CritChanceDrop(new Texture("Equipment/RedDotSight.png"), "Red dot sight", "Crit chance +7%.", 7),
             new CritDamageDrop(new Texture("Equipment/AP-rounds.png"), "Armor piercing bullets", "Crit damage +25%", 0.5f),
             new DamageDrop(new Texture("Equipment/ammo.png"), "Hollow points", "Damage +20%", 0.2f),
-            new ExtraInventoryDrop(new Texture("Equipment/Bag.png"), "Bag", "Carry an additional weapon."),
             new HealDrop(new Texture("Equipment/medkit.png"), "Medkit", "Heal 25%", 25),
             new HealthDrop(new Texture("Equipment/FlakVest.png"), "Kevlar vest", "Max health +10%", 10),
             new SaveAmmoDrop(new Texture("Equipment/Magazine.png"), "Extended magazine", "8% chance to save ammo.", 8),
@@ -153,16 +151,13 @@ public class Play implements Screen {
             new Texture("player_single_frame.png"),
             getAnimatedPlayerTexture(),
             new Vector2(0, 0),
-            new Weapon[]{
-                commonWeapons.get("Pistol").copy(),
-                null,
-                null
-            },
+            new Weapon[3],
             new Texture[]{
                 new Texture("bloodParticle.png")
             },
             camera
         );
+        player.addToInventory(commonWeapons.get("Pistol").copy());
         //Add the player to the list of entities
         entities.add(player);
 
@@ -281,6 +276,8 @@ public class Play implements Screen {
             //draw each entity
             draw();
 
+            player.hud.render();
+
             //add all entities from the entitiesToAdd list to the main entities list
             //See the initialisation of entitiesToAdd for why this is necessary
             //Then empty the entitiesToAdd list, since everything in it has already been added.
@@ -299,7 +296,7 @@ public class Play implements Screen {
             if (!paused){
                 //periodically increase the score every second
                 if (scoreIncreaseTimer > 1){
-                    score += 10;
+                    player.score += 10;
                     scoreIncreaseTimer = 0;
                 }
                 scoreIncreaseTimer += Gdx.graphics.getDeltaTime();
@@ -316,16 +313,16 @@ public class Play implements Screen {
             });
 
             //Update the current tier in case the score has gone over the boundary into the next tier
-            if (score > 3500){
+            if (player.score > 3500){
                 currentTier = 5;
             }
-            else if (score > 2000){
+            else if (player.score > 2000){
                 currentTier = 4;
             }
-            else if (score > 1000){
+            else if (player.score > 1000){
                 currentTier = 3;
             }
-            else if (score > 500){
+            else if (player.score > 500){
                 currentTier = 2;
             }
         }
@@ -483,6 +480,7 @@ public class Play implements Screen {
     public void resize(int width, int height) {
         //Resize the viewport
         viewport.update(width, height);
+        player.resize(width, height);
     }
 
     @Override
@@ -499,6 +497,7 @@ public class Play implements Screen {
     public void dispose() {
         // dispose of the spritebatch and all the textures and sounds
         batch.dispose();
+        player.dispose();
         backgroundMusic.dispose();
         blueZombieTexture.dispose();
         redZombieTexture.dispose();
