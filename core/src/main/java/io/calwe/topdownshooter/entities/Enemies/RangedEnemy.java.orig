@@ -30,21 +30,22 @@ public class RangedEnemy extends Enemy {
 
     //This overrides Enemy's logic method
     @Override
-    public void logic() {
+    public void logic(){
         //If the enemy is more than 60 away, move towards the player
-        if (target.pos.dst(pos) > 60) {
+        if (target.pos.dst(pos) > 60){
             momentum.add(getMovementToPlayer());
-        } else {
+        }
+        else{
             elapsedTime = 0.0f;
         }
 
         //If we are less than 120 away, and the attack is not on cooldown, launch a projectile at the player
-        if (target.pos.dst(pos) < 120) {
-            if (attackCooldownTimer >= attackCooldown) {
-                EnemyProjectile p = new EnemyProjectile(projectileTexture, new Vector2(pos.x + (width / 2f), pos.y + (height / 2f)), damage, knockback);
+        if (target.pos.dst(pos) < 120){
+            if (attackCooldownTimer >= attackCooldown){
+                EnemyProjectile p = new EnemyProjectile(projectileTexture, new Vector2(pos.x + (width/2f), pos.y + (height/2f)), damage, knockback);
                 //Turn the bullet so it is facing towards the target
-                float angleToLook = (float) Math.atan2(target.pos.x - (pos.x), target.pos.y - (pos.y));
-                float rotation = angleToLook * -180f / (float) Math.PI;
+                float angleToLook = (float)Math.atan2(target.pos.x-(pos.x), target.pos.y-(pos.y));
+                float rotation = angleToLook*-180f/(float)Math.PI;
                 p.sprite.setRotation(rotation);
                 // apply the movement to the projectile
                 p.momentum.set(new Vector2(0, projectileSpeed).rotateDeg(rotation));
@@ -58,21 +59,22 @@ public class RangedEnemy extends Enemy {
         //Reduce their momentum over time
         momentum.scl(slide);
         //Turn to face the player
-        float angleToLook = (float) Math.atan2(target.pos.x - (pos.x), target.pos.y - (pos.y));
+        float angleToLook = (float)Math.atan2(target.pos.x-(pos.x), target.pos.y-(pos.y));
         // convert the angle given from radians to degrees, and rotate the enemy to look in that direction
-        sprite.setRotation(angleToLook * -180f / (float) Math.PI);
+        sprite.setRotation(angleToLook*-180f/(float)Math.PI);
 
         // Add an offset to the sprite to account for the fact that the sprite is not centered in its image.
-        Vector2 spriteOffset = new Vector2(0, 2).rotate(angleToLook * -180f / (float) Math.PI);
+        Vector2 spriteOffset = new Vector2(0, 2).rotate(angleToLook*-180f/(float)Math.PI);
         spriteOffset.add(pos);
         sprite.setPosition(spriteOffset.x, spriteOffset.y);
 
         //Increase the attack cooldown timer over time
         attackCooldownTimer += Gdx.graphics.getDeltaTime();
         //Check if the zombie is out of health - if it is, execute the die function
-        if (health <= 0) {
+        if (health <= 0){
             die();
         }
+<<<<<<< HEAD:core/src/main/java/io/calwe/topdownshooter/entities/RangedEnemy.java
     }
 
     @Override
@@ -82,11 +84,13 @@ public class RangedEnemy extends Enemy {
         target.score += 150;
         //Remove this entity from the world
         Play.entitiesToRemove.add(this);
+=======
         //If the zombie is too far away from the player to reasonably catch up or be seen, it is nothing but a drain on
         // resources and should be removed
         if (pos.dst(target.pos) > 300){
             Play.entitiesToRemove.add(this);
         }
+>>>>>>> InfiniteMap:core/src/main/java/io/calwe/topdownshooter/entities/Enemies/RangedEnemy.java
     }
 
     //Run when we collide with another entity

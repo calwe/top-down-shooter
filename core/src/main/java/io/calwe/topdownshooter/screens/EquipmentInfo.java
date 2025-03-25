@@ -20,7 +20,6 @@ public class EquipmentInfo implements Screen {
     Texture medkit;
     Texture kevlar;
     Texture redDotSight;
-    Texture bag;
     Texture bomb;
     Texture magazine;
 
@@ -30,7 +29,6 @@ public class EquipmentInfo implements Screen {
         batch = new SpriteBatch();
         hollowPoint = new Texture("Equipment/ammo.png");
         APBullets = new Texture("Equipment/AP-rounds.png");
-        bag = new Texture("Equipment/Bag.png");
         medkit = new Texture("Equipment/medkit.png");
         kevlar = new Texture("Equipment/FlakVest.png");
         redDotSight = new Texture("Equipment/RedDotSight.png");
@@ -69,8 +67,7 @@ public class EquipmentInfo implements Screen {
             batch.draw(APBullets, Gdx.graphics.getWidth()*0.1f, Gdx.graphics.getHeight()*0.54f-32, 48,48);
             batch.draw(redDotSight, Gdx.graphics.getWidth()*0.1f, Gdx.graphics.getHeight()*0.47f-32, 48,48);
             batch.draw(magazine, Gdx.graphics.getWidth()*0.1f, Gdx.graphics.getHeight()*0.4f-32, 48,48);
-            batch.draw(bag, Gdx.graphics.getWidth()*0.1f, Gdx.graphics.getHeight()*0.33f-32, 48,48);
-            batch.draw(bomb, Gdx.graphics.getWidth()*0.1f, Gdx.graphics.getHeight()*0.26f-32, 48,48);
+            batch.draw(bomb, Gdx.graphics.getWidth()*0.1f, Gdx.graphics.getHeight()*0.33f-32, 48,48);
 
             //set the text size
             font.getData().setScale(3f);
@@ -81,8 +78,7 @@ public class EquipmentInfo implements Screen {
             font.draw(batch, "ARMOR PIERCING BULLETS: INCREASE CRIT DAMAGE BY 25%", Gdx.graphics.getWidth()/2f-700, Gdx.graphics.getHeight()*0.54f);
             font.draw(batch, "RED DOT SIGHT: INCREASE CRIT CHANCE BY 7%", Gdx.graphics.getWidth()/2f-700, Gdx.graphics.getHeight()*0.47f);
             font.draw(batch, "EXTENDED MAGAZINE: 8% CHANCE NOT TO CONSUME AMMUNITION", Gdx.graphics.getWidth()/2f-700, Gdx.graphics.getHeight()*0.4f);
-            font.draw(batch, "BAG: CARRY AN ADDITIONAL WEAPON", Gdx.graphics.getWidth()/2f-700, Gdx.graphics.getHeight()*0.33f);
-            font.draw(batch, "BOMB: KILL ALL ZOMBIES ON THE SCREEN", Gdx.graphics.getWidth()/2f-700, Gdx.graphics.getHeight()*0.26f);
+            font.draw(batch, "BOMB: KILL ALL ZOMBIES ON THE SCREEN", Gdx.graphics.getWidth()/2f-700, Gdx.graphics.getHeight()*0.33f);
 
             font.draw(batch, "PRESS ENTER TO CONTINUE TO THE NEXT PAGE (ZOMBIES).", Gdx.graphics.getWidth()/2f-550, Gdx.graphics.getHeight()*0.15f);
             font.draw(batch, "PRESS X TO RETURN TO THE START MENU.", Gdx.graphics.getWidth()/2f-550, Gdx.graphics.getHeight()*0.1f);
@@ -117,5 +113,12 @@ public class EquipmentInfo implements Screen {
     public void dispose() {
         //dispose of the spritebatch now its not needed
         batch.dispose();
+        hollowPoint.dispose();
+        APBullets.dispose();
+        redDotSight.dispose();
+        magazine.dispose();
+        medkit.dispose();
+        kevlar.dispose();
+        bomb.dispose();
     }
 }
