@@ -66,7 +66,7 @@ public class Map {
         wallTexture = new Texture("World/wall.png");
         floorTexture = new Texture("World/houseFloor.png");
         landmineTexture = new Texture("World/landmine.png");
-        explosionAnimation = getLandmineExplosionAnimation();
+        explosionAnimation = Play.getAnimation("World/explosionAnimation.png", 4);
 
         //Create the grass tileset
         Texture tilesetTexture = new Texture(Gdx.files.internal("map_tileset.png"));
@@ -216,24 +216,6 @@ public class Map {
             //Add the current coords to the list of coords things have already been generated at
             entitiesAlreadyGeneratedCoords.add(new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)));
         }
-    }
-
-    //Get the landmine explosion animation
-    private Animation<TextureRegion> getLandmineExplosionAnimation(){
-        // load the spritesheet as a texture, then make a textureRegion out of that texture.
-        TextureRegion texture = new TextureRegion(new Texture("World/explosionAnimation.png"));
-        //The number of sprites in the spritesheet showing each part of the animation
-        int numFrames = 4;
-        //Split the spritesheet into individual textureregions
-        TextureRegion[][] AnimationTextures2D = texture.split(texture.getRegionWidth(), texture.getRegionHeight()/numFrames);
-        //split can only split spritesheets into 2d arrays of textureregions, so convert it to a 1d array
-        TextureRegion[] AnimationTextures = new TextureRegion[numFrames];
-        for (int i = 0; i < numFrames; i++) {
-            AnimationTextures[i] = AnimationTextures2D[i][0];
-        }
-        //load all the textureregions into an animation, with a duration of 0.0357 per frame.
-        // This sums up to the entire animation being about 0.5 seconds, which appears to work best visually.
-        return new Animation<>(0.0357f, AnimationTextures);
     }
 
     //Generate a landmine at the provided coords if nothing has already been generated there

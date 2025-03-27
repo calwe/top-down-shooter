@@ -85,14 +85,13 @@ public class Enemy extends Entity {
         //Check if there is anything blocking the way towards the player
         if (!colliderCast(
             new Vector2(pos.x + ((width/2f)-boundsWidthReduction), pos.y + ((height/2f)-boundsHeightReduction)),
-            newPos,
-            3
+            newPos
         )){
             // convert the angle given from radians to degrees, and rotate the enemy to look in that direction
             sprite.setRotation(angleToLook*-180f/(float)Math.PI);
 
             // Add an offset to the sprite to account for the fact that the sprite is not centered in its image.
-            Vector2 spriteOffset = new Vector2(0, 2).rotate(angleToLook*-180f/(float)Math.PI);
+            Vector2 spriteOffset = new Vector2(0, 2).rotateDeg(angleToLook * -180f / (float) Math.PI);
             spriteOffset.add(pos);
             sprite.setPosition(spriteOffset.x, spriteOffset.y);
             return  movementToPlayer;
@@ -114,8 +113,8 @@ public class Enemy extends Entity {
             sprite.setRotation(angleToLook*-180f/(float)Math.PI + rotation);
 
             // Add an offset to the sprite to account for the fact that the sprite is not centered in its image.
-            Vector2 spriteOffset = new Vector2(0, 2).rotate(angleToLook*-180f/(float)Math.PI);
-            spriteOffset.rotate(rotation);
+            Vector2 spriteOffset = new Vector2(0, 2).rotateDeg(angleToLook * -180f / (float) Math.PI);
+            spriteOffset.rotateDeg(rotation);
             spriteOffset.add(pos);
             sprite.setPosition(spriteOffset.x, spriteOffset.y);
 
@@ -126,30 +125,35 @@ public class Enemy extends Entity {
         return  movementToPlayer;
     }
 
-    //Project the enemy's collider in a direction to check if moving in that direction will cause it to collide with anityhing
-    boolean colliderCast(Vector2 startPos, Vector2 endPos, int increment){
+    //Project the enemy's collider in a direction to check if moving in that direction will cause it to collide with anything
+    boolean colliderCast(Vector2 startPos, Vector2 endPos){
+        //the gap between each collider test
+        int increment = 3;
+        //get the direction to get from startPos to endPos
         Vector2 direction = new Vector2(endPos.x-startPos.x,endPos.y-startPos.y);
+        //normalize the direction so it has a magnitude of 1
         direction.nor();
         //Get all the possible things it could collide with
         Dictionary<Rectangle, Entity> collideableRects = Play.getOtherColliderRects(this);
         Object[] rects = Collections.list(collideableRects.keys()).toArray();
         Rectangle currentBounds = new Rectangle();
         // Iterate from the start positon to the end position in steps of increment
-        for (int i = 0; i < startPos.dst(endPos)/increment; i++) {
+        for (int i = 1; i < startPos.dst(endPos)/increment; i++) {
             Vector2 coordToCheck = startPos.cpy();
             Vector2 tempDirection = direction.cpy();
-            tempDirection.scl(increment);
+            tempDirection.scl(increment*i);
+            //move coordToCheck in tempDirection an amount equal to increment times i
             coordToCheck.add(tempDirection);
+            //generate a new collider at coordToCheck
             currentBounds.x = coordToCheck.x - (width/2f) + boundsWidthReduction;
             currentBounds.y = coordToCheck.y  - (height/2f) + boundsHeightReduction;
             currentBounds.width = width-(boundsWidthReduction/2f);
             currentBounds.height = height-(boundsHeightReduction/2f);
-            //Check if the collider overlaps at the current position
+            //Check if the generated collider overlaps with any other entities
             for (Object rect : rects) {
                 if (currentBounds.overlaps((Rectangle) rect)) {
-                    //Check if the thing it is overlapping with is an Obstacle
-                    //Because we want to collide with the player, and colliding
-                    // with other zombies doesn't matter since theyll also be moving
+                    //Check if the thing it is overlapping with is an Obstacle because colliding with the player
+                    // is fine, and colliding with other zombies doesn't matter since they'll also be moving
                     if (collideableRects.get(rect) instanceof Obstacle) {
                         return true;
                     }

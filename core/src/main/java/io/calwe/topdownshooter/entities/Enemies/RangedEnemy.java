@@ -60,7 +60,7 @@ public class RangedEnemy extends Enemy {
         sprite.setRotation(angleToLook * -180f / (float) Math.PI);
 
         // Add an offset to the sprite to account for the fact that the sprite is not centered in its image.
-        Vector2 spriteOffset = new Vector2(0, 2).rotate(angleToLook * -180f / (float) Math.PI);
+        Vector2 spriteOffset = new Vector2(0, 2).rotateDeg(angleToLook * -180f / (float) Math.PI);
         spriteOffset.add(pos);
         sprite.setPosition(spriteOffset.x, spriteOffset.y);
 

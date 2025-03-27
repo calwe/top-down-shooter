@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import io.calwe.topdownshooter.entities.Entity;
 import io.calwe.topdownshooter.entities.Player;
 import io.calwe.topdownshooter.screens.Play;
 
@@ -97,7 +96,7 @@ public class ChargingEnemy extends Enemy {
         momentum.scl(slide);
         float angleToLook = (float)Math.atan2(target.pos.x-(pos.x), target.pos.y-(pos.y));
         // Add an offset to the sprite to account for the fact that the sprite is not centered in its image.
-        Vector2 spriteOffset = new Vector2(0, 2).rotate(angleToLook*-180f/(float)Math.PI);
+        Vector2 spriteOffset = new Vector2(0, 2).rotateDeg(angleToLook*-180f/(float)Math.PI);
         spriteOffset.add(pos);
         sprite.setPosition(spriteOffset.x, spriteOffset.y);
         chargingSprite.setPosition(spriteOffset.x, spriteOffset.y);
@@ -142,26 +141,6 @@ public class ChargingEnemy extends Enemy {
         target.score += 150;
         //Remove this entity from the world
         Play.entitiesToRemove.add(this);
-    }
-
-    //Run when we collide with another entity
-    @Override
-    public void OnEntityCollision(Entity e){
-        if (charging){
-            //Check if the entity we collided with is the player
-            if (e instanceof Player){
-                Player player = (Player)e;
-                //Deal damage to the player
-                player.takeDamage(damage);
-                //Knock the player away from the zombie
-                Vector2 knockbackDirection = new Vector2(player.pos.x-pos.x,player.pos.y-pos.y);
-                knockbackDirection.nor();
-                knockbackDirection.scl(knockback);
-                player.applyKnockback(knockbackDirection);
-                //Remove this zombie from the world
-                Play.entitiesToRemove.add(this);
-            }
-        }
     }
 
 }

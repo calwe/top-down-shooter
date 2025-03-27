@@ -134,7 +134,7 @@ public class Play implements Screen {
         // and with his walk animation, and a red particle that is released when he is damaged
         player = new Player(
             new Texture("player_single_frame.png"),
-            getAnimatedPlayerTexture(),
+            getAnimation("running.png", 14),
             new Vector2(0, 0),
             new Weapon[3],
             new Texture[]{
@@ -163,43 +163,7 @@ public class Play implements Screen {
             new Texture("bloodParticle.png"),
             new Texture("Enemies/zombieParticle.png")
         };
-        animatedZombieTexture = getAnimatedZombieTexture();
-    }
-
-    //Get the humanoid walk animation
-    private Animation<TextureRegion> getAnimatedPlayerTexture(){
-        // load the spritesheet as a texture, then make a textureRegion out of that texture.
-        TextureRegion playerTexture = new TextureRegion(new Texture("running.png"));
-        //The number of sprites in the spritesheet showing each part of the walk animation
-        int numFrames = 14;
-        //Split the spritesheet into individual textureregions
-        TextureRegion[][] playerAnimationTextures2D = playerTexture.split(playerTexture.getRegionWidth(), playerTexture.getRegionHeight()/numFrames);
-        //split can only split spritesheets into 2d arrays of textureregions, so convert it to a 1d array
-        TextureRegion[] playerAnimationTextures = new TextureRegion[numFrames];
-        for (int i = 0; i < numFrames; i++) {
-            playerAnimationTextures[i] = playerAnimationTextures2D[i][0];
-        }
-        //load all the textureregions into an animation, with a duration of 0.0357 per frame.
-        // This sums up to the entire animation being about 0.5 seconds, which appears to work best visually.
-        return new Animation<>(0.0357f, playerAnimationTextures);
-    }
-
-    //Get the zombie walk animation
-    private Animation<TextureRegion> getAnimatedZombieTexture(){
-        // load the spritesheet as a texture, then make a textureRegion out of that texture.
-        TextureRegion zombieTexture = new TextureRegion(new Texture("Enemies/zombieRunning.png"));
-        //The number of sprites in the spritesheet showing each part of the walk animation
-        int numFrames = 14;
-        //Split the spritesheet into individual textureregions
-        TextureRegion[][] zombieAnimationTextures2D = zombieTexture.split(zombieTexture.getRegionWidth(), zombieTexture.getRegionHeight()/numFrames);
-        //split can only split spritesheets into 2d arrays of textureregions, so convert it to a 1d array
-        TextureRegion[] zombieAnimationTextures = new TextureRegion[numFrames];
-        for (int i = 0; i < numFrames; i++) {
-            zombieAnimationTextures[i] = zombieAnimationTextures2D[i][0];
-        }
-        //load all the textureregions into an animation, with a duration of 0.0357 per frame.
-        // This sums up to the entire animation being about 0.5 seconds, which appears to work best visually.
-        return new Animation<>(0.0357f, zombieAnimationTextures);
+        animatedZombieTexture = getAnimation("Enemies/zombieRunning.png", 14);
     }
 
     //Create each weapon and load it into the weapons dictionary
@@ -300,7 +264,9 @@ public class Play implements Screen {
                 scoreIncreaseTimer += Gdx.graphics.getDeltaTime();
             }
 
-            arrangeEntitiesByLayer();
+            //sort the entities in the entities by layer, so that entities with a lower layer will be rendered under
+            // entities with a higher layer
+            entities.sort(Comparator.comparingInt(entity -> entity.layer));
 
             updateCurrentTier();
 
@@ -338,10 +304,19 @@ public class Play implements Screen {
         }
     }
 
-    void arrangeEntitiesByLayer(){
-        //sort the entities in the entities by layer, so that entities with a lower layer will be rendered under
-        // entities with a higher layer
-        entities.sort(Comparator.comparingInt(entity -> entity.layer));
+    //Get an animation, with the texture set at the provided path, and a number of frames equal to numFrames
+    public static Animation<TextureRegion> getAnimation(String path, int numFrames){
+        // load the spritesheet as a texture, then make a textureRegion out of that texture.
+        TextureRegion texture = new TextureRegion(new Texture(path));
+        //Split the spritesheet into individual textureregions
+        TextureRegion[][] AnimationTextures2D = texture.split(texture.getRegionWidth(), texture.getRegionHeight()/numFrames);
+        //split can only split spritesheets into 2d arrays of textureregions, so convert it to a 1d array
+        TextureRegion[] AnimationTextures = new TextureRegion[numFrames];
+        for (int i = 0; i < numFrames; i++) {
+            AnimationTextures[i] = AnimationTextures2D[i][0];
+        }
+        //load all the textureregions into an animation, with a duration of 0.0357 per frame.
+        return new Animation<>(0.0357f, AnimationTextures);
     }
 
     public void handleEnemySpawning(){

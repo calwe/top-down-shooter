@@ -60,7 +60,7 @@ public class EquipmentDrop extends Entity {
         }
     }
 
-    //Unimplemented, but supposed to be overriden by each subclass so that the drop actually provides a benefit
+    //Unimplemented, but supposed to be overridden by each subclass so that the drop actually provides a benefit
     public void ApplyAffect(Player p){
 
     }

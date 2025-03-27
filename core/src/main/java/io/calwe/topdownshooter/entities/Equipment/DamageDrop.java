@@ -1,7 +1,6 @@
 package io.calwe.topdownshooter.entities.Equipment;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Vector2;
 import io.calwe.topdownshooter.entities.Player;
 
 public class DamageDrop extends EquipmentDrop{
