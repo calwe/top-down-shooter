@@ -3,7 +3,6 @@ package io.calwe.topdownshooter.entities;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import io.calwe.topdownshooter.screens.Play;
 
@@ -55,7 +54,7 @@ public class WorldFeature extends Entity{
             //set playerIsInside to true
             playerIsInside = true;
         }
-        //If we are overlapping with a smaller or equal worldfeature, destroy it. This is to prevent trees from spawing inside houses
+        //If we are overlapping with a smaller or equal worldfeature, destroy it. This is to prevent trees from spawning inside houses
         if (e instanceof WorldFeature){
             WorldFeature feature = (WorldFeature)e;
             if (feature.width*feature.height <= width*height){

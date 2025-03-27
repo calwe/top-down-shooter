@@ -110,7 +110,7 @@ public class EquipmentInfo implements Screen {
 
     @Override
     public void dispose() {
-        //dispose of the spritebatch now its not needed
+        //dispose of the spritebatch now it's not needed
         batch.dispose();
         hollowPoint.dispose();
         APBullets.dispose();

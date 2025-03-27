@@ -48,12 +48,12 @@ public class Play implements Screen {
     public static final Dictionary<String, Weapon> epicWeapons = new Hashtable<>();
     public static final Dictionary<String, Weapon> legendaryWeapons = new Hashtable<>();
 
-    //List of all the places world entites have already been generated
-    private final List<Vector2> entitysAlreadyGeneratedCoords = new ArrayList<>();
+    //List of all the places world entities have already been generated
+    private final List<Vector2> entitiesAlreadyGeneratedCoords = new ArrayList<>();
 
     //All the equipment drop options
     public static EquipmentDrop[] equipment;
-    //This is used by the draw method of entities so that all entities can rendered in a single batch draw,
+    //This is used by the draw method of entities so that all entities can be rendered in a single batch draw,
     // rather than in multiple batches
     public final SpriteBatch batch = new SpriteBatch();
 
@@ -182,7 +182,7 @@ public class Play implements Screen {
         }
         //load all the textureregions into an animation, with a duration of 0.0357 per frame.
         // This sums up to the entire animation being about 0.5 seconds, which appears to work best visually.
-        return new Animation<TextureRegion>(0.0357f, playerAnimationTextures);
+        return new Animation<>(0.0357f, playerAnimationTextures);
     }
 
     //Get the zombie walk animation
@@ -200,7 +200,7 @@ public class Play implements Screen {
         }
         //load all the textureregions into an animation, with a duration of 0.0357 per frame.
         // This sums up to the entire animation being about 0.5 seconds, which appears to work best visually.
-        return new Animation<TextureRegion>(0.0357f, zombieAnimationTextures);
+        return new Animation<>(0.0357f, zombieAnimationTextures);
     }
 
     //Create each weapon and load it into the weapons dictionary
@@ -342,13 +342,7 @@ public class Play implements Screen {
     void arrangeEntitiesByLayer(){
         //sort the entities in the entities by layer, so that entities with a lower layer will be rendered under
         // entities with a higher layer
-        entities.sort(new Comparator<Entity>() {
-            public int compare(Entity entity1, Entity entity2) {
-                if (entity1.layer > entity2.layer) return 1;
-                if (entity1.layer < entity2.layer) return -1;
-                return 0;
-            }
-        });
+        entities.sort(Comparator.comparingInt(entity -> entity.layer));
     }
 
     public void handleEnemySpawning(){
@@ -427,7 +421,7 @@ public class Play implements Screen {
     }
 
     public void input() {
-        // Iterate through each entity and call their input function to handle their input, passing in the camera
+        // Iterate through each entity and call their input function to handle their input, passing in the camera.
         // The camera is used for things like getting the coordinates of clicks on the screen
         for (Entity e : entities) {
             e.input(camera);
@@ -440,9 +434,8 @@ public class Play implements Screen {
         //Create a new dictionary of entities and their bounds
         Dictionary<Rectangle, Entity> collideableRects = new Hashtable<>();
         //Loop through each entity and add them and their bounds to the dictionary
-        for (int i = 0; i < entities.size(); i++) {
-            Entity e = entities.get(i);
-            if (e != entity){
+        for (Entity e : entities) {
+            if (e != entity) {
                 collideableRects.put(e.bounds, e);
             }
         }
@@ -464,7 +457,7 @@ public class Play implements Screen {
         batch.setProjectionMatrix(camera.combined);
         // Start loading things to render into the batch
         batch.begin();
-        map.renderWorld(batch, entitysAlreadyGeneratedCoords);
+        map.renderWorld(batch, entitiesAlreadyGeneratedCoords);
         // Iterate through each entity and call their draw function to add them to the batch do draw passing in
         // the spritebatch so that all entities can be drawn at once
         for (Entity e : entities) {

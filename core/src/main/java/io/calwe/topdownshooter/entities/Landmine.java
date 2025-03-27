@@ -6,15 +6,9 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import io.calwe.topdownshooter.entities.Enemies.Enemy;
 import io.calwe.topdownshooter.screens.Play;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Dictionary;
-import java.util.List;
 
 public class Landmine extends Entity{
     boolean detonating = false;
@@ -66,7 +60,7 @@ public class Landmine extends Entity{
         //Loop through all entities - deal damage to all players and enemies within 18.
         // Enemies take damage equal to the health of the toughest enemy - so it will always kill any enemy
         // Players take damage equal to the damage stat.
-        // Also apply knockback to players - enemies will be dead so theres no point applying it to them.
+        // Also apply knockback to players - enemies will be dead so there's no point applying it to them.
         for (Entity e : Play.entities){
             if (pos.dst(e.pos) <= 18){
                 if (e instanceof Enemy){

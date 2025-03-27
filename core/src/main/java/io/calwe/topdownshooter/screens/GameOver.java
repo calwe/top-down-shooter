@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.Color;
 import io.calwe.topdownshooter.Game;
-import io.calwe.topdownshooter.Main;
 
 public class GameOver implements Screen {
     SpriteBatch batch;

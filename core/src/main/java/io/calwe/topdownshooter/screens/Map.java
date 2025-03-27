@@ -1,16 +1,12 @@
 package io.calwe.topdownshooter.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Vector2;
 import io.calwe.topdownshooter.entities.Crate;
@@ -18,29 +14,14 @@ import io.calwe.topdownshooter.entities.Landmine;
 import io.calwe.topdownshooter.entities.Obstacle;
 import io.calwe.topdownshooter.entities.WorldFeature;
 
-import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Random;
-import java.util.Vector;
 
 public class Map {
-    // the tile set texture contains each possible tile for the map in a stitched together column
-    // assets in libGDX are stored in the assets/ folder
-    public static final String TILE_SET_TEXTURE = "map_tileset.png";
     // width/height of each tile in pixels. each tile must be square
     public static final int tileSize = 12;
     // number of tiles in the texture
     public static final int tileCount = 5;
-
-
-    // size of the map in tiles
-    public static final int MAP_WIDTH = 64;
-    public static final int MAP_HEIGHT = 64;
-
-    // libGDX contains a few different tile map renderers, such as isometric or hexagonal
-    // for a top-down game, the orthogonal map renderer is suitable
-    private OrthogonalTiledMapRenderer renderer;
-    private TiledMap map;
 
     private final long initialTime;
 
@@ -67,7 +48,7 @@ public class Map {
         //The distance away map tiles are loaded from the player
         viewDistance = 20;
 
-        //Load all of the textures
+        //Load all the textures
         treeTexture = new Texture("World/treeTop.png");
         treeTransparentTexture = new Texture("World/treeTopTransparent.png");
         trunkTexture = new Texture("World/treeTrunk.png");
@@ -252,7 +233,7 @@ public class Map {
         }
         //load all the textureregions into an animation, with a duration of 0.0357 per frame.
         // This sums up to the entire animation being about 0.5 seconds, which appears to work best visually.
-        return new Animation<TextureRegion>(0.0357f, AnimationTextures);
+        return new Animation<>(0.0357f, AnimationTextures);
     }
 
     //Generate a landmine at the provided coords if nothing has already been generated there

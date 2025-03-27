@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import io.calwe.topdownshooter.Weapon;
@@ -26,7 +25,7 @@ public class Player extends Entity {
 
     //The character's inventory
     public Weapon[] inventory;
-    // What slot in the character's inventory they currently have selected
+    // Which slot in the character's inventory they currently have selected
     int currentInventorySlot = 0;
 
     // The maximum amount of health the player can have, and how much health they start with
@@ -128,7 +127,7 @@ public class Player extends Entity {
     private void handleInventorySwitching(){
         //Inventory slot switching can only handle inventories up to 9 slots long, because it iterates through
         // number keys, starting at 1.
-        // Iterate through number keys up to the length of the inventory (e.g. if the inventory is 3 slots in size,
+        // Iterate through number keys up to the length of the inventory - e.g. if the inventory is 3 slots in size,
         // iterate through numbers 1-3. Check if any of these keys are pressed. If they are and that slot is not
         // empty, switch to that slot
         for (int i = 0; i < inventory.length; i++) {
