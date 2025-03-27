@@ -89,7 +89,6 @@ public class Enemy extends Entity {
         )){
             // convert the angle given from radians to degrees, and rotate the enemy to look in that direction
             sprite.setRotation(angleToLook*-180f/(float)Math.PI);
-
             // Add an offset to the sprite to account for the fact that the sprite is not centered in its image.
             Vector2 spriteOffset = new Vector2(0, 2).rotateDeg(angleToLook * -180f / (float) Math.PI);
             spriteOffset.add(pos);
@@ -99,15 +98,11 @@ public class Enemy extends Entity {
         else{
             //If there is something in the way to get to the player, turn to the right and move in that direction instead.
             int rotation = 90;
-//            if (pos.cpy().add(movementToPlayer.cpy().rotate(90)).dst(target.pos) > pos.cpy().add(movementToPlayer.cpy().rotate(-90)).dst(target.pos)){
-//                rotation = -90;
-//            }
             //Calculate the direction to the player, and move in that direction
             movementToPlayer = new Vector2(target.pos.x-pos.x,target.pos.y-pos.y);
             movementToPlayer.rotateDeg(rotation);
             movementToPlayer.nor();
             movementToPlayer.scl(movementSpeed*Gdx.graphics.getDeltaTime());
-
 
             // convert the angle given from radians to degrees, and rotate the enemy to look in that direction
             sprite.setRotation(angleToLook*-180f/(float)Math.PI + rotation);
@@ -119,6 +114,7 @@ public class Enemy extends Entity {
             sprite.setPosition(spriteOffset.x, spriteOffset.y);
 
         }
+        //if the enemy isn't moving, reset their walk animation
         if (Math.round(movementToPlayer.x*100f)/100f == 0.0f && Math.round(movementToPlayer.y*100f)/100f == 0.0f){
             elapsedTime = 0.0f;
         }
