@@ -14,11 +14,9 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import io.calwe.topdownshooter.Game;
-import io.calwe.topdownshooter.Main;
 import io.calwe.topdownshooter.Shotgun;
 import io.calwe.topdownshooter.Weapon;
 import io.calwe.topdownshooter.entities.*;
-import io.calwe.topdownshooter.ui.HUD;
 import io.calwe.topdownshooter.entities.Enemies.ChargingEnemy;
 import io.calwe.topdownshooter.entities.Enemies.Enemy;
 import io.calwe.topdownshooter.entities.Enemies.ExplodingEnemy;
@@ -36,28 +34,28 @@ public class Play implements Screen {
     private Map map;
 
     // A master list of every moving object in the world, so that they can all be updated and rendered easily
-    public static List<Entity> entities;
+    public static final List<Entity> entities = new ArrayList<>();
     //Separate lists are required for adding and removing entities, as entities creating or destroying other entities
     //is generally handled in entities' logic function, which is run by a function iterating through each entity
     //and running their logic. Adding or removing from a list that is being iterated through can cause problems,
     //so entity creation and destruction is added to a list and handled at the end of the rendering loop, separately.
-    public static List<Entity> entitiesToAdd = new ArrayList<>();
-    public static List<Entity> entitiesToRemove = new ArrayList<>();
+    public static final List<Entity> entitiesToAdd = new ArrayList<>();
+    public static final List<Entity> entitiesToRemove = new ArrayList<>();
     //This is a dictionary, linking every weapon to its name so that they are easily accessible
-    public static Dictionary<String, Weapon> commonWeapons = new Hashtable<>();
-    public static Dictionary<String, Weapon> uncommonWeapons = new Hashtable<>();
-    public static Dictionary<String, Weapon> rareWeapons = new Hashtable<>();
-    public static Dictionary<String, Weapon> epicWeapons = new Hashtable<>();
-    public static Dictionary<String, Weapon> legendaryWeapons = new Hashtable<>();
+    public static final Dictionary<String, Weapon> commonWeapons = new Hashtable<>();
+    public static final Dictionary<String, Weapon> uncommonWeapons = new Hashtable<>();
+    public static final Dictionary<String, Weapon> rareWeapons = new Hashtable<>();
+    public static final Dictionary<String, Weapon> epicWeapons = new Hashtable<>();
+    public static final Dictionary<String, Weapon> legendaryWeapons = new Hashtable<>();
 
     //List of all the places world entites have already been generated
-    private List<Vector2> entitysAlreadyGeneratedCoords = new ArrayList<>();
+    private final List<Vector2> entitysAlreadyGeneratedCoords = new ArrayList<>();
 
     //All the equipment drop options
     public static EquipmentDrop[] equipment;
     //This is used by the draw method of entities so that all entities can rendered in a single batch draw,
     // rather than in multiple batches
-    public SpriteBatch batch;
+    public final SpriteBatch batch = new SpriteBatch();
 
     //The player
     public static Player player;
@@ -76,7 +74,7 @@ public class Play implements Screen {
     public static Game game;
 
     //The enemy cap at each tier
-    private int[] enemyCapAtTier = new int[]{
+    private final int[] enemyCapAtTier = new int[]{
         3,
         4,
         5,
@@ -110,35 +108,22 @@ public class Play implements Screen {
     public void show() {
         // Initialize the map, spritebatch, and entities array
         map = new Map();
-        batch = new SpriteBatch();
-        entities = new ArrayList<Entity>();
         //Load the textures and sounds
-        blueZombieTexture = new Texture("Enemies/blueZombie.png");
-        redZombieTexture = new Texture("Enemies/redZombie.png");
-        orangeZombieTexture = new Texture("Enemies/orangeZombie.png");
-        greyZombieTexture = new Texture("Enemies/greyZombie.png");
-        zombieProjectileTexture = new Texture("Enemies/zombieProjectile.png");
-        chargingZombieLockingOnTexture = new Texture("Enemies/ChargingZombieLockingOn.png");
-        zombieParticles = new Texture[]{
-            new Texture("bloodParticle.png"),
-            new Texture("Enemies/zombieParticle.png")
-        };
-        animatedZombieTexture = getAnimatedZombieTexture();
+        loadTextures();
         zombieHurtSound = Gdx.audio.newSound(Gdx.files.internal("Enemies/zombieHit.mp3"));
-
 
         //Populate the weapons dictionary with weapons
         initializeWeapons();
 
         //Load the equipment drops
         equipment = new EquipmentDrop[]{
-            new CritChanceDrop(new Texture("Equipment/RedDotSight.png"), "Red dot sight", "Crit chance +7%.", 7),
-            new CritDamageDrop(new Texture("Equipment/AP-rounds.png"), "Armor piercing bullets", "Crit damage +25%", 0.5f),
+            new CritChanceDrop(new Texture("Equipment/redDotSight.png"), "Red dot sight", "Crit chance +7%.", 7),
+            new CritDamageDrop(new Texture("Equipment/APRounds.png"), "Armor piercing bullets", "Crit damage +25%", 0.5f),
             new DamageDrop(new Texture("Equipment/ammo.png"), "Hollow points", "Damage +20%", 0.2f),
             new HealDrop(new Texture("Equipment/medkit.png"), "Medkit", "Heal 25%", 25),
-            new HealthDrop(new Texture("Equipment/FlakVest.png"), "Kevlar vest", "Max health +10%", 10),
-            new SaveAmmoDrop(new Texture("Equipment/Magazine.png"), "Extended magazine", "8% chance to save ammo.", 8),
-            new BombDrop(new Texture("Equipment/Bomb.png"), "Bomb", "Clear all enemies on the screen. ")
+            new HealthDrop(new Texture("Equipment/flakVest.png"), "Kevlar vest", "Max health +10%", 10),
+            new SaveAmmoDrop(new Texture("Equipment/magazine.png"), "Extended magazine", "8% chance to save ammo.", 8),
+            new BombDrop(new Texture("Equipment/bomb.png"), "Bomb", "Clear all enemies on the screen. ")
         };
 
         // create a new orthographic (no 3d perspective) camera, and set its position to the center of the map
@@ -168,6 +153,20 @@ public class Play implements Screen {
         backgroundMusic.setLooping(id, true);
     }
 
+    private void loadTextures() {
+        blueZombieTexture = new Texture("Enemies/blueZombie.png");
+        redZombieTexture = new Texture("Enemies/redZombie.png");
+        orangeZombieTexture = new Texture("Enemies/orangeZombie.png");
+        greyZombieTexture = new Texture("Enemies/greyZombie.png");
+        zombieProjectileTexture = new Texture("Enemies/zombieProjectile.png");
+        chargingZombieLockingOnTexture = new Texture("Enemies/chargingZombieLockingOn.png");
+        zombieParticles = new Texture[]{
+            new Texture("bloodParticle.png"),
+            new Texture("Enemies/zombieParticle.png")
+        };
+        animatedZombieTexture = getAnimatedZombieTexture();
+    }
+
     //Get the humanoid walk animation
     private Animation<TextureRegion> getAnimatedPlayerTexture(){
         // load the spritesheet as a texture, then make a textureRegion out of that texture.
@@ -186,66 +185,66 @@ public class Play implements Screen {
         return new Animation<TextureRegion>(0.0357f, playerAnimationTextures);
     }
 
-    //Get the humanoid walk animation
+    //Get the zombie walk animation
     private Animation<TextureRegion> getAnimatedZombieTexture(){
         // load the spritesheet as a texture, then make a textureRegion out of that texture.
-        TextureRegion playerTexture = new TextureRegion(new Texture("zombieRunning.png"));
+        TextureRegion zombieTexture = new TextureRegion(new Texture("Enemies/zombieRunning.png"));
         //The number of sprites in the spritesheet showing each part of the walk animation
         int numFrames = 14;
         //Split the spritesheet into individual textureregions
-        TextureRegion[][] playerAnimationTextures2D = playerTexture.split(playerTexture.getRegionWidth(), playerTexture.getRegionHeight()/numFrames);
+        TextureRegion[][] zombieAnimationTextures2D = zombieTexture.split(zombieTexture.getRegionWidth(), zombieTexture.getRegionHeight()/numFrames);
         //split can only split spritesheets into 2d arrays of textureregions, so convert it to a 1d array
-        TextureRegion[] playerAnimationTextures = new TextureRegion[numFrames];
+        TextureRegion[] zombieAnimationTextures = new TextureRegion[numFrames];
         for (int i = 0; i < numFrames; i++) {
-            playerAnimationTextures[i] = playerAnimationTextures2D[i][0];
+            zombieAnimationTextures[i] = zombieAnimationTextures2D[i][0];
         }
         //load all the textureregions into an animation, with a duration of 0.0357 per frame.
         // This sums up to the entire animation being about 0.5 seconds, which appears to work best visually.
-        return new Animation<TextureRegion>(0.0357f, playerAnimationTextures);
+        return new Animation<TextureRegion>(0.0357f, zombieAnimationTextures);
     }
 
     //Create each weapon and load it into the weapons dictionary
     private void initializeWeapons() {
         //Load the bullet texture all weapons use
-        Texture bulletTexture = new Texture("bullet.png");
+        Texture bulletTexture = new Texture("Weapons/bullet.png");
         //Load the sounds the weapons use
-        Sound fireSound = Gdx.audio.newSound(Gdx.files.internal("gunshot.mp3"));
-        Sound emptySound = Gdx.audio.newSound(Gdx.files.internal("noAmmo.mp3"));
+        Sound fireSound = Gdx.audio.newSound(Gdx.files.internal("Weapons/gunshot.mp3"));
+        Sound emptySound = Gdx.audio.newSound(Gdx.files.internal("Weapons/noAmmo.mp3"));
 
         //Initialise the common weapons
-        commonWeapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("PistolSideOn.png"), bulletTexture, fireSound, emptySound, 18, 10, 2.5f, 10, 10f, 1f, 1f, 5));
-        commonWeapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMGSideOn.png"), bulletTexture, fireSound, emptySound, 90, 3, 10, 5, 15f, 0.5f, 0.4f, 5));
-        commonWeapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 60,  5, 5, 15, 5f, 1.5f, 0.7f, 7));
-        commonWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 8, 22, 0.75f, 75, 0.1f, 2f, 3f, 7, true));
-        commonWeapons.put("Shotgun", new Shotgun(new Texture("shotgun-aiming.png"), new Texture("shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 10, 6, 1, 5, 10, 2, 1, 5));
+        commonWeapons.put("Pistol", new Weapon(new Texture("Weapons/pistolAiming.png"), new Texture("Weapons/pistolSideOn.png"), bulletTexture, fireSound, emptySound, 18, 10, 2.5f, 10, 10f, 1f, 1f, 5));
+        commonWeapons.put("SMG", new Weapon(new Texture("Weapons/SMGAiming.png"), new Texture("Weapons/SMGSideOn.png"), bulletTexture, fireSound, emptySound, 90, 3, 10, 5, 15f, 0.5f, 0.4f, 5));
+        commonWeapons.put("Assault Rifle", new Weapon(new Texture("Weapons/assaultRifleAiming.png"), new Texture("Weapons/assaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 60,  5, 5, 15, 5f, 1.5f, 0.7f, 7));
+        commonWeapons.put("Sniper Rifle", new Weapon(new Texture("Weapons/sniperAiming.png"), new Texture("Weapons/sniperSideOn.png"), bulletTexture, fireSound, emptySound, 8, 22, 0.75f, 75, 0.1f, 2f, 3f, 7, true));
+        commonWeapons.put("Shotgun", new Shotgun(new Texture("Weapons/shotgunAiming.png"), new Texture("Weapons/shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 10, 6, 1, 5, 10, 2, 1, 5));
 
         //Initialise the uncommon weapons
-        uncommonWeapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("PistolSideOn.png"), bulletTexture, fireSound, emptySound, 18, 13, 2.5f, 10, 10f, 1f, 1f, 5));
-        uncommonWeapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMGSideOn.png"), bulletTexture, fireSound, emptySound, 90, 4, 10, 5, 15f, 0.5f, 0.4f, 5));
-        uncommonWeapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 60,  7, 5, 15, 5f, 1.5f, 0.7f, 7));
-        uncommonWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 8, 29, 0.75f, 75, 0.1f, 2f, 3f, 7, true));
-        uncommonWeapons.put("Shotgun", new Shotgun(new Texture("shotgun-aiming.png"), new Texture("shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 10, 8, 1, 5, 10, 2, 1, 5));
+        uncommonWeapons.put("Pistol", new Weapon(new Texture("Weapons/pistolAiming.png"), new Texture("Weapons/pistolSideOn.png"), bulletTexture, fireSound, emptySound, 18, 13, 2.5f, 10, 10f, 1f, 1f, 5));
+        uncommonWeapons.put("SMG", new Weapon(new Texture("Weapons/SMGAiming.png"), new Texture("Weapons/SMGSideOn.png"), bulletTexture, fireSound, emptySound, 90, 4, 10, 5, 15f, 0.5f, 0.4f, 5));
+        uncommonWeapons.put("Assault Rifle", new Weapon(new Texture("Weapons/assaultRifleAiming.png"), new Texture("Weapons/assaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 60,  7, 5, 15, 5f, 1.5f, 0.7f, 7));
+        uncommonWeapons.put("Sniper Rifle", new Weapon(new Texture("Weapons/sniperAiming.png"), new Texture("Weapons/sniperSideOn.png"), bulletTexture, fireSound, emptySound, 8, 29, 0.75f, 75, 0.1f, 2f, 3f, 7, true));
+        uncommonWeapons.put("Shotgun", new Shotgun(new Texture("Weapons/shotgunAiming.png"), new Texture("Weapons/shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 10, 8, 1, 5, 10, 2, 1, 5));
 
         //Initialise the rare weapons
-        rareWeapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("PistolSideOn.png"), bulletTexture, fireSound, emptySound, 18, 17, 2.5f, 10, 10f, 1f, 1f, 5));
-        rareWeapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMGSideOn.png"), bulletTexture, fireSound, emptySound, 90, 5, 10, 5, 15f, 0.5f, 0.4f, 5));
-        rareWeapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 60,  8, 5, 15, 5f, 1.5f, 0.7f, 7));
-        rareWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 8, 37, 0.75f, 75, 0.1f, 2f, 3f, 7, true));
-        rareWeapons.put("Shotgun", new Shotgun(new Texture("shotgun-aiming.png"), new Texture("shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 10, 10, 1, 5, 10, 2, 1, 5));
+        rareWeapons.put("Pistol", new Weapon(new Texture("Weapons/pistolAiming.png"), new Texture("Weapons/pistolSideOn.png"), bulletTexture, fireSound, emptySound, 18, 17, 2.5f, 10, 10f, 1f, 1f, 5));
+        rareWeapons.put("SMG", new Weapon(new Texture("Weapons/SMGAiming.png"), new Texture("Weapons/SMGSideOn.png"), bulletTexture, fireSound, emptySound, 90, 5, 10, 5, 15f, 0.5f, 0.4f, 5));
+        rareWeapons.put("Assault Rifle", new Weapon(new Texture("Weapons/assaultRifleAiming.png"), new Texture("Weapons/assaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 60,  8, 5, 15, 5f, 1.5f, 0.7f, 7));
+        rareWeapons.put("Sniper Rifle", new Weapon(new Texture("Weapons/sniperAiming.png"), new Texture("Weapons/sniperSideOn.png"), bulletTexture, fireSound, emptySound, 8, 37, 0.75f, 75, 0.1f, 2f, 3f, 7, true));
+        rareWeapons.put("Shotgun", new Shotgun(new Texture("Weapons/shotgunAiming.png"), new Texture("Weapons/shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 10, 10, 1, 5, 10, 2, 1, 5));
 
         //Initialise the epic weapons
-        epicWeapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("PistolSideOn.png"), bulletTexture, fireSound, emptySound, 18, 20, 2.5f, 10, 10f, 1f, 1f, 5));
-        epicWeapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMGSideOn.png"), bulletTexture, fireSound, emptySound, 90, 6, 10, 5, 15f, 0.5f, 0.4f, 5));
-        epicWeapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 60,  10, 5, 15, 5f, 1.5f, 0.7f, 7));
-        epicWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 8, 44, 0.75f, 75, 0.1f, 2f, 3f, 7, true));
-        epicWeapons.put("Shotgun", new Shotgun(new Texture("shotgun-aiming.png"), new Texture("shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 10, 12, 1, 5, 10, 2, 1, 5));
+        epicWeapons.put("Pistol", new Weapon(new Texture("Weapons/pistolAiming.png"), new Texture("Weapons/pistolSideOn.png"), bulletTexture, fireSound, emptySound, 18, 20, 2.5f, 10, 10f, 1f, 1f, 5));
+        epicWeapons.put("SMG", new Weapon(new Texture("Weapons/SMGAiming.png"), new Texture("Weapons/SMGSideOn.png"), bulletTexture, fireSound, emptySound, 90, 6, 10, 5, 15f, 0.5f, 0.4f, 5));
+        epicWeapons.put("Assault Rifle", new Weapon(new Texture("Weapons/assaultRifleAiming.png"), new Texture("Weapons/assaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 60,  10, 5, 15, 5f, 1.5f, 0.7f, 7));
+        epicWeapons.put("Sniper Rifle", new Weapon(new Texture("Weapons/sniperAiming.png"), new Texture("Weapons/sniperSideOn.png"), bulletTexture, fireSound, emptySound, 8, 44, 0.75f, 75, 0.1f, 2f, 3f, 7, true));
+        epicWeapons.put("Shotgun", new Shotgun(new Texture("Weapons/shotgunAiming.png"), new Texture("Weapons/shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 10, 12, 1, 5, 10, 2, 1, 5));
 
         //Initialise the legendary weapons
-        legendaryWeapons.put("Pistol", new Weapon(new Texture("pistol-aiming.png"), new Texture("PistolSideOn.png"), bulletTexture, fireSound, emptySound, 18, 23, 2.5f, 10, 10f, 1f, 1f, 5));
-        legendaryWeapons.put("SMG", new Weapon(new Texture("SMG-aiming.png"), new Texture("SMGSideOn.png"), bulletTexture, fireSound, emptySound, 90, 7, 10, 5, 15f, 0.5f, 0.4f, 5));
-        legendaryWeapons.put("Assault Rifle", new Weapon(new Texture("assaultRifle-aiming.png"), new Texture("AssaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 60,  12, 5, 15, 5f, 1.5f, 0.7f, 7));
-        legendaryWeapons.put("Sniper Rifle", new Weapon(new Texture("sniper-aiming.png"), new Texture("sniperSideOn.png"), bulletTexture, fireSound, emptySound, 8, 51, 0.75f, 75, 0.1f, 2f, 3f, 7, true));
-        legendaryWeapons.put("Shotgun", new Shotgun(new Texture("shotgun-aiming.png"), new Texture("shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 10, 14, 1, 5, 10, 2, 1, 5));
+        legendaryWeapons.put("Pistol", new Weapon(new Texture("Weapons/pistolAiming.png"), new Texture("Weapons/pistolSideOn.png"), bulletTexture, fireSound, emptySound, 18, 23, 2.5f, 10, 10f, 1f, 1f, 5));
+        legendaryWeapons.put("SMG", new Weapon(new Texture("Weapons/SMGAiming.png"), new Texture("Weapons/SMGSideOn.png"), bulletTexture, fireSound, emptySound, 90, 7, 10, 5, 15f, 0.5f, 0.4f, 5));
+        legendaryWeapons.put("Assault Rifle", new Weapon(new Texture("Weapons/assaultRifleAiming.png"), new Texture("Weapons/assaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 60,  12, 5, 15, 5f, 1.5f, 0.7f, 7));
+        legendaryWeapons.put("Sniper Rifle", new Weapon(new Texture("Weapons/sniperAiming.png"), new Texture("Weapons/sniperSideOn.png"), bulletTexture, fireSound, emptySound, 8, 51, 0.75f, 75, 0.1f, 2f, 3f, 7, true));
+        legendaryWeapons.put("Shotgun", new Shotgun(new Texture("Weapons/shotgunAiming.png"), new Texture("Weapons/shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 10, 14, 1, 5, 10, 2, 1, 5));
     }
 
 
@@ -302,29 +301,10 @@ public class Play implements Screen {
                 scoreIncreaseTimer += Gdx.graphics.getDeltaTime();
             }
 
-            //sort the entities in the entities by layer, so that entities with a lower layer will be rendered under
-            // entities with a higher layer
-            entities.sort(new Comparator<Entity>() {
-                public int compare(Entity entity1, Entity entity2) {
-                    if (entity1.layer > entity2.layer) return 1;
-                    if (entity1.layer < entity2.layer) return -1;
-                    return 0;
-                }
-            });
+            arrangeEntitiesByLayer();
 
-            //Update the current tier in case the score has gone over the boundary into the next tier
-            if (player.score > 3500){
-                currentTier = 5;
-            }
-            else if (player.score > 2000){
-                currentTier = 4;
-            }
-            else if (player.score > 1000){
-                currentTier = 3;
-            }
-            else if (player.score > 500){
-                currentTier = 2;
-            }
+            updateCurrentTier();
+
         }
         //Log any errors
         catch (Exception error){
@@ -343,6 +323,33 @@ public class Play implements Screen {
         return numEnemies;
     }
 
+    void updateCurrentTier(){
+        //Update the current tier in case the score has gone over the boundary into the next tier
+        if (player.score > 3500){
+            currentTier = 5;
+        }
+        else if (player.score > 2000){
+            currentTier = 4;
+        }
+        else if (player.score > 1000){
+            currentTier = 3;
+        }
+        else if (player.score > 500){
+            currentTier = 2;
+        }
+    }
+
+    void arrangeEntitiesByLayer(){
+        //sort the entities in the entities by layer, so that entities with a lower layer will be rendered under
+        // entities with a higher layer
+        entities.sort(new Comparator<Entity>() {
+            public int compare(Entity entity1, Entity entity2) {
+                if (entity1.layer > entity2.layer) return 1;
+                if (entity1.layer < entity2.layer) return -1;
+                return 0;
+            }
+        });
+    }
 
     public void handleEnemySpawning(){
         //Check if the cooldown to spawn a new enemy has elapsed
@@ -370,8 +377,7 @@ public class Play implements Screen {
                         spawnPos,
                         player,
                         zombieParticles,
-                        zombieProjectileTexture,
-                        1.5f
+                        zombieProjectileTexture
                     );
                 }
                 //15% chance to spawn a red charging zombie
@@ -383,11 +389,7 @@ public class Play implements Screen {
                         spawnPos,
                         player,
                         zombieParticles,
-                        chargingZombieLockingOnTexture,
-                        4,
-                        0.5f,
-                        40,
-                        0.7f
+                        chargingZombieLockingOnTexture
                     );
                 }
                 //15% chance to spawn a grey ranged zombie
@@ -399,8 +401,6 @@ public class Play implements Screen {
                         spawnPos,
                         player,
                         zombieParticles,
-                        2,
-                        2.5f,
                         zombieProjectileTexture
                     );
                 }
@@ -480,7 +480,7 @@ public class Play implements Screen {
     public void resize(int width, int height) {
         //Resize the viewport
         viewport.update(width, height);
-	player.resize(width, height);
+	    player.resize(width, height);
     }
 
     @Override

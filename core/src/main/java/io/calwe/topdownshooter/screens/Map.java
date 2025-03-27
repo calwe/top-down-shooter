@@ -68,23 +68,23 @@ public class Map {
         viewDistance = 20;
 
         //Load all of the textures
-        treeTexture = new Texture("World/TreeTop.png");
-        treeTransparentTexture = new Texture("World/TreeTopTransparent.png");
-        trunkTexture = new Texture("World/TreeTrunk.png");
+        treeTexture = new Texture("World/treeTop.png");
+        treeTransparentTexture = new Texture("World/treeTopTransparent.png");
+        trunkTexture = new Texture("World/treeTrunk.png");
         crateTexture = new Texture("crate.png");
         carTextures = new Texture[]{
-            new Texture("World/Cars/BlackCar.png"),
-            new Texture("World/Cars/BlueCar.png"),
-            new Texture("World/Cars/GrayCar.png"),
-            new Texture("World/Cars/GreenCar.png"),
-            new Texture("World/Cars/RedCar.png"),
-            new Texture("World/Cars/WhiteCar.png"),
+            new Texture("World/Cars/blackCar.png"),
+            new Texture("World/Cars/blueCar.png"),
+            new Texture("World/Cars/grayCar.png"),
+            new Texture("World/Cars/greenCar.png"),
+            new Texture("World/Cars/redCar.png"),
+            new Texture("World/Cars/whiteCar.png"),
         };
         houseTexture = new Texture("World/roof.png");
         houseTransparentTexture = new Texture("World/roofTransparent.png");
-        wallTexture = new Texture("World/Wall.png");
-        floorTexture = new Texture("World/Floor.png");
-        landmineTexture = new Texture("World/Landmine.png");
+        wallTexture = new Texture("World/wall.png");
+        floorTexture = new Texture("World/houseFloor.png");
+        landmineTexture = new Texture("World/landmine.png");
         explosionAnimation = getLandmineExplosionAnimation();
 
         //Create the grass tileset

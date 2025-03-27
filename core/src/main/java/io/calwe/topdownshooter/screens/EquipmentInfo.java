@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import io.calwe.topdownshooter.Game;
-import io.calwe.topdownshooter.Main;
 
 public class EquipmentInfo implements Screen {
     SpriteBatch batch;
@@ -28,12 +27,12 @@ public class EquipmentInfo implements Screen {
         //Initialise the spritebatch and load all the textures
         batch = new SpriteBatch();
         hollowPoint = new Texture("Equipment/ammo.png");
-        APBullets = new Texture("Equipment/AP-rounds.png");
+        APBullets = new Texture("Equipment/APRounds.png");
         medkit = new Texture("Equipment/medkit.png");
-        kevlar = new Texture("Equipment/FlakVest.png");
-        redDotSight = new Texture("Equipment/RedDotSight.png");
-        magazine = new Texture("Equipment/Magazine.png");
-        bomb = new Texture("Equipment/OutlinedBomb.png");
+        kevlar = new Texture("Equipment/flakVest.png");
+        redDotSight = new Texture("Equipment/redDotSight.png");
+        magazine = new Texture("Equipment/magazine.png");
+        bomb = new Texture("Equipment/outlinedBomb.png");
     }
 
     @Override

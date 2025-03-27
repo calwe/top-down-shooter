@@ -12,10 +12,18 @@ public class Weapon{
     int damage;
     // Number of bullets that can be fired per second
     float fireRate;
+    long timeLastFired = 0;
+    //chance to deal double damage on hit
     int critChance;
+
     float inaccuracy;
+    //knockback applied to the player when they fire the weapon
     public float recoil;
+    //knockback applied to the enemy on hit
     float knockback;
+
+    boolean pierces = false;
+
     float bulletSpeed;
     public int ammo;
 
@@ -25,10 +33,6 @@ public class Weapon{
 
     Sound fireSound;
     Sound emptySound;
-
-    long timeLastFired = 0;
-
-    boolean pierces = false;
 
     public Weapon(Texture texture, Texture sideOn, Texture bulletTexture, Sound fireSound, Sound emptySound, int ammo, int damage, float fireRate, int critChance, float inaccuracy, float recoil, float knockback, float bulletSpeed){
         this.texture = texture;

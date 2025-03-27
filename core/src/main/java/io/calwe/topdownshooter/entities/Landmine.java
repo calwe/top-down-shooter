@@ -17,14 +17,15 @@ import java.util.Dictionary;
 import java.util.List;
 
 public class Landmine extends Entity{
-    boolean detonating;
+    boolean detonating = false;
     float timer = 0;
-    float knockback;
-    Animation<TextureRegion> explodeAnimation;
-    int damage;
+    final float knockback;
+    final Animation<TextureRegion> explodeAnimation;
+    //The damage dealt to the player by an explosion.
+    // Enemies take damage based on a formula so they always take more damage than they have health so the mines always kill them
+    final int playerDamage = 30;
 
     public Landmine(Texture texture, Vector2 position, Animation<TextureRegion> explodeAnimation, float knockback){
-        this.damage = 30;
         this.knockback = knockback;
         this.layer = 0;
         this.hasSolidCollision = false;
@@ -56,46 +57,6 @@ public class Landmine extends Entity{
 
     }
 
-    @Override
-    //This handles collisions while moving
-    protected void tryMove () {
-        //Calculate the current collider bounds
-        bounds.x = pos.x;
-        bounds.y = pos.y;
-        bounds.width = width;
-        bounds.height = height;
-        //Get all the other objects we could collide with
-        Dictionary<Rectangle, Entity> collideableRects = Play.getOtherColliderRects(this);
-        Object[] rects = Collections.list(collideableRects.keys()).toArray();
-        List<Entity> entityCollisions = new ArrayList<>();
-        // Iterate through each other object we could collide with
-        for (int i = 0; i < rects.length; i++) {
-            Rectangle rect = (Rectangle)rects[i];
-            //If we collide with an entity
-            if (bounds.overlaps(rect)) {
-                //Add them to the list of entities we collided with
-                if (!entityCollisions.contains(collideableRects.get(rect))) {
-                    entityCollisions.add(collideableRects.get(rect));
-                }
-            }
-        }
-        // Iterate through each other object we could collide with
-        for (int i = 0; i < rects.length; i++) {
-            Rectangle rect = (Rectangle)rects[i];
-            //If we collide with an entity
-            if (bounds.overlaps(rect)) {
-                //Add them to the list of entities we collided with
-                if (!entityCollisions.contains(collideableRects.get(rect))) {
-                    entityCollisions.add(collideableRects.get(rect));
-                }
-            }
-        }
-        //Call OnEntityCollision for each entity we collided with
-        for (Entity e : entityCollisions) {
-            OnEntityCollision(e);
-        }
-    }
-
     public void  detonate(){
         //Set detonating to true
         //Resize the entity because the explosion is bigger than the landmine
@@ -112,7 +73,7 @@ public class Landmine extends Entity{
                     ((Enemy)e).takeDamage(Math.round(25 * (1 + (0.33f*(Play.currentTier-1)))));
                 }
                 else if (e instanceof Player){
-                    ((Player)e).takeDamage(damage);
+                    ((Player)e).takeDamage(playerDamage);
                     Vector2 direction = new Vector2(e.pos.x- pos.x, e.pos.y - pos.y);
                     direction.nor();
                     direction.scl(knockback);

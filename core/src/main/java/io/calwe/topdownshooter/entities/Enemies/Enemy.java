@@ -26,39 +26,36 @@ public class Enemy extends Entity {
     // The amount of health the enemy currently has remaining
     int health;
     // The amount of damage done to the player on contact
-    int damage;
+    int damage = 10;
     //The amount of knockback inflicted on the player on contact
-    float knockback;
+    float knockback = 2;
     //how fast the enemy moves
-    float movementSpeed;
+    float movementSpeed = 9;
 
     // The enemy's movement animation
-    Animation<TextureRegion> enemyWalkAnimation;
+    final Animation<TextureRegion> enemyWalkAnimation;
     // A float that stores the time since the animation started playing so we can figure out what frame
     // of the animation to display
     float elapsedTime = 0.0f;
 
     //The body texture of the enemy
-    Texture enemyTexture;
+    final Texture enemyTexture;
 
     //The player, so that we can track their position to move towards
-    Player target;
+    final Player target;
 
     //The sound the zombie plays when it takes damage
-    Sound hurtSound;
+    final Sound hurtSound;
 
     //The blood particles the zombie releases when it takes damage
-    Texture[] damageParticles;
+    final Texture[] damageParticles;
 
     // The constructor - initialize all the variables
     public Enemy(Texture texture, Animation<TextureRegion> enemyWalkAnimation, Sound hurtSound, Vector2 startPos, Player target, Texture[] damageParticles) {
         this.maxHealth = Math.round(20 * (1 + (0.33f*(Play.currentTier-1))));
         this.health = maxHealth;
-        this.damage = 10;
-        this.knockback = 2f;
         this.pos = startPos;
         this.momentum = new Vector2(0, 0);
-        this.movementSpeed = 9f;
         this.enemyWalkAnimation = enemyWalkAnimation;
         this.slide = 0.85f;
         this.width = 12;

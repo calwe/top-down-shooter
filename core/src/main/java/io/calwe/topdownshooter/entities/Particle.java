@@ -10,7 +10,7 @@ import io.calwe.topdownshooter.screens.Play;
 // the blood particles released when players are damaged
 public class Particle extends Entity {
     //How long the particle exists for
-    float lifeTime;
+    final float lifeTime;
     //how long the particle has existed for
     float timer = 0;
 
@@ -34,8 +34,8 @@ public class Particle extends Entity {
 
     @Override
     public void logic() {
-        //Move and check for collisions
-        tryMove();
+        //Move the particle without checking for collisions - particles never collide with anything
+        pos = new Vector2(pos.x + momentum.x, pos.y + momentum.y);
         //Reduce their momentum over time
         momentum.scl(slide);
         sprite.setPosition(pos.x, pos.y);

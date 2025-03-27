@@ -10,13 +10,13 @@ import io.calwe.topdownshooter.screens.Play;
 //Floating text that rises up from its position - used for showing the damage when you hit an enemy
 public class HitText extends Entity {
     //The text to be displayed
-    String text;
+    final String text;
     //How long before the text should disappear
-    float lifeTime;
+    float lifeTime = 0.2f;
     //The timer to keep track of how long the text has existed
-    float timer;
+    float timer = 0;
     //The font
-    BitmapFont font;
+    final BitmapFont font;
 
     public HitText(String text, Vector2 startPos, Color color){
         this.font = new BitmapFont();
@@ -31,8 +31,6 @@ public class HitText extends Entity {
         this.hasSolidCollision = false;
         this.boundsHeightReduction = 0;
         this.boundsWidthReduction = 0;
-        this.lifeTime = 0.2f;
-        this.timer = 0;
         bounds.x = pos.x + boundsWidthReduction;
         bounds.y = pos.y + boundsHeightReduction;
         bounds.width = width - (boundsWidthReduction*2f);

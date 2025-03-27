@@ -11,15 +11,14 @@ import io.calwe.topdownshooter.screens.Play;
 
 public class ExplodingEnemy extends Enemy {
 
-    float projectileSpeed;
-    Texture projectileTexture;
+    final float projectileSpeed = 1.5f;
+    final Texture projectileTexture;
 
     // The constructor - initialize all the variables
-    public ExplodingEnemy(Texture texture, Animation<TextureRegion> enemyWalkAnimation, Sound hurtSound, Vector2 startPos, Player target, Texture[] damageParticles, Texture projectileTexture, float projectileSpeed) {
+    public ExplodingEnemy(Texture texture, Animation<TextureRegion> enemyWalkAnimation, Sound hurtSound, Vector2 startPos, Player target, Texture[] damageParticles, Texture projectileTexture) {
         super(texture,enemyWalkAnimation,hurtSound,startPos,target,damageParticles);
         this.maxHealth = Math.round(10 * (1 + (0.33f*(Play.currentTier-1))));
         this.health = maxHealth;
-        this.projectileSpeed = projectileSpeed;
         this.projectileTexture = projectileTexture;
     }
 

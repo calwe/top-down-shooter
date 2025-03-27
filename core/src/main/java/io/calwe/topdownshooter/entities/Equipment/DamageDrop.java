@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import io.calwe.topdownshooter.entities.Player;
 
 public class DamageDrop extends EquipmentDrop{
-    float damageMultiplier;
+    final float damageMultiplier;
     public DamageDrop(Texture texture, String upgradeName, String upgradeDescription, float damageMultiplier){
         super(texture, upgradeName, upgradeDescription);
         this.damageMultiplier = damageMultiplier;

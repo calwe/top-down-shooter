@@ -14,35 +14,28 @@ import io.calwe.topdownshooter.screens.Play;
 
 public class ChargingEnemy extends Enemy {
     Sprite chargingSprite;
-    float attackCooldown;
+    final float attackCooldown = 4;
     float attackCooldownTimer;
-    float chargeUpTime;
-    float chargeUpTimer;
-    float chargeSpeed;
-    boolean preparingToCharge;
-    boolean charging;
-    float chargeDuration;
-    float chargeTimer;
+    final float chargeUpTime = 0.5f;
+    float chargeUpTimer = 0;
+    final float chargeSpeed = 40;
+    boolean preparingToCharge = false;
+    boolean charging = false;
+    final float chargeDuration = 0.7f;
+    float chargeTimer = 0;
     Vector2 chargeDirection;
 
+
     // The constructor - initialize all the variables
-    public ChargingEnemy(Texture texture, Animation<TextureRegion> enemyWalkAnimation, Sound hurtSound, Vector2 startPos, Player target, Texture[] damageParticles, Texture attackTelegraphTexture, float attackCooldown, float chargeUpTime, float chargeSpeed, float chargeDuration) {
+    public ChargingEnemy(Texture texture, Animation<TextureRegion> enemyWalkAnimation, Sound hurtSound, Vector2 startPos, Player target, Texture[] damageParticles, Texture attackTelegraphTexture) {
         super(texture, enemyWalkAnimation, hurtSound, startPos, target, damageParticles);
         this.maxHealth = Math.round(25 * (1 + (0.33f*(Play.currentTier-1))));
         this.health = maxHealth;
         this.chargingSprite = new Sprite(attackTelegraphTexture, width, 128);
-        this.attackCooldown = attackCooldown;
         this.attackCooldownTimer = attackCooldown;
-        this.chargeUpTime = chargeUpTime;
-        this.chargeUpTimer = 0;
-        this.chargeTimer = 0;
         this.movementSpeed = 11f;
         this.damage = 20;
         this.knockback = 5f;
-        this.chargeDuration = chargeDuration;
-        this.chargeSpeed = chargeSpeed;
-        this.preparingToCharge = false;
-        this.charging = false;
     }
 
     //This overrides Enemy's logic method

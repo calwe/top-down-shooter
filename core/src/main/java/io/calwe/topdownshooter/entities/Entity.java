@@ -14,7 +14,7 @@ import java.util.List;
 
 // superclass intended to be used by all moving objects/creatures
 // This class does not have a constructor because it is abstract and will never be implemented
-// But all its subclasses shoudl have constructors
+// But all its subclasses should have constructors
 public abstract class Entity {
     //The entity's current position in the world
     public Vector2 pos;

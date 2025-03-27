@@ -12,9 +12,9 @@ import io.calwe.topdownshooter.screens.Play;
 import java.util.Random;
 
 public class EnemyProjectile extends Entity {
-    int damage;
-    float knockback;
-    float lifeTime = 5;
+    final int damage;
+    final float knockback;
+    final float lifeTime = 5;
     float timer = 0;
 
     public EnemyProjectile(Texture texture, Vector2 startPos, int damage, float knockback){

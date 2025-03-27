@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import io.calwe.topdownshooter.entities.Player;
 
 public class HealthDrop extends EquipmentDrop{
-    int healthIncreaseAmount;
+    final int healthIncreaseAmount;
     public HealthDrop(Texture texture, String upgradeName, String upgradeDescription, int healthIncreaseAmount){
         super(texture, upgradeName, upgradeDescription);
         this.healthIncreaseAmount = healthIncreaseAmount;

@@ -13,7 +13,7 @@ import io.calwe.topdownshooter.screens.Play;
 import java.util.*;
 
 public class Obstacle extends Entity{
-    float scale;
+    final float scale;
 
     public Obstacle(Texture texture, Vector2 position, float scale, int width, int height) {
         this.layer = 20;
