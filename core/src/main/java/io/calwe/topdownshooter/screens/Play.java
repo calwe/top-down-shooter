@@ -14,7 +14,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import io.calwe.topdownshooter.Game;
-import io.calwe.topdownshooter.Shotgun;
 import io.calwe.topdownshooter.Weapon;
 import io.calwe.topdownshooter.entities.*;
 import io.calwe.topdownshooter.entities.Enemies.ChargingEnemy;
@@ -216,35 +215,35 @@ public class Play implements Screen {
         commonWeapons.put("SMG", new Weapon(new Texture("Weapons/SMGAiming.png"), new Texture("Weapons/SMGSideOn.png"), bulletTexture, fireSound, emptySound, 90, 3, 10, 5, 15f, 0.5f, 0.4f, 5));
         commonWeapons.put("Assault Rifle", new Weapon(new Texture("Weapons/assaultRifleAiming.png"), new Texture("Weapons/assaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 60,  5, 5, 15, 5f, 1.5f, 0.7f, 7));
         commonWeapons.put("Sniper Rifle", new Weapon(new Texture("Weapons/sniperAiming.png"), new Texture("Weapons/sniperSideOn.png"), bulletTexture, fireSound, emptySound, 8, 22, 0.75f, 75, 0.1f, 2f, 3f, 7, true));
-        commonWeapons.put("Shotgun", new Shotgun(new Texture("Weapons/shotgunAiming.png"), new Texture("Weapons/shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 10, 6, 1, 5, 10, 2, 1, 5));
+        commonWeapons.put("Shotgun", new Weapon(new Texture("Weapons/shotgunAiming.png"), new Texture("Weapons/shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 10, 6, 1, 5, 10, 2, 1, 5, 5));
 
         //Initialise the uncommon weapons
         uncommonWeapons.put("Pistol", new Weapon(new Texture("Weapons/pistolAiming.png"), new Texture("Weapons/pistolSideOn.png"), bulletTexture, fireSound, emptySound, 18, 13, 2.5f, 10, 10f, 1f, 1f, 5));
         uncommonWeapons.put("SMG", new Weapon(new Texture("Weapons/SMGAiming.png"), new Texture("Weapons/SMGSideOn.png"), bulletTexture, fireSound, emptySound, 90, 4, 10, 5, 15f, 0.5f, 0.4f, 5));
         uncommonWeapons.put("Assault Rifle", new Weapon(new Texture("Weapons/assaultRifleAiming.png"), new Texture("Weapons/assaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 60,  7, 5, 15, 5f, 1.5f, 0.7f, 7));
         uncommonWeapons.put("Sniper Rifle", new Weapon(new Texture("Weapons/sniperAiming.png"), new Texture("Weapons/sniperSideOn.png"), bulletTexture, fireSound, emptySound, 8, 29, 0.75f, 75, 0.1f, 2f, 3f, 7, true));
-        uncommonWeapons.put("Shotgun", new Shotgun(new Texture("Weapons/shotgunAiming.png"), new Texture("Weapons/shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 10, 8, 1, 5, 10, 2, 1, 5));
+        uncommonWeapons.put("Shotgun", new Weapon(new Texture("Weapons/shotgunAiming.png"), new Texture("Weapons/shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 10, 8, 1, 5, 10, 2, 1, 5, 5));
 
         //Initialise the rare weapons
         rareWeapons.put("Pistol", new Weapon(new Texture("Weapons/pistolAiming.png"), new Texture("Weapons/pistolSideOn.png"), bulletTexture, fireSound, emptySound, 18, 17, 2.5f, 10, 10f, 1f, 1f, 5));
         rareWeapons.put("SMG", new Weapon(new Texture("Weapons/SMGAiming.png"), new Texture("Weapons/SMGSideOn.png"), bulletTexture, fireSound, emptySound, 90, 5, 10, 5, 15f, 0.5f, 0.4f, 5));
         rareWeapons.put("Assault Rifle", new Weapon(new Texture("Weapons/assaultRifleAiming.png"), new Texture("Weapons/assaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 60,  8, 5, 15, 5f, 1.5f, 0.7f, 7));
         rareWeapons.put("Sniper Rifle", new Weapon(new Texture("Weapons/sniperAiming.png"), new Texture("Weapons/sniperSideOn.png"), bulletTexture, fireSound, emptySound, 8, 37, 0.75f, 75, 0.1f, 2f, 3f, 7, true));
-        rareWeapons.put("Shotgun", new Shotgun(new Texture("Weapons/shotgunAiming.png"), new Texture("Weapons/shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 10, 10, 1, 5, 10, 2, 1, 5));
+        rareWeapons.put("Shotgun", new Weapon(new Texture("Weapons/shotgunAiming.png"), new Texture("Weapons/shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 10, 10, 1, 5, 10, 2, 1, 5, 5));
 
         //Initialise the epic weapons
         epicWeapons.put("Pistol", new Weapon(new Texture("Weapons/pistolAiming.png"), new Texture("Weapons/pistolSideOn.png"), bulletTexture, fireSound, emptySound, 18, 20, 2.5f, 10, 10f, 1f, 1f, 5));
         epicWeapons.put("SMG", new Weapon(new Texture("Weapons/SMGAiming.png"), new Texture("Weapons/SMGSideOn.png"), bulletTexture, fireSound, emptySound, 90, 6, 10, 5, 15f, 0.5f, 0.4f, 5));
         epicWeapons.put("Assault Rifle", new Weapon(new Texture("Weapons/assaultRifleAiming.png"), new Texture("Weapons/assaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 60,  10, 5, 15, 5f, 1.5f, 0.7f, 7));
         epicWeapons.put("Sniper Rifle", new Weapon(new Texture("Weapons/sniperAiming.png"), new Texture("Weapons/sniperSideOn.png"), bulletTexture, fireSound, emptySound, 8, 44, 0.75f, 75, 0.1f, 2f, 3f, 7, true));
-        epicWeapons.put("Shotgun", new Shotgun(new Texture("Weapons/shotgunAiming.png"), new Texture("Weapons/shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 10, 12, 1, 5, 10, 2, 1, 5));
+        epicWeapons.put("Shotgun", new Weapon(new Texture("Weapons/shotgunAiming.png"), new Texture("Weapons/shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 10, 12, 1, 5, 10, 2, 1, 5, 5));
 
         //Initialise the legendary weapons
         legendaryWeapons.put("Pistol", new Weapon(new Texture("Weapons/pistolAiming.png"), new Texture("Weapons/pistolSideOn.png"), bulletTexture, fireSound, emptySound, 18, 23, 2.5f, 10, 10f, 1f, 1f, 5));
         legendaryWeapons.put("SMG", new Weapon(new Texture("Weapons/SMGAiming.png"), new Texture("Weapons/SMGSideOn.png"), bulletTexture, fireSound, emptySound, 90, 7, 10, 5, 15f, 0.5f, 0.4f, 5));
         legendaryWeapons.put("Assault Rifle", new Weapon(new Texture("Weapons/assaultRifleAiming.png"), new Texture("Weapons/assaultRifleSideOn.png"), bulletTexture, fireSound, emptySound, 60,  12, 5, 15, 5f, 1.5f, 0.7f, 7));
         legendaryWeapons.put("Sniper Rifle", new Weapon(new Texture("Weapons/sniperAiming.png"), new Texture("Weapons/sniperSideOn.png"), bulletTexture, fireSound, emptySound, 8, 51, 0.75f, 75, 0.1f, 2f, 3f, 7, true));
-        legendaryWeapons.put("Shotgun", new Shotgun(new Texture("Weapons/shotgunAiming.png"), new Texture("Weapons/shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 10, 14, 1, 5, 10, 2, 1, 5));
+        legendaryWeapons.put("Shotgun", new Weapon(new Texture("Weapons/shotgunAiming.png"), new Texture("Weapons/shotgunSideOn.png"), bulletTexture, fireSound, emptySound, 10, 14, 1, 5, 10, 2, 1, 5, 5));
     }
 
 
