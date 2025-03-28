@@ -40,9 +40,7 @@ public abstract class Entity {
     public float boundsHeightReduction;
     public float boundsWidthReduction;
 
-    public void input(OrthographicCamera camera) {
-
-    }
+    public void input(OrthographicCamera camera) {}
 
     //The priority for rendering this entity - higher numbers are rendered on top.
     public int layer = 10;
@@ -62,7 +60,6 @@ public abstract class Entity {
     public void draw(SpriteBatch batch) {
         sprite.draw(batch);
     }
-
 
     //This handles collisions while moving
     protected void tryMove () {

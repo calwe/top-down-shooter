@@ -2,10 +2,6 @@ package io.calwe.topdownshooter.ui;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public class Inventory extends Table {
@@ -44,10 +40,8 @@ public class Inventory extends Table {
     }
 
     public void selectSlot(int slot) {
-        if (slots[slot].weaponInSlot != null) {
-            slots[currentInventorySlot].setSelected(false);
-            slots[slot].setSelected(true);
-            currentInventorySlot = slot;
-        }
+        slots[currentInventorySlot].setSelected(false);
+        slots[slot].setSelected(true);
+        currentInventorySlot = slot;
     }
 }

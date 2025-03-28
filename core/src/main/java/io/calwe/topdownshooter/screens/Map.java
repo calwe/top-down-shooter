@@ -84,7 +84,7 @@ public class Map {
         houseTransparentTexture = new Texture("World/roofTransparent.png");
         wallTexture = new Texture("World/Wall.png");
         floorTexture = new Texture("World/Floor.png");
-        landmineTexture = new Texture("World/Landmine.png");
+        landmineTexture = new Texture("World/landmine.png");
         explosionAnimation = getLandmineExplosionAnimation();
 
         //Create the grass tileset
