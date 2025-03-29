@@ -11,19 +11,16 @@ import io.calwe.topdownshooter.entities.Player;
 import io.calwe.topdownshooter.screens.Play;
 
 public class RangedEnemy extends Enemy {
-    float projectileSpeed;
-    Texture projectileTexture;
-    float attackCooldown;
-    float attackCooldownTimer;
+    final float projectileSpeed = 2.5f;
+    final float attackCooldown = 2;
+    float attackCooldownTimer = 0;
+    final Texture projectileTexture;
 
     // The constructor - initialize all the variables
-    public RangedEnemy(Texture texture, Animation<TextureRegion> enemyWalkAnimation, Sound hurtSound, Vector2 startPos, Player target, Texture[] damageParticles, float attackCooldown, float projectileSpeed, Texture projectileTexture) {
+    public RangedEnemy(Texture texture, Animation<TextureRegion> enemyWalkAnimation, Sound hurtSound, Vector2 startPos, Player target, Texture[] damageParticles, Texture projectileTexture) {
         super(texture, enemyWalkAnimation, hurtSound, startPos, target, damageParticles);
         this.maxHealth = Math.round(25 * (1 + (0.33f*(Play.currentTier-1))));
         this.health = maxHealth;
-        this.attackCooldown = attackCooldown;
-        this.attackCooldownTimer = 0;
-        this.projectileSpeed = projectileSpeed;
         this.projectileTexture = projectileTexture;
     }
 
@@ -63,7 +60,7 @@ public class RangedEnemy extends Enemy {
         sprite.setRotation(angleToLook * -180f / (float) Math.PI);
 
         // Add an offset to the sprite to account for the fact that the sprite is not centered in its image.
-        Vector2 spriteOffset = new Vector2(0, 2).rotate(angleToLook * -180f / (float) Math.PI);
+        Vector2 spriteOffset = new Vector2(0, 2).rotateDeg(angleToLook * -180f / (float) Math.PI);
         spriteOffset.add(pos);
         sprite.setPosition(spriteOffset.x, spriteOffset.y);
 

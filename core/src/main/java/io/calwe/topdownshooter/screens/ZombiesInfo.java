@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import io.calwe.topdownshooter.Game;
-import io.calwe.topdownshooter.Main;
 
 public class ZombiesInfo implements Screen {
     SpriteBatch batch;

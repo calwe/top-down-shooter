@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import io.calwe.topdownshooter.Game;
-import io.calwe.topdownshooter.Main;
 
 public class WeaponsInfo implements Screen {
     SpriteBatch batch;
@@ -25,11 +24,11 @@ public class WeaponsInfo implements Screen {
     public void show() {
         //Initialise the spritebatch and load the textures
         batch = new SpriteBatch();
-        pistolTexture = new Texture("PistolSideOn.png");
-        SMGTexture = new Texture("SMGSideOn.png");
-        assaultTexture = new Texture("AssaultRifleSideOn.png");
-        sniperTexture = new Texture("sniperSideOn.png");
-        shotgunTexture = new Texture("shotgunSideOn.png");
+        pistolTexture = new Texture("Weapons/pistolSideOn.png");
+        SMGTexture = new Texture("Weapons/SMGSideOn.png");
+        assaultTexture = new Texture("Weapons/assaultRifleSideOn.png");
+        sniperTexture = new Texture("Weapons/sniperSideOn.png");
+        shotgunTexture = new Texture("Weapons/shotgunSideOn.png");
     }
 
     @Override
