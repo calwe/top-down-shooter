@@ -134,10 +134,10 @@ public class Enemy extends Entity {
         Object[] rects = Collections.list(collideableRects.keys()).toArray();
         Rectangle currentBounds = new Rectangle();
         // Iterate from the start positon to the end position in steps of increment
-        for (int i = 1; i < startPos.dst(endPos)/increment; i++) {
+        for (int i = 0; i < startPos.dst(endPos)/increment; i++) {
             Vector2 coordToCheck = startPos.cpy();
             Vector2 tempDirection = direction.cpy();
-            tempDirection.scl(increment*i);
+            tempDirection.scl(increment);
             //move coordToCheck in tempDirection an amount equal to increment times i
             coordToCheck.add(tempDirection);
             //generate a new collider at coordToCheck
