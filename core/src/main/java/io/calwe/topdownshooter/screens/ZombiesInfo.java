@@ -28,7 +28,7 @@ public class ZombiesInfo implements Screen {
         redZombie = new Texture("Enemies/redZombie.png");
         orangeZombie = new Texture("Enemies/orangeZombie.png");
         blueZombie = new Texture("Enemies/blueZombie.png");
-        landmine = new Texture("World/Landmine.png");
+        landmine = new Texture("World/landmine.png");
     }
 
     @Override

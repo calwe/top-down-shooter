@@ -50,6 +50,8 @@ public class Player extends Entity {
     //The player's current body image based on what weapon he is currently holding
     Texture playerTexture;
 
+    final Texture noWeaponTexture = new Texture("playerNoWeapon.png");
+
     //An array of textures for the particles that should be released when the player is damage
     final Texture[] damageParticles;
 
@@ -132,9 +134,7 @@ public class Player extends Entity {
         // empty, switch to that slot
         for (int i = 0; i < inventory.length; i++) {
             if (Gdx.input.isKeyPressed(8+i)) {
-                if (inventory[i] != null) {
-                    currentInventorySlot = i;
-                }
+                currentInventorySlot = i;
             }
         }
     }
@@ -162,38 +162,7 @@ public class Player extends Entity {
         momentum.scl(slide);
 
         //Set the player's current body image based on the weapon they are currently holding
-        playerTexture = inventory[currentInventorySlot].texture;
-        //Handle clicks registered - shoot the current weapon
-        if (mouseDown){
-            // Check what weapon we are currently using
-            Weapon weapon = inventory[currentInventorySlot];
-
-            // Find the angle between the player and the mouse
-            float angleToLook = (float)Math.atan2(mouseCoords.x-(pos.x+width/2f), mouseCoords.y-(pos.y+height/2f));
-            // Calculate the offset to account for the fact that the weapon is not at the center of the player
-            float offsetRotation = angleToLook*-180f/(float)Math.PI;
-            Vector2 weaponOffset = new Vector2(5, 6).rotateDeg(offsetRotation);
-
-            // calculate the gun's position by finding the center of the player and adding the weapon offset
-            Vector2 firingPos = new Vector2(pos.x+width/2f, pos.y+height/2f);
-            firingPos.add(weaponOffset);
-
-            // calculate the angle between the gun and the mouse position
-            float bulletAngleToLook = (float)Math.atan2(mouseCoords.x-(firingPos.x), mouseCoords.y-(firingPos.y));
-            float bulletRotation = bulletAngleToLook*-180f/(float)Math.PI;
-
-            // attempt to fire the weapon at the mouse position
-            boolean fireSuccessful = weapon.fire(firingPos, bulletRotation, damageMultiplier, critMultiplier, additionalCritChance, saveAmmoChance);
-            if (fireSuccessful){
-                //if the weapon fired, apply recoil and show the firing texture
-                Vector2 direction = new Vector2(mouseCoords.x - (firingPos.x), mouseCoords.y - (firingPos.y));
-                direction.nor();
-                direction.scl(-0.01f*weapon.recoil);
-                momentum.add(direction);
-            }
-            // reset mouseDown
-            mouseDown = false;
-        }
+        handleWeapons();
 
         // Calculate the angle the player will need to be turning towards to face the mouse, taking into account that
         // the pos.x and pos.y coordinates are from the bottom left corner of the player not the center
@@ -220,6 +189,46 @@ public class Player extends Entity {
     //If the player is out of health, switch to the game over screen
     private void die(){
         Play.game.GameOver(score);
+    }
+
+    private void handleWeapons() {
+        if (inventory[currentInventorySlot] == null) {
+            playerTexture = noWeaponTexture;
+            return;
+        }
+
+        playerTexture = inventory[currentInventorySlot].texture;
+        //Handle clicks registered - shoot the current weapon
+        if (mouseDown){
+            // Check what weapon we are currently using
+            Weapon weapon = inventory[currentInventorySlot];
+
+            // Find the angle between the player and the mouse
+            float angleToLook = (float)Math.atan2(mouseCoords.x-(pos.x+width/2f), mouseCoords.y-(pos.y+height/2f));
+            // Calculate the offset to account for the fact that the weapon is not at the center of the player
+            float offsetRotation = angleToLook*-180f/(float)Math.PI;
+            Vector2 weaponOffset = new Vector2(5, 6).rotateDeg(offsetRotation);
+
+            // calculate the gun's position by finding the center of the player and adding the weapon offset
+            Vector2 firingPos = new Vector2(pos.x+width/2f, pos.y+height/2f);
+            firingPos.add(weaponOffset);
+
+            // calculate the angle between the gun and the mouse position
+            float bulletAngleToLook = (float)Math.atan2(mouseCoords.x-(firingPos.x), mouseCoords.y-(firingPos.y));
+            float bulletRotation = bulletAngleToLook*-180f/(float)Math.PI;
+
+            // attempt to fire the weapon at the mouse position
+            boolean fireSuccessful = weapon.fire(firingPos, bulletRotation, damageMultiplier, critMultiplier, additionalCritChance, saveAmmoChance);
+            if (fireSuccessful){
+                //if the weapon fired, apply recoil and show the firing texture
+                Vector2 direction = new Vector2(mouseCoords.x - (firingPos.x), mouseCoords.y - (firingPos.y));
+                direction.nor();
+                direction.scl(-0.01f * weapon.recoil);
+                momentum.add(direction);
+            }
+            // reset mouseDown
+            mouseDown = false;
+        }
     }
 
     // This overrides entity's draw method so we can have animation

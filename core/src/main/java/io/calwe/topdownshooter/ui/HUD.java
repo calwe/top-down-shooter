@@ -27,7 +27,8 @@ public class HUD {
 
         inventory = new Inventory();
         table.top();
-        table.add(inventory).top().left().expandX();
+        table.add(inventory).top().left().expandX().pad(4f, 2f, 2f, 2f);
+        table.setDebug(true);
 
         healthUI = new Statistic("health", health);
         scoreUI = new Statistic("score", score);
