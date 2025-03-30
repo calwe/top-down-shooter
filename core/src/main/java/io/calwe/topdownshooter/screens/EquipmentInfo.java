@@ -29,12 +29,12 @@ public class EquipmentInfo implements Screen {
         //Initialise the spritebatch and load all the textures
         batch = new SpriteBatch();
         hollowPoint = new Texture("Equipment/ammo.png");
-        APBullets = new Texture("Equipment/AP-rounds.png");
+        APBullets = new Texture("Equipment/APRounds.png");
         medkit = new Texture("Equipment/medkit.png");
-        kevlar = new Texture("Equipment/FlakVest.png");
-        redDotSight = new Texture("Equipment/RedDotSight.png");
-        magazine = new Texture("Equipment/Magazine.png");
-        bomb = new Texture("Equipment/OutlinedBomb.png");
+        kevlar = new Texture("Equipment/flakVest.png");
+        redDotSight = new Texture("Equipment/redDotSight.png");
+        magazine = new Texture("Equipment/magazine.png");
+        bomb = new Texture("Equipment/outlinedBomb.png");
     }
 
     @Override
@@ -112,7 +112,7 @@ public class EquipmentInfo implements Screen {
 
     @Override
     public void dispose() {
-        //dispose of the spritebatch now its not needed
+        //dispose of the spritebatch now it's not needed
         batch.dispose();
         hollowPoint.dispose();
         APBullets.dispose();

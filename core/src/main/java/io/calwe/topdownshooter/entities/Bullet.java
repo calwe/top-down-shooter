@@ -13,14 +13,14 @@ import java.util.List;
 import java.util.Random;
 
 public class Bullet extends Entity {
-    int damage;
-    int critChance;
-    float critMultiplier;
-    float knockback;
-    float lifeTime = 5;
+    final int damage;
+    final int critChance;
+    final float critMultiplier;
+    final float knockback;
+    final float lifeTime = 5;
     float timer = 0;
     List<Enemy> alreadyHit;
-    boolean pierces;
+    final boolean pierces;
 
     public Bullet(Texture texture, Vector2 startPos, int damage, int critChance, float critMultiplier, float knockback, boolean pierces){
         this.pierces = pierces;

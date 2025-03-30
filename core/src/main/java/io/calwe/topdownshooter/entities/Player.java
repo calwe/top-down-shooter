@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import io.calwe.topdownshooter.Weapon;
@@ -20,30 +19,30 @@ import java.util.*;
 // A subclass of entity, which is the player - the main character
 public class Player extends Entity {
     //Input - whether the mouse is currently pressed down (for shooting)
-    boolean mouseDown;
+    boolean mouseDown = false;
     //What the current location of the mouse is - so that the character can look at the mouse location
-    Vector2 mouseCoords;
+    Vector2 mouseCoords = new Vector2(0,0);
 
     //The character's inventory
     public Weapon[] inventory;
-    // What slot in the character's inventory they currently have selected
+    // Which slot in the character's inventory they currently have selected
     int currentInventorySlot = 0;
 
     // The maximum amount of health the player can have, and how much health they start with
-    public int maxHealth;
+    public int maxHealth = 100;
     // The amount of health the player currently has remaining
     int health;
     //how fast the player move
-    float movementSpeed;
+    final float movementSpeed = 10f;
 
     // The player's score, based on how many zombies have been killed and how long the player has been alive
     public int score;
 
     // The camera - this is used to keep the camera's position over the player
-    OrthographicCamera camera;
+    final OrthographicCamera camera;
 
     // The player's movement animation
-    Animation<TextureRegion> playerWalkAnimation;
+    final Animation<TextureRegion> playerWalkAnimation;
     // A float that stores the time since the animation started playing so we can figure out what frame
     // of the animation to display
     float elapsedTime = 0.0f;
@@ -54,7 +53,7 @@ public class Player extends Entity {
     final Texture noWeaponTexture = new Texture("playerNoWeapon.png");
 
     //An array of textures for the particles that should be released when the player is damage
-    Texture[] damageParticles;
+    final Texture[] damageParticles;
 
     // These are used so that upgrades can improve your capabilities - otherwise they would be hardcoded
     public float damageMultiplier = 1;
@@ -62,22 +61,17 @@ public class Player extends Entity {
     public float critMultiplier = 2;
     public int additionalCritChance = 0;
 
-    public HUD hud;
+    public HUD hud = new HUD(this.health, this.score);
 
     // The constructor - intialize all the variables
     public Player(Texture texture, Animation<TextureRegion> playerWalkAnimation, Vector2 startPos, Weapon[] inventory, Texture[] damageParticles, OrthographicCamera camera) {
-        this.maxHealth = 100;
         this.pos = startPos;
         this.momentum = new Vector2(0, 0);
-        this.movementSpeed = 10f;
-        this.mouseDown = false;
         this.playerWalkAnimation = playerWalkAnimation;
-        this.mouseCoords = new Vector2(0,0);
         this.slide = 0.85f;
         this.width = 12;
         this.layer = 15;
         this.height = 16;
-        this.hud = new HUD(this.health, this.score);
         this.inventory = inventory;
         this.damageParticles = damageParticles;
         this.camera = camera;
@@ -85,7 +79,6 @@ public class Player extends Entity {
         this.health = maxHealth;
         this.boundsHeightReduction = 3;
         this.boundsWidthReduction = 3;
-        this.hud = new HUD(this.health, this.score);
         //Calculate the player's collider bounds
         bounds.x = pos.x + boundsWidthReduction;
         bounds.y = pos.y + boundsHeightReduction;
@@ -136,7 +129,7 @@ public class Player extends Entity {
     private void handleInventorySwitching(){
         //Inventory slot switching can only handle inventories up to 9 slots long, because it iterates through
         // number keys, starting at 1.
-        // Iterate through number keys up to the length of the inventory (e.g. if the inventory is 3 slots in size,
+        // Iterate through number keys up to the length of the inventory - e.g. if the inventory is 3 slots in size,
         // iterate through numbers 1-3. Check if any of these keys are pressed. If they are and that slot is not
         // empty, switch to that slot
         for (int i = 0; i < inventory.length; i++) {

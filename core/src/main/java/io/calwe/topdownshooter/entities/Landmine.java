@@ -6,25 +6,20 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import io.calwe.topdownshooter.entities.Enemies.Enemy;
 import io.calwe.topdownshooter.screens.Play;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Dictionary;
-import java.util.List;
-
 public class Landmine extends Entity{
-    boolean detonating;
+    boolean detonating = false;
     float timer = 0;
-    float knockback;
-    Animation<TextureRegion> explodeAnimation;
-    int damage;
+    final float knockback;
+    final Animation<TextureRegion> explodeAnimation;
+    //The damage dealt to the player by an explosion.
+    // Enemies take damage based on a formula so they always take more damage than they have health so the mines always kill them
+    final int playerDamage = 30;
 
     public Landmine(Texture texture, Vector2 position, Animation<TextureRegion> explodeAnimation, float knockback){
-        this.damage = 30;
         this.knockback = knockback;
         this.layer = 0;
         this.hasSolidCollision = false;
@@ -56,46 +51,6 @@ public class Landmine extends Entity{
 
     }
 
-    @Override
-    //This handles collisions while moving
-    protected void tryMove () {
-        //Calculate the current collider bounds
-        bounds.x = pos.x;
-        bounds.y = pos.y;
-        bounds.width = width;
-        bounds.height = height;
-        //Get all the other objects we could collide with
-        Dictionary<Rectangle, Entity> collideableRects = Play.getOtherColliderRects(this);
-        Object[] rects = Collections.list(collideableRects.keys()).toArray();
-        List<Entity> entityCollisions = new ArrayList<>();
-        // Iterate through each other object we could collide with
-        for (int i = 0; i < rects.length; i++) {
-            Rectangle rect = (Rectangle)rects[i];
-            //If we collide with an entity
-            if (bounds.overlaps(rect)) {
-                //Add them to the list of entities we collided with
-                if (!entityCollisions.contains(collideableRects.get(rect))) {
-                    entityCollisions.add(collideableRects.get(rect));
-                }
-            }
-        }
-        // Iterate through each other object we could collide with
-        for (int i = 0; i < rects.length; i++) {
-            Rectangle rect = (Rectangle)rects[i];
-            //If we collide with an entity
-            if (bounds.overlaps(rect)) {
-                //Add them to the list of entities we collided with
-                if (!entityCollisions.contains(collideableRects.get(rect))) {
-                    entityCollisions.add(collideableRects.get(rect));
-                }
-            }
-        }
-        //Call OnEntityCollision for each entity we collided with
-        for (Entity e : entityCollisions) {
-            OnEntityCollision(e);
-        }
-    }
-
     public void  detonate(){
         //Set detonating to true
         //Resize the entity because the explosion is bigger than the landmine
@@ -105,14 +60,14 @@ public class Landmine extends Entity{
         //Loop through all entities - deal damage to all players and enemies within 18.
         // Enemies take damage equal to the health of the toughest enemy - so it will always kill any enemy
         // Players take damage equal to the damage stat.
-        // Also apply knockback to players - enemies will be dead so theres no point applying it to them.
+        // Also apply knockback to players - enemies will be dead so there's no point applying it to them.
         for (Entity e : Play.entities){
             if (pos.dst(e.pos) <= 18){
                 if (e instanceof Enemy){
                     ((Enemy)e).takeDamage(Math.round(25 * (1 + (0.33f*(Play.currentTier-1)))));
                 }
                 else if (e instanceof Player){
-                    ((Player)e).takeDamage(damage);
+                    ((Player)e).takeDamage(playerDamage);
                     Vector2 direction = new Vector2(e.pos.x- pos.x, e.pos.y - pos.y);
                     direction.nor();
                     direction.scl(knockback);

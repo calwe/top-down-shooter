@@ -1,16 +1,12 @@
 package io.calwe.topdownshooter.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Vector2;
 import io.calwe.topdownshooter.entities.Crate;
@@ -18,29 +14,14 @@ import io.calwe.topdownshooter.entities.Landmine;
 import io.calwe.topdownshooter.entities.Obstacle;
 import io.calwe.topdownshooter.entities.WorldFeature;
 
-import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Random;
-import java.util.Vector;
 
 public class Map {
-    // the tile set texture contains each possible tile for the map in a stitched together column
-    // assets in libGDX are stored in the assets/ folder
-    public static final String TILE_SET_TEXTURE = "map_tileset.png";
     // width/height of each tile in pixels. each tile must be square
     public static final int tileSize = 12;
     // number of tiles in the texture
     public static final int tileCount = 5;
-
-
-    // size of the map in tiles
-    public static final int MAP_WIDTH = 64;
-    public static final int MAP_HEIGHT = 64;
-
-    // libGDX contains a few different tile map renderers, such as isometric or hexagonal
-    // for a top-down game, the orthogonal map renderer is suitable
-    private OrthogonalTiledMapRenderer renderer;
-    private TiledMap map;
 
     private final long initialTime;
 
@@ -67,25 +48,25 @@ public class Map {
         //The distance away map tiles are loaded from the player
         viewDistance = 20;
 
-        //Load all of the textures
-        treeTexture = new Texture("World/TreeTop.png");
-        treeTransparentTexture = new Texture("World/TreeTopTransparent.png");
-        trunkTexture = new Texture("World/TreeTrunk.png");
+        //Load all the textures
+        treeTexture = new Texture("World/treeTop.png");
+        treeTransparentTexture = new Texture("World/treeTopTransparent.png");
+        trunkTexture = new Texture("World/treeTrunk.png");
         crateTexture = new Texture("crate.png");
         carTextures = new Texture[]{
-            new Texture("World/Cars/BlackCar.png"),
-            new Texture("World/Cars/BlueCar.png"),
-            new Texture("World/Cars/GrayCar.png"),
-            new Texture("World/Cars/GreenCar.png"),
-            new Texture("World/Cars/RedCar.png"),
-            new Texture("World/Cars/WhiteCar.png"),
+            new Texture("World/Cars/blackCar.png"),
+            new Texture("World/Cars/blueCar.png"),
+            new Texture("World/Cars/grayCar.png"),
+            new Texture("World/Cars/greenCar.png"),
+            new Texture("World/Cars/redCar.png"),
+            new Texture("World/Cars/whiteCar.png"),
         };
         houseTexture = new Texture("World/roof.png");
         houseTransparentTexture = new Texture("World/roofTransparent.png");
-        wallTexture = new Texture("World/Wall.png");
-        floorTexture = new Texture("World/Floor.png");
+        wallTexture = new Texture("World/wall.png");
+        floorTexture = new Texture("World/houseFloor.png");
         landmineTexture = new Texture("World/landmine.png");
-        explosionAnimation = getLandmineExplosionAnimation();
+        explosionAnimation = Play.getAnimation("World/explosionAnimation.png", 4);
 
         //Create the grass tileset
         Texture tilesetTexture = new Texture(Gdx.files.internal("map_tileset.png"));
@@ -190,43 +171,9 @@ public class Map {
                 96,
                 new Obstacle[]{
                     //Left wall
-                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+45), 1, 6, 6),
-                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+42), 1, 6, 6),
-                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+36), 1, 6, 6),
-                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+30), 1, 6, 6),
-                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+24), 1, 6, 6),
-                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+18), 1, 6, 6),
-                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+12), 1, 6, 6),
-                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+6), 1, 6, 6),
-                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+0), 1, 6, 6),
-                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)-6), 1, 6, 6),
-                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)-12), 1, 6, 6),
-                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)-18), 1, 6, 6),
-                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)-24), 1, 6, 6),
-                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)-30), 1, 6, 6),
-                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)-36), 1, 6, 6),
-                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)-42), 1, 6, 6),
-                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)-45), 1, 6, 6),
-
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)-27, y*tileSize + (tileSize/2f)+0), 1, 6, 96),
                     //Right wall
-                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+45), 1, 6, 6),
-                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+42), 1, 6, 6),
-                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+36), 1, 6, 6),
-                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+30), 1, 6, 6),
-                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+24), 1, 6, 6),
-                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+18), 1, 6, 6),
-                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+12), 1, 6, 6),
-                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+6), 1, 6, 6),
-                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+0), 1, 6, 6),
-                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)-6), 1, 6, 6),
-                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)-12), 1, 6, 6),
-                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)-18), 1, 6, 6),
-                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)-24), 1, 6, 6),
-                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)-30), 1, 6, 6),
-                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)-36), 1, 6, 6),
-                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)-42), 1, 6, 6),
-                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)-45), 1, 6, 6),
-
+                    new Obstacle(wallTexture, new Vector2(x*tileSize + (tileSize/2f)+27, y*tileSize + (tileSize/2f)+0), 1, 6, 96),
                     //Floor
                     new Obstacle(floorTexture, new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)), 1, 60, 96, false, -5)
                 }
@@ -235,24 +182,6 @@ public class Map {
             //Add the current coords to the list of coords things have already been generated at
             entitiesAlreadyGeneratedCoords.add(new Vector2(x*tileSize + (tileSize/2f), y*tileSize + (tileSize/2f)));
         }
-    }
-
-    //Get the landmine explosion animation
-    private Animation<TextureRegion> getLandmineExplosionAnimation(){
-        // load the spritesheet as a texture, then make a textureRegion out of that texture.
-        TextureRegion texture = new TextureRegion(new Texture("World/explosionAnimation.png"));
-        //The number of sprites in the spritesheet showing each part of the animation
-        int numFrames = 4;
-        //Split the spritesheet into individual textureregions
-        TextureRegion[][] AnimationTextures2D = texture.split(texture.getRegionWidth(), texture.getRegionHeight()/numFrames);
-        //split can only split spritesheets into 2d arrays of textureregions, so convert it to a 1d array
-        TextureRegion[] AnimationTextures = new TextureRegion[numFrames];
-        for (int i = 0; i < numFrames; i++) {
-            AnimationTextures[i] = AnimationTextures2D[i][0];
-        }
-        //load all the textureregions into an animation, with a duration of 0.0357 per frame.
-        // This sums up to the entire animation being about 0.5 seconds, which appears to work best visually.
-        return new Animation<TextureRegion>(0.0357f, AnimationTextures);
     }
 
     //Generate a landmine at the provided coords if nothing has already been generated there

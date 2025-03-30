@@ -9,12 +9,10 @@ import io.calwe.topdownshooter.entities.Obstacle;
 import io.calwe.topdownshooter.entities.Player;
 import io.calwe.topdownshooter.screens.Play;
 
-import java.util.Random;
-
 public class EnemyProjectile extends Entity {
-    int damage;
-    float knockback;
-    float lifeTime = 5;
+    final int damage;
+    final float knockback;
+    final float lifeTime = 5;
     float timer = 0;
 
     public EnemyProjectile(Texture texture, Vector2 startPos, int damage, float knockback){
@@ -54,7 +52,6 @@ public class EnemyProjectile extends Entity {
         //If the thing we hit is a player
         if (e instanceof Player){
             Player player = (Player)e;
-            Random random = new Random();
             //Deal the damage to the player
             player.takeDamage(damage);
             // calculate and apply knockback to the player
