@@ -15,7 +15,9 @@ public class Inventory extends Table {
 
     public Inventory() {
         slots = new InventorySlot[3];
+        // create the input handler, which is used by the 'InputMultiplexer' in the HUD class
         weaponSwitcher = new InputAdapter() {
+            // select the correct slot based on which number key is hit
             public boolean keyDown(int keycode) {
                 switch (keycode) {
                     case Input.Keys.NUM_1:
@@ -32,6 +34,7 @@ public class Inventory extends Table {
                 }
             }
         };
+        // create each inventory slot
         for (int i = 0; i < SLOTS; i++) {
             slots[i] = new InventorySlot();
             add(slots[i]);
@@ -40,8 +43,11 @@ public class Inventory extends Table {
     }
 
     public void selectSlot(int slot) {
+        // deselect the old slot
         slots[currentInventorySlot].setSelected(false);
+        // select the new slot
         slots[slot].setSelected(true);
+        // store the selected slot index in a variable
         currentInventorySlot = slot;
     }
 }

@@ -7,9 +7,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import io.calwe.topdownshooter.entities.Weapon;
 
 public class InventorySlot extends Actor {
-    public static final float TEXTURE_SIZE = 12.0f;
-    public static final float SCALE = 5.0f;
-
     Texture unselectedTexture;
     Texture selectedTexture;
 
@@ -29,6 +26,7 @@ public class InventorySlot extends Actor {
 
     @Override
     public void draw (Batch batch, float parentAlpha) {
+        // boilerplate for draw function. ensures that color filtering works correctly
         Color color = getColor();
         batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
 
@@ -37,6 +35,8 @@ public class InventorySlot extends Actor {
                 selectedTexture.getWidth(), selectedTexture.getHeight(), getScaleX(), getScaleY(), getRotation(), 0, 0,
                 selectedTexture.getWidth(), selectedTexture.getWidth(), false, false);
         } else {
+            // we must add 1 to the x and y of the unselected texture, as it is 1 pixel smaller on each side.
+            // this ensures it is still centered, despite being smaller than the selected texture
             batch.draw(unselectedTexture, getX() + 1, getY() + 1, getOriginX(), getOriginY(),
                 unselectedTexture.getWidth(), unselectedTexture.getHeight(), getScaleX(), getScaleY(), getRotation(), 0, 0,
                 unselectedTexture.getWidth(), unselectedTexture.getHeight(), false, false);
@@ -57,6 +57,8 @@ public class InventorySlot extends Actor {
                 getWidth(), height, getScaleX(), getScaleY(), getRotation(), 0, 0,
                 weaponInSlot.sideOn.getWidth(), weaponInSlot.sideOn.getHeight(), false, false);
         }
+
+        // boilerplate for draw function, ensures color filters are reset
         batch.setColor(Color.WHITE);
     }
 }
