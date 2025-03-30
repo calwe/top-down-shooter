@@ -132,11 +132,7 @@ public abstract class Entity {
         }
     }
 
-
     //Run when the Entity collides with another entity - does nothing as default but can be overridden
     // for things like dealing damage on contact, or picking up items
-    public void OnEntityCollision(Entity e){
-
-    }
-
+    public void OnEntityCollision(Entity e){}
 }

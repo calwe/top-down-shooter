@@ -85,11 +85,4 @@ public class RangedEnemy extends Enemy {
             Play.entitiesToRemove.add(this);
         }
     }
-
-    //Run when we collide with another entity
-    @Override
-    public void OnEntityCollision(Entity e){
-        //Don't do anything - this enemy doesn't deal damage on collision since it has ranged attacks instead.
-    }
-
 }
