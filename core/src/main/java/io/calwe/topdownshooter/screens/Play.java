@@ -14,7 +14,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import io.calwe.topdownshooter.Game;
-import io.calwe.topdownshooter.Weapon;
+import io.calwe.topdownshooter.Map;
+import io.calwe.topdownshooter.entities.Weapon;
 import io.calwe.topdownshooter.entities.*;
 import io.calwe.topdownshooter.entities.Enemies.ChargingEnemy;
 import io.calwe.topdownshooter.entities.Enemies.Enemy;
@@ -30,7 +31,7 @@ public class Play implements Screen {
     private OrthographicCamera camera;
     private FillViewport viewport;
 
-    private Map map;
+    private io.calwe.topdownshooter.Map map;
 
     // A master list of every moving object in the world, so that they can all be updated and rendered easily
     public static final List<Entity> entities = new ArrayList<>();

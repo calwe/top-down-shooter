@@ -3,11 +3,8 @@ package io.calwe.topdownshooter.ui;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Stack;
-import com.badlogic.gdx.utils.Align;
-import io.calwe.topdownshooter.Weapon;
+import io.calwe.topdownshooter.entities.Weapon;
 
 public class InventorySlot extends Actor {
     public static final float TEXTURE_SIZE = 12.0f;

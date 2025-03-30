@@ -1,9 +1,8 @@
-package io.calwe.topdownshooter;
+package io.calwe.topdownshooter.entities;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
-import io.calwe.topdownshooter.entities.Bullet;
 import io.calwe.topdownshooter.screens.Play;
 
 import java.util.Random;

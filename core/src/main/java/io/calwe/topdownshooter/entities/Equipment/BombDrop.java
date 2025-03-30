@@ -8,7 +8,7 @@ import io.calwe.topdownshooter.entities.Entity;
 import io.calwe.topdownshooter.entities.Landmine;
 import io.calwe.topdownshooter.entities.Player;
 import io.calwe.topdownshooter.screens.Play;
-import io.calwe.topdownshooter.screens.Map;
+import io.calwe.topdownshooter.Map;
 
 public class BombDrop extends EquipmentDrop {
     public BombDrop(Texture texture, String name, String description){

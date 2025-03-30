@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import io.calwe.topdownshooter.Weapon;
 import io.calwe.topdownshooter.screens.Play;
 import io.calwe.topdownshooter.ui.HUD;
 

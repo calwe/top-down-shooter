@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
-import io.calwe.topdownshooter.Weapon;
 import io.calwe.topdownshooter.entities.Equipment.EquipmentDrop;
 import io.calwe.topdownshooter.screens.Play;
 

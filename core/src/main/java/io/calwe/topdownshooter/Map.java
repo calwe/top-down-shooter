@@ -1,4 +1,4 @@
-package io.calwe.topdownshooter.screens;
+package io.calwe.topdownshooter;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -13,6 +13,7 @@ import io.calwe.topdownshooter.entities.Crate;
 import io.calwe.topdownshooter.entities.Landmine;
 import io.calwe.topdownshooter.entities.Obstacle;
 import io.calwe.topdownshooter.entities.WorldFeature;
+import io.calwe.topdownshooter.screens.Play;
 
 import java.util.List;
 import java.util.Random;
