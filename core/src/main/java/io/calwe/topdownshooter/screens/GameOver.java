@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.Color;
 import io.calwe.topdownshooter.Game;
 import io.calwe.topdownshooter.Main;
+import io.calwe.topdownshooter.Utility;
 
 public class GameOver implements Screen {
     SpriteBatch batch;
@@ -39,8 +40,8 @@ public class GameOver implements Screen {
             //draw a gravestone
             batch.draw(gravestone, Gdx.graphics.getWidth()/2f-Gdx.graphics.getHeight()*0.25f, Gdx.graphics.getHeight()*0.2f, Gdx.graphics.getHeight()*0.5f,Gdx.graphics.getHeight()*0.5f);
 
-            //Initialise a new font
-            BitmapFont font = new BitmapFont();
+            // get a copy of the game font
+            BitmapFont font = Utility.font;
             //Set the font color and size
             font.setColor(Color.RED);
             font.getData().setScale(8f);

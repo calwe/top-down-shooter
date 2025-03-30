@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import io.calwe.topdownshooter.Game;
 import io.calwe.topdownshooter.Main;
+import io.calwe.topdownshooter.Utility;
 
 public class Start implements Screen {
     SpriteBatch batch;
@@ -41,7 +42,7 @@ public class Start implements Screen {
             batch.begin();
             batch.draw(skull, (Gdx.graphics.getWidth()/2f)-(Gdx.graphics.getHeight()*0.25f), Gdx.graphics.getHeight()*0.2f, Gdx.graphics.getHeight()*0.5f,Gdx.graphics.getHeight()*0.5f);
             //Initialise a new font
-            BitmapFont font = new BitmapFont();
+            BitmapFont font = Utility.font;
             //Set the font color and size
             font.setColor(Color.GREEN);
             font.getData().setScale(8f);

@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import io.calwe.topdownshooter.Game;
 import io.calwe.topdownshooter.Main;
+import io.calwe.topdownshooter.Utility;
 
 public class ZombiesInfo implements Screen {
     SpriteBatch batch;
@@ -46,7 +47,7 @@ public class ZombiesInfo implements Screen {
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             batch.begin();
             //Initialise a new font
-            BitmapFont font = new BitmapFont();
+            BitmapFont font = Utility.font;
             //Set the font color and size
             font.setColor(Color.WHITE);
             font.getData().setScale(8f);
