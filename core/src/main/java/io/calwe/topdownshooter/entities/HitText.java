@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import io.calwe.topdownshooter.Utility;
 import io.calwe.topdownshooter.screens.Play;
 
 //Floating text that rises up from its position - used for showing the damage when you hit an enemy
@@ -19,7 +20,7 @@ public class HitText extends Entity {
     final BitmapFont font;
 
     public HitText(String text, Vector2 startPos, Color color){
-        this.font = new BitmapFont();
+        this.font = Utility.font;
         this.font.setColor(color);
         this.font.getData().setScale(0.4f);
         this.pos = startPos;
